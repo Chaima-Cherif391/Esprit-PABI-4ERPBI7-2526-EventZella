@@ -136,7 +136,7 @@ pip install -r requirements.txt
 ```bash
 # Open /powerbi/dashboard.pbix in Power BI Desktop
 # Or access the published report via the link below:
-# [Power BI Report Link] → à ajouter
+
 ```
 
 ---
