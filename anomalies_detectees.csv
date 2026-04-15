@@ -1,0 +1,46 @@
+id_reservation,price,nbr_reservations,nbr_visitors,marketing_spend,market_count,reservation_status,event_type,event_date,category_name,city,country,rating,trend_score,growth_rate_pct,capacity_min,capacity_max,venue_type,anomaly_iforest,anomaly_score_iforest,anomaly_lof,anomaly_consensus,anomaly_price,anomaly_reservations,anomaly_marketing,anomaly_rules,anomaly_final
+16870,3580.0,249,22215,25000.0,20,confirmed,Wedding,2023-10-06,Wedding,Tunis,Tunisie,1,0.0,0.0,300,500,Hotel,-1,-0.0015299094980681938,1,0,False,False,False,False,1
+13965,1094.0,249,22215,25000.0,20,cancelled,Wedding,2023-11-17,Wedding,Tunis,Tunisie,1,0.0,0.0,300,500,Hotel,-1,-0.008123994630527154,1,0,False,False,False,False,1
+6441,14239.0,249,22215,23000.0,20,confirmed,Wedding,2024-05-22,Wedding,Tunis,Tunisie,5,0.0,0.0,300,500,Hotel,-1,-0.0038846078293837127,1,0,False,False,False,False,1
+16647,136640.0,298,962,25000.0,16,cancelled,Wedding,2025-02-20,Wedding,Ben Arous,Tunisie,3,0.0,0.0,200,400,Venues de mariage privées,-1,-0.037909458424206344,1,0,True,False,False,False,1
+11723,137910.0,298,962,25000.0,20,pending,Birthday,2022-05-16,Wedding,Manouba,Tunisie,1,0.0,0.0,200,400,Venues de mariage privées,-1,-0.06690646229440234,1,0,True,False,False,False,1
+13989,149610.0,202,1983,19000.0,18,pending,Wedding,2025-07-24,Birthday,Manouba,Tunisie,4,0.0,0.0,200,400,Venues de mariage privées,-1,-0.019550548293881254,1,0,True,False,False,False,1
+2070,92600.0,42,3577,17000.0,20,pending,Corporate Event,2023-02-18,Wedding,Manouba,Tunisie,5,0.0,0.0,200,400,Venues de mariage privées,-1,-0.037892593691337795,-1,1,False,False,False,False,1
+6750,147800.0,126,4896,22000.0,13,pending,Wedding,2025-09-26,Corporate,Manouba,Tunisie,1,0.0,0.0,200,400,Venues de mariage privées,-1,-0.02030989844191533,1,0,True,False,False,False,1
+7058,75890.0,249,22215,15000.0,20,pending,Birthday,2022-08-28,Wedding,Manouba,Tunisie,2,0.0,0.0,200,400,Venues de mariage privées,-1,-0.050275617547692164,-1,1,False,False,False,False,1
+8761,88110.0,42,3577,13000.0,16,cancelled,Wedding,2024-10-25,Wedding,Manouba,Tunisie,2,0.0,0.0,200,400,Venues de mariage privées,-1,-0.02500625618645813,-1,1,False,False,False,False,1
+16063,135870.0,249,22215,12000.0,20,cancelled,Wedding,2024-04-29,Wedding,Manouba,Tunisie,5,0.0,0.0,200,400,Venues de mariage privées,-1,-0.0862845800636971,-1,1,True,False,False,False,1
+14521,14412.0,249,22215,25000.0,18,pending,Birthday,2023-07-14,Birthday,Manouba,Tunisie,5,0.0,0.0,200,400,Venues de mariage privées,-1,-0.005281556268888821,1,0,False,False,False,False,1
+3342,141250.0,239,4101,12000.0,16,confirmed,Birthday,2025-06-18,Wedding,Manouba,Tunisie,5,0.0,0.0,200,400,Venues de mariage privées,-1,-0.044919839595036315,1,0,True,False,False,False,1
+4918,140530.0,42,3577,21000.0,2,cancelled,Birthday,2023-07-13,Wedding,Nabeul,Tunisie,5,0.0,0.0,300,500,Venues de mariage privées,-1,-0.019105128799645432,1,0,True,False,False,False,1
+7146,140320.0,252,1608,22000.0,2,confirmed,Birthday,2022-12-20,Wedding,Nabeul,Tunisie,5,0.0,0.0,300,500,Venues de mariage privées,-1,-0.0038931620593569694,1,0,True,False,False,False,1
+7404,69360.0,42,3577,13000.0,14,cancelled,Birthday,2024-07-20,Corporate,Nabeul,Tunisie,2,0.0,0.0,300,500,Venues de mariage privées,-1,-0.0063201189543615754,-1,1,False,False,False,False,1
+15674,145180.0,126,4896,24000.0,2,confirmed,Wedding,2025-02-20,Wedding,Nabeul,Tunisie,4,0.0,0.0,300,500,Venues de mariage privées,-1,-0.00241954785461862,1,0,True,False,False,False,1
+5929,99310.0,249,22215,20000.0,14,cancelled,Birthday,2022-11-12,Corporate,Nabeul,Tunisie,2,0.0,0.0,300,500,Venues de mariage privées,-1,-0.024424654462776196,-1,1,False,False,False,False,1
+11557,138930.0,252,1608,20000.0,10,pending,Corporate Event,2025-04-26,Birthday,Nabeul,Tunisie,5,0.0,0.0,300,500,Venues de mariage privées,-1,-0.004115895292861271,1,0,True,False,False,False,1
+13049,147520.0,229,3480,25000.0,2,pending,Corporate Event,2025-04-30,Wedding,Nabeul,Tunisie,5,0.0,0.0,300,500,Venues de mariage privées,-1,-0.010372454614473448,1,0,True,False,False,False,1
+4016,147490.0,252,1608,23000.0,16,confirmed,Corporate Event,2023-02-25,Wedding,Sousse,Tunisie,2,0.0,0.0,300,500,Venues de mariage privées,-1,-0.019301159041577254,1,0,True,False,False,False,1
+5337,116250.0,229,3480,15000.0,12,confirmed,Wedding,2022-01-25,Corporate,Monastir,Tunisie,5,0.0,0.0,200,500,Hotel,-1,-0.012878060355561272,1,0,True,False,False,False,1
+5143,104920.0,249,22215,15000.0,12,cancelled,Birthday,2025-02-18,Corporate,Monastir,Tunisie,1,0.0,0.0,200,500,Hotel,-1,-0.050733977266748775,-1,1,True,False,False,False,1
+10812,118510.0,298,962,26000.0,2,confirmed,Wedding,2024-12-25,Wedding,Mahdia,Tunisie,2,0.0,0.0,200,400,Venues de mariage privées,-1,-0.026383096016034946,1,0,True,False,False,False,1
+1613,92180.0,42,3577,12000.0,0,pending,Birthday,2023-04-11,Wedding,Sfax,Tunisie,5,0.0,0.0,200,500,Hotel,-1,-0.036939786603424674,1,0,False,False,False,False,1
+16163,64340.0,249,22215,25000.0,0,pending,Corporate Event,2022-07-14,Corporate,Tataouine,Tunisie,2,0.0,0.0,100,200,Hotel,-1,-0.0033586011649190395,-1,1,False,False,False,False,1
+2651,77320.0,249,22215,13000.0,1,pending,Wedding,2022-03-20,Wedding,Tataouine,Tunisie,3,0.0,0.0,100,200,Hotel,-1,-0.02510596693308087,-1,1,False,False,False,False,1
+7031,141040.0,252,1608,19000.0,0,pending,Birthday,2025-04-02,Corporate,Tataouine,Tunisie,5,0.0,0.0,100,200,Hotel,-1,-0.009307298802813668,1,0,True,False,False,False,1
+14987,65230.0,249,22215,26000.0,1,pending,Birthday,2022-10-16,Wedding,Tataouine,Tunisie,5,0.0,0.0,100,200,Hotel,-1,-0.031004945545748508,-1,1,False,False,False,False,1
+13584,124490.0,252,1608,22000.0,5,pending,Wedding,2022-11-24,Corporate,Kairouan,Tunisie,1,0.0,0.0,300,500,Venues de mariage privées,-1,-0.00023054665322064238,1,0,True,False,False,False,1
+2727,114050.0,155,66,12000.0,5,confirmed,Corporate Event,2022-06-15,Corporate,Kairouan,Tunisie,4,0.0,0.0,300,500,Venues de mariage privées,-1,-0.01928237601340488,1,0,True,False,False,False,1
+14271,135710.0,202,1983,22000.0,5,pending,Corporate Event,2023-09-10,Corporate,Kairouan,Tunisie,5,0.0,0.0,300,500,Venues de mariage privées,-1,-0.0028117273177260538,1,0,True,False,False,False,1
+5467,120370.0,155,66,13000.0,7,pending,Birthday,2024-11-24,Corporate,Zaghouan,Tunisie,3,0.0,0.0,100,200,Hotel,-1,-0.025231243687206084,1,0,True,False,False,False,1
+15916,119750.0,298,962,22000.0,8,pending,Corporate Event,2024-10-16,Wedding,Zaghouan,Tunisie,5,0.0,0.0,100,200,Hotel,-1,-0.016275078271565158,1,0,True,False,False,False,1
+4424,149480.0,239,4101,24000.0,0,pending,Wedding,2024-11-11,Corporate,Siliana,Tunisie,2,0.0,0.0,200,400,Venues de mariage privées,-1,-0.0031876767910646864,1,0,True,False,False,False,1
+17966,144550.0,203,1258,13000.0,2,cancelled,Wedding,2024-07-16,Wedding,Jendouba,Tunisie,5,0.0,0.0,100,200,Hotel,-1,-0.019738556414413022,1,0,True,False,False,False,1
+7529,147590.0,203,1417,17000.0,0,pending,Wedding,2025-03-20,Birthday,Jendouba,Tunisie,5,0.0,0.0,100,200,Hotel,-1,-0.019224146938895625,1,0,True,False,False,False,1
+17582,147990.0,252,1608,24000.0,10,cancelled,Birthday,2025-07-14,Corporate,Jendouba,Tunisie,1,0.0,0.0,100,200,Hotel,-1,-0.009001120773199034,1,0,True,False,False,False,1
+8209,98740.0,155,66,15000.0,6,cancelled,Corporate Event,2024-06-29,Corporate,Bizerte,Tunisie,5,0.0,0.0,300,500,Venues de mariage privées,-1,-0.016043462503131267,1,0,False,False,False,False,1
+13296,121580.0,155,66,12000.0,0,pending,Wedding,2024-07-20,Birthday,Gafsa,Tunisie,1,0.0,0.0,100,200,Hotel,-1,-0.049750047586733626,1,0,True,False,False,False,1
+1862,124850.0,298,962,21000.0,10,confirmed,Birthday,2023-10-03,Wedding,Gafsa,Tunisie,4,0.0,0.0,100,200,Hotel,-1,-0.005809882073097183,1,0,True,False,False,False,1
+14055,94120.0,42,3577,13000.0,0,pending,Birthday,2025-11-15,Wedding,Gafsa,Tunisie,3,0.0,0.0,100,200,Hotel,-1,-0.014373786131446131,1,0,False,False,False,False,1
+13852,74910.0,249,22215,24000.0,5,cancelled,Corporate Event,2023-11-18,Corporate,Gafsa,Tunisie,2,0.0,0.0,100,200,Hotel,-1,-0.006181709275697389,-1,1,False,False,False,False,1
+3010,98180.0,202,1983,12000.0,0,confirmed,Birthday,2023-04-08,Birthday,Kasserine,Tunisie,1,0.0,0.0,200,400,Venues de mariage privées,-1,-0.005135635868745658,1,0,False,False,False,False,1
+2071,145290.0,42,3577,13000.0,0,cancelled,Wedding,2024-05-27,Birthday,Kasserine,Tunisie,4,0.0,0.0,200,400,Venues de mariage privées,-1,-0.0393889374069043,1,0,True,False,False,False,1
