@@ -1,0 +1,1 @@
+[2026-03-29T19:49:54.578+0000] {scheduler_job_runner.py:781} ERROR - Executor reports task instance <TaskInstance: talend_dwh_pipeline.run_master_dwh manual__2026-03-29T19:49:50.785825+00:00 [queued]> finished (failed) although the task says it's queued. (Info: None) Was the task killed externally?

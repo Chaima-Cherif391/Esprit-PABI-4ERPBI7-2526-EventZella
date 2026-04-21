@@ -1,0 +1,17 @@
+[2026-04-21T19:36:47.071+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: talend_dwh_pipeline.quality_check manual__2026-04-21T19:34:06.747268+00:00 [queued]>
+[2026-04-21T19:36:47.081+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: talend_dwh_pipeline.quality_check manual__2026-04-21T19:34:06.747268+00:00 [queued]>
+[2026-04-21T19:36:47.082+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 2
+[2026-04-21T19:36:47.098+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): quality_check> on 2026-04-21 19:34:06.747268+00:00
+[2026-04-21T19:36:47.107+0000] {standard_task_runner.py:60} INFO - Started process 382 to run task
+[2026-04-21T19:36:47.110+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'talend_dwh_pipeline', 'quality_check', 'manual__2026-04-21T19:34:06.747268+00:00', '--job-id', '280', '--raw', '--subdir', 'DAGS_FOLDER/talend_dwh_pipeline.py', '--cfg-path', '/tmp/tmpt0ub0q0t']
+[2026-04-21T19:36:47.113+0000] {standard_task_runner.py:88} INFO - Job 280: Subtask quality_check
+[2026-04-21T19:36:47.186+0000] {task_command.py:423} INFO - Running <TaskInstance: talend_dwh_pipeline.quality_check manual__2026-04-21T19:34:06.747268+00:00 [running]> on host aae99a7b755a
+[2026-04-21T19:36:47.277+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_EMAIL='chouchenemariem505@gmail.com' AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='talend_dwh_pipeline' AIRFLOW_CTX_TASK_ID='quality_check' AIRFLOW_CTX_EXECUTION_DATE='2026-04-21T19:34:06.747268+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-04-21T19:34:06.747268+00:00'
+[2026-04-21T19:36:47.280+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-04-21T19:36:47.281+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'echo "Quality check OK"']
+[2026-04-21T19:36:47.297+0000] {subprocess.py:86} INFO - Output:
+[2026-04-21T19:36:47.299+0000] {subprocess.py:93} INFO - Quality check OK
+[2026-04-21T19:36:47.300+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-04-21T19:36:47.328+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=talend_dwh_pipeline, task_id=quality_check, execution_date=20260421T193406, start_date=20260421T193647, end_date=20260421T193647
+[2026-04-21T19:36:47.363+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2026-04-21T19:36:47.397+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

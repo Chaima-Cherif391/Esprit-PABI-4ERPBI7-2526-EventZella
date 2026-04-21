@@ -1,0 +1,15 @@
+[2026-04-18T20:24:26.903+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: talend_dwh_pipeline.success_email scheduled__2026-04-17T00:00:00+00:00 [queued]>
+[2026-04-18T20:24:26.951+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: talend_dwh_pipeline.success_email scheduled__2026-04-17T00:00:00+00:00 [queued]>
+[2026-04-18T20:24:26.961+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 2
+[2026-04-18T20:24:27.022+0000] {taskinstance.py:2191} INFO - Executing <Task(EmailOperator): success_email> on 2026-04-17 00:00:00+00:00
+[2026-04-18T20:24:27.089+0000] {standard_task_runner.py:60} INFO - Started process 348 to run task
+[2026-04-18T20:24:27.096+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'talend_dwh_pipeline', 'success_email', 'scheduled__2026-04-17T00:00:00+00:00', '--job-id', '270', '--raw', '--subdir', 'DAGS_FOLDER/talend_dwh_pipeline.py', '--cfg-path', '/tmp/tmpb6g9ohi4']
+[2026-04-18T20:24:27.115+0000] {standard_task_runner.py:88} INFO - Job 270: Subtask success_email
+[2026-04-18T20:24:27.478+0000] {task_command.py:423} INFO - Running <TaskInstance: talend_dwh_pipeline.success_email scheduled__2026-04-17T00:00:00+00:00 [running]> on host aae99a7b755a
+[2026-04-18T20:24:27.834+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_EMAIL='chouchenemariem505@gmail.com' AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='talend_dwh_pipeline' AIRFLOW_CTX_TASK_ID='success_email' AIRFLOW_CTX_EXECUTION_DATE='2026-04-17T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-04-17T00:00:00+00:00'
+[2026-04-18T20:24:27.884+0000] {base.py:83} INFO - Using connection ID 'smtp_default' for task execution.
+[2026-04-18T20:24:27.889+0000] {email.py:270} INFO - Email alerting: attempt 1
+[2026-04-18T20:24:28.790+0000] {email.py:281} INFO - Sent an alert email to ['chouchenemariem505@gmail.com']
+[2026-04-18T20:24:29.619+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=talend_dwh_pipeline, task_id=success_email, execution_date=20260417T000000, start_date=20260418T202426, end_date=20260418T202429
+[2026-04-18T20:24:29.759+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2026-04-18T20:24:29.881+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

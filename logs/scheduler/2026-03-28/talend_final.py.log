@@ -1,0 +1,515 @@
+[2026-03-28T22:09:37.832+0000] {processor.py:161} INFO - Started process (PID=53) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:09:37.834+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:09:37.838+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:09:37.837+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:09:37.890+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:09:38.148+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:09:38.146+0000] {override.py:1769} INFO - Created Permission View: can edit on DAG:talend_dwh_pipeline
+[2026-03-28T22:09:38.162+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:09:38.162+0000] {override.py:1769} INFO - Created Permission View: can delete on DAG:talend_dwh_pipeline
+[2026-03-28T22:09:38.173+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:09:38.173+0000] {override.py:1769} INFO - Created Permission View: can read on DAG:talend_dwh_pipeline
+[2026-03-28T22:09:38.174+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:09:38.174+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:09:38.186+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:09:38.186+0000] {dag.py:3058} INFO - Creating ORM DAG for talend_dwh_pipeline
+[2026-03-28T22:09:38.201+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:09:38.200+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:09:38.223+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.398 seconds
+[2026-03-28T22:10:08.843+0000] {processor.py:161} INFO - Started process (PID=109) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:10:08.844+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:10:08.846+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:10:08.846+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:10:08.862+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:10:08.885+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:10:08.885+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:10:08.915+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:10:08.915+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:10:08.939+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.100 seconds
+[2026-03-28T22:10:39.175+0000] {processor.py:161} INFO - Started process (PID=165) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:10:39.176+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:10:39.179+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:10:39.178+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:10:39.194+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:10:39.218+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:10:39.217+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:10:39.243+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:10:39.243+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:10:39.273+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.103 seconds
+[2026-03-28T22:11:09.692+0000] {processor.py:161} INFO - Started process (PID=221) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:11:09.693+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:11:09.696+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:11:09.695+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:11:09.715+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:11:09.741+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:11:09.740+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:11:09.763+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:11:09.763+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:11:09.804+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.116 seconds
+[2026-03-28T22:11:39.962+0000] {processor.py:161} INFO - Started process (PID=277) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:11:39.963+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:11:39.966+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:11:39.965+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:11:39.980+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:11:40.004+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:11:40.004+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:11:40.025+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:11:40.025+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:11:40.053+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.095 seconds
+[2026-03-28T22:12:10.184+0000] {processor.py:161} INFO - Started process (PID=333) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:12:10.185+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:12:10.187+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:12:10.187+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:12:10.203+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:12:10.224+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:12:10.224+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:12:10.252+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:12:10.252+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:12:10.278+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.098 seconds
+[2026-03-28T22:12:40.354+0000] {processor.py:161} INFO - Started process (PID=389) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:12:40.355+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:12:40.357+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:12:40.357+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:12:40.371+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:12:40.391+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:12:40.390+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:12:40.411+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:12:40.411+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:12:40.436+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.085 seconds
+[2026-03-28T22:13:10.732+0000] {processor.py:161} INFO - Started process (PID=445) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:13:10.734+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:13:10.736+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:13:10.735+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:13:10.751+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:13:10.777+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:13:10.777+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:13:10.799+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:13:10.798+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:13:10.824+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.095 seconds
+[2026-03-28T22:14:04.195+0000] {processor.py:161} INFO - Started process (PID=52) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:14:04.197+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:14:04.201+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:14:04.201+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:14:04.256+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:14:04.745+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:14:04.744+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:14:04.797+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:14:04.797+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:14:04.865+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.677 seconds
+[2026-03-28T22:14:35.218+0000] {processor.py:161} INFO - Started process (PID=107) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:14:35.219+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:14:35.222+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:14:35.221+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:14:35.237+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:14:35.261+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:14:35.261+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:14:35.286+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:14:35.286+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:14:35.312+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.098 seconds
+[2026-03-28T22:15:05.742+0000] {processor.py:161} INFO - Started process (PID=163) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:15:05.744+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:15:05.747+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:15:05.747+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:15:05.766+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:15:05.791+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:15:05.791+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:15:05.817+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:15:05.817+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:15:05.843+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.106 seconds
+[2026-03-28T22:15:36.103+0000] {processor.py:161} INFO - Started process (PID=225) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:15:36.106+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:15:36.109+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:15:36.108+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:15:36.126+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:15:36.152+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:15:36.152+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:15:36.175+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:15:36.175+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:15:36.201+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.102 seconds
+[2026-03-28T22:16:06.425+0000] {processor.py:161} INFO - Started process (PID=281) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:16:06.426+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:16:06.429+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:16:06.429+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:16:06.443+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:16:06.462+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:16:06.462+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:16:06.486+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:16:06.485+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:16:06.509+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.087 seconds
+[2026-03-28T22:16:36.582+0000] {processor.py:161} INFO - Started process (PID=337) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:16:36.583+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:16:36.586+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:16:36.586+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:16:36.612+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:16:36.633+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:16:36.633+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:16:36.655+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:16:36.654+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:16:36.692+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.115 seconds
+[2026-03-28T22:17:06.911+0000] {processor.py:161} INFO - Started process (PID=393) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:17:06.912+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:17:06.915+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:17:06.914+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:17:06.928+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:17:06.948+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:17:06.947+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:17:06.970+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:17:06.969+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:17:06.994+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.086 seconds
+[2026-03-28T22:17:37.188+0000] {processor.py:161} INFO - Started process (PID=449) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:17:37.189+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:17:37.191+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:17:37.191+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:17:37.204+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:17:37.223+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:17:37.222+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:17:37.243+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:17:37.243+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:17:37.265+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.081 seconds
+[2026-03-28T22:18:07.820+0000] {processor.py:161} INFO - Started process (PID=505) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:18:07.821+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:18:07.823+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:18:07.823+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:18:07.837+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:18:07.858+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:18:07.858+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:18:07.879+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:18:07.878+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:18:07.903+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.086 seconds
+[2026-03-28T22:18:38.018+0000] {processor.py:161} INFO - Started process (PID=561) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:18:38.019+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:18:38.021+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:18:38.021+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:18:38.035+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:18:38.055+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:18:38.055+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:18:38.075+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:18:38.075+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:18:38.098+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.084 seconds
+[2026-03-28T22:19:08.333+0000] {processor.py:161} INFO - Started process (PID=617) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:19:08.334+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:19:08.336+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:19:08.336+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:19:08.350+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:19:08.370+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:19:08.369+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:19:08.390+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:19:08.390+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:19:08.415+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.086 seconds
+[2026-03-28T22:19:39.053+0000] {processor.py:161} INFO - Started process (PID=673) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:19:39.054+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:19:39.056+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:19:39.056+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:19:39.073+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:19:39.099+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:19:39.098+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:19:39.128+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:19:39.127+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:19:39.235+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.186 seconds
+[2026-03-28T22:20:09.748+0000] {processor.py:161} INFO - Started process (PID=729) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:20:09.749+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:20:09.753+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:20:09.752+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:20:09.775+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:20:09.805+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:20:09.804+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:20:09.840+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:20:09.840+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:20:09.872+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.128 seconds
+[2026-03-28T22:20:39.921+0000] {processor.py:161} INFO - Started process (PID=785) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:20:39.922+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:20:39.924+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:20:39.924+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:20:39.939+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:20:39.964+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:20:39.963+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:20:39.989+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:20:39.988+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:20:40.023+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.106 seconds
+[2026-03-28T22:21:10.598+0000] {processor.py:161} INFO - Started process (PID=841) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:21:10.599+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:21:10.601+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:21:10.601+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:21:10.615+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:21:10.636+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:21:10.636+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:21:10.657+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:21:10.657+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:21:10.785+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.190 seconds
+[2026-03-28T22:21:41.210+0000] {processor.py:161} INFO - Started process (PID=897) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:21:41.211+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:21:41.214+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:21:41.214+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:21:41.236+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:21:41.265+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:21:41.265+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:21:41.298+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:21:41.298+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:21:41.330+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.125 seconds
+[2026-03-28T22:22:11.526+0000] {processor.py:161} INFO - Started process (PID=953) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:22:11.527+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:22:11.529+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:22:11.529+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:22:11.545+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:22:11.569+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:22:11.569+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:22:11.594+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:22:11.594+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:22:11.618+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.096 seconds
+[2026-03-28T22:22:41.797+0000] {processor.py:161} INFO - Started process (PID=1009) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:22:41.798+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:22:41.800+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:22:41.799+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:22:41.816+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:22:41.843+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:22:41.843+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:22:41.870+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:22:41.870+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:22:41.898+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.105 seconds
+[2026-03-28T22:23:12.124+0000] {processor.py:161} INFO - Started process (PID=1065) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:23:12.125+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:23:12.127+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:23:12.127+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:23:12.141+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:23:12.163+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:23:12.163+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:23:12.185+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:23:12.185+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:23:12.209+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.089 seconds
+[2026-03-28T22:23:42.376+0000] {processor.py:161} INFO - Started process (PID=1121) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:23:42.378+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:23:42.381+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:23:42.380+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:23:42.400+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:23:42.426+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:23:42.425+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:23:42.450+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:23:42.450+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:23:42.473+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.101 seconds
+[2026-03-28T22:24:12.732+0000] {processor.py:161} INFO - Started process (PID=1177) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:24:12.734+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:24:12.736+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:24:12.735+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:24:12.751+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:24:12.774+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:24:12.774+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:24:12.798+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:24:12.798+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:24:12.822+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.093 seconds
+[2026-03-28T22:24:43.142+0000] {processor.py:161} INFO - Started process (PID=1233) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:24:43.144+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:24:43.146+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:24:43.146+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:24:43.161+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:24:43.180+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:24:43.180+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:24:43.202+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:24:43.201+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:24:43.253+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.115 seconds
+[2026-03-28T22:25:13.324+0000] {processor.py:161} INFO - Started process (PID=1289) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:25:13.325+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:25:13.327+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:25:13.327+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:25:13.341+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:25:13.360+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:25:13.360+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:25:13.380+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:25:13.379+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:25:13.405+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.084 seconds
+[2026-03-28T22:25:43.645+0000] {processor.py:161} INFO - Started process (PID=1345) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:25:43.646+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:25:43.649+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:25:43.649+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:25:43.662+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:25:43.682+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:25:43.682+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:25:43.702+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:25:43.702+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:25:43.725+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.083 seconds
+[2026-03-28T22:26:14.004+0000] {processor.py:161} INFO - Started process (PID=1402) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:26:14.005+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:26:14.008+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:26:14.008+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:26:14.022+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:26:14.041+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:26:14.041+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:26:14.061+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:26:14.061+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:26:14.085+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.084 seconds
+[2026-03-28T22:26:44.161+0000] {processor.py:161} INFO - Started process (PID=1458) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:26:44.162+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:26:44.165+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:26:44.164+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:26:44.185+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:26:44.206+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:26:44.206+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:26:44.234+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:26:44.233+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:26:44.279+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.122 seconds
+[2026-03-28T22:27:14.638+0000] {processor.py:161} INFO - Started process (PID=1514) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:27:14.640+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:27:14.645+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:27:14.645+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:27:14.665+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:27:14.694+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:27:14.693+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:27:14.719+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:27:14.719+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:27:14.750+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.118 seconds
+[2026-03-28T22:27:45.262+0000] {processor.py:161} INFO - Started process (PID=1570) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:27:45.272+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:27:45.275+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:27:45.275+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:27:45.305+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:27:45.339+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:27:45.339+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:27:45.392+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:27:45.386+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:27:45.495+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.240 seconds
+[2026-03-28T22:28:15.822+0000] {processor.py:161} INFO - Started process (PID=1626) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:28:15.823+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:28:15.825+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:28:15.824+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:28:15.839+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:28:15.872+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:28:15.872+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:28:15.899+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:28:15.898+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:28:15.927+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.108 seconds
+[2026-03-28T22:28:45.975+0000] {processor.py:161} INFO - Started process (PID=1682) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:28:45.976+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:28:45.979+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:28:45.978+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:28:45.999+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:28:46.026+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:28:46.026+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:28:46.050+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:28:46.050+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:28:46.127+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.157 seconds
+[2026-03-28T22:29:16.563+0000] {processor.py:161} INFO - Started process (PID=1738) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:29:16.564+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:29:16.567+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:29:16.566+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:29:16.580+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:29:16.601+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:29:16.601+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:29:16.626+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:29:16.625+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:29:16.652+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.092 seconds
+[2026-03-28T22:29:47.014+0000] {processor.py:161} INFO - Started process (PID=1794) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:29:47.015+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:29:47.018+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:29:47.017+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:29:47.032+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:29:47.056+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:29:47.056+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:29:47.080+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:29:47.080+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:29:47.107+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.096 seconds
+[2026-03-28T22:30:17.292+0000] {processor.py:161} INFO - Started process (PID=1850) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:17.293+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:30:17.296+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:17.295+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:17.311+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:17.334+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:17.334+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:30:17.358+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:17.358+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:30:17.385+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.096 seconds
+[2026-03-28T22:30:41.543+0000] {processor.py:161} INFO - Started process (PID=1904) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:41.544+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:30:41.546+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:41.546+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:41.569+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:41.588+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:41.588+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:30:41.611+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:41.611+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:30:41.642+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.102 seconds
+[2026-03-28T22:30:43.697+0000] {processor.py:161} INFO - Started process (PID=1905) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:43.699+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:30:43.701+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:43.701+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:43.725+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:43.750+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:43.749+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:30:43.773+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:43.773+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:30:43.801+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.109 seconds
+[2026-03-28T22:30:57.364+0000] {processor.py:161} INFO - Started process (PID=1955) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:57.366+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:30:57.368+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:57.367+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:57.387+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:57.406+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:57.406+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:30:57.427+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:57.427+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:30:57.568+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.207 seconds
+[2026-03-28T22:30:58.633+0000] {processor.py:161} INFO - Started process (PID=1956) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:58.634+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:30:58.637+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:58.636+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:58.663+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:30:58.682+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:58.682+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:30:58.703+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:30:58.703+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:30:58.845+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.215 seconds
+[2026-03-28T22:31:35.340+0000] {processor.py:161} INFO - Started process (PID=52) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:31:35.342+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:31:35.345+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:31:35.345+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:31:35.379+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:31:35.568+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:31:35.568+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:31:35.594+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:31:35.593+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:31:35.631+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.297 seconds
+[2026-03-28T22:32:11.596+0000] {processor.py:161} INFO - Started process (PID=53) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:32:11.598+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:32:11.603+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:32:11.602+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:32:11.634+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:32:11.824+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:32:11.823+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:32:11.854+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:32:11.854+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:32:11.887+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.298 seconds
+[2026-03-28T22:32:42.022+0000] {processor.py:161} INFO - Started process (PID=110) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:32:42.023+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:32:42.026+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:32:42.025+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:32:42.044+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:32:42.068+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:32:42.068+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:32:42.091+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:32:42.091+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:32:42.123+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.105 seconds
+[2026-03-28T22:33:56.128+0000] {processor.py:161} INFO - Started process (PID=64) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:33:56.130+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:33:56.134+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:33:56.133+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:33:56.182+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:33:56.488+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:33:56.487+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:33:56.515+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:33:56.515+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:33:56.547+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.425 seconds
+[2026-03-28T22:34:27.354+0000] {processor.py:161} INFO - Started process (PID=120) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:34:27.358+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:34:27.370+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:34:27.369+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:34:27.432+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:34:27.491+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:34:27.491+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:34:27.553+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:34:27.553+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:34:27.600+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.266 seconds
+[2026-03-28T22:34:57.944+0000] {processor.py:161} INFO - Started process (PID=176) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:34:57.945+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:34:57.948+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:34:57.947+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:34:57.960+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:34:57.981+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:34:57.980+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:34:58.001+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:34:58.001+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:34:58.024+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.084 seconds
+[2026-03-28T22:35:28.149+0000] {processor.py:161} INFO - Started process (PID=232) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:35:28.150+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:35:28.152+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:35:28.152+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:35:28.166+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:35:28.196+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:35:28.195+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:35:28.228+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:35:28.227+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:35:28.253+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.108 seconds
+[2026-03-28T22:35:58.434+0000] {processor.py:161} INFO - Started process (PID=288) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:35:58.436+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:35:58.438+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:35:58.438+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:35:58.456+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:35:58.483+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:35:58.483+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:35:58.513+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:35:58.512+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:35:58.541+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.111 seconds
+[2026-03-28T22:36:28.681+0000] {processor.py:161} INFO - Started process (PID=344) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:36:28.682+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:36:28.684+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:36:28.684+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:36:28.699+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:36:28.719+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:36:28.719+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:36:28.743+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:36:28.743+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:36:28.779+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.101 seconds
+[2026-03-28T22:36:59.119+0000] {processor.py:161} INFO - Started process (PID=400) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:36:59.121+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:36:59.124+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:36:59.123+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:36:59.138+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:36:59.159+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:36:59.158+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:36:59.180+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:36:59.180+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:36:59.203+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.087 seconds
+[2026-03-28T22:37:40.070+0000] {processor.py:161} INFO - Started process (PID=46) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:37:40.073+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:37:40.078+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:37:40.077+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:37:40.102+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:37:40.321+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:37:40.321+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:37:40.346+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:37:40.346+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:37:40.374+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.309 seconds
+[2026-03-28T22:38:10.504+0000] {processor.py:161} INFO - Started process (PID=108) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:38:10.506+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:38:10.508+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:38:10.508+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:38:10.524+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:38:10.546+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:38:10.545+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:38:10.569+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:38:10.569+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:38:10.593+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.093 seconds
+[2026-03-28T22:38:41.472+0000] {processor.py:161} INFO - Started process (PID=164) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:38:41.474+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:38:41.477+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:38:41.477+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:38:41.505+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:38:41.545+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:38:41.544+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:38:41.607+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:38:41.606+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:38:41.647+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.183 seconds
+[2026-03-28T22:39:12.062+0000] {processor.py:161} INFO - Started process (PID=220) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:39:12.063+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:39:12.066+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:39:12.065+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:39:12.094+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:39:12.124+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:39:12.124+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:39:12.151+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:39:12.151+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:39:12.179+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.124 seconds
+[2026-03-28T22:39:42.264+0000] {processor.py:161} INFO - Started process (PID=276) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:39:42.266+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:39:42.270+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:39:42.270+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:39:42.292+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:39:42.328+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:39:42.328+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:39:42.364+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:39:42.363+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:39:42.401+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.142 seconds
+[2026-03-28T22:40:12.611+0000] {processor.py:161} INFO - Started process (PID=332) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:40:12.612+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:40:12.614+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:40:12.613+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:40:12.629+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:40:12.652+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:40:12.652+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:40:12.680+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:40:12.680+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:40:12.706+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.099 seconds
+[2026-03-28T22:40:42.959+0000] {processor.py:161} INFO - Started process (PID=388) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:40:42.960+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:40:42.963+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:40:42.962+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:40:42.981+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:40:43.011+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:40:43.011+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:40:43.044+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:40:43.044+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:40:43.079+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.123 seconds
+[2026-03-28T22:41:13.440+0000] {processor.py:161} INFO - Started process (PID=444) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:41:13.441+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:41:13.443+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:41:13.443+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:41:13.460+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:41:13.563+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:41:13.563+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:41:13.583+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:41:13.582+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:41:13.606+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.171 seconds
+[2026-03-28T22:41:43.984+0000] {processor.py:161} INFO - Started process (PID=500) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:41:43.985+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:41:43.988+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:41:43.987+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:41:44.002+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:41:44.024+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:41:44.024+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:41:44.052+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:41:44.051+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:41:44.083+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.102 seconds
+[2026-03-28T22:42:14.235+0000] {processor.py:161} INFO - Started process (PID=556) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:42:14.236+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:42:14.239+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:42:14.238+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:42:14.261+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:42:14.292+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:42:14.292+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:42:14.329+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:42:14.329+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:42:14.359+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.129 seconds
+[2026-03-28T22:42:44.939+0000] {processor.py:161} INFO - Started process (PID=612) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:42:44.940+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:42:44.942+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:42:44.941+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:42:44.955+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:42:44.975+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:42:44.975+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:42:44.998+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:42:44.998+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:42:45.026+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.091 seconds
+[2026-03-28T22:43:15.511+0000] {processor.py:161} INFO - Started process (PID=668) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:43:15.512+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:43:15.514+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:43:15.514+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:43:15.538+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:43:15.605+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:43:15.605+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:43:15.663+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:43:15.663+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:43:15.696+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.189 seconds
+[2026-03-28T22:43:46.142+0000] {processor.py:161} INFO - Started process (PID=724) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:43:46.143+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:43:46.146+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:43:46.146+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:43:46.162+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:43:46.181+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:43:46.181+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:43:46.203+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:43:46.203+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-27 00:00:00+00:00, run_after=2026-03-28 00:00:00+00:00
+[2026-03-28T22:43:46.228+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.090 seconds
+[2026-03-28T22:44:16.487+0000] {processor.py:161} INFO - Started process (PID=780) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:44:16.488+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:44:16.490+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:44:16.490+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:44:16.503+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:44:16.527+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:44:16.527+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:44:16.562+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:44:16.562+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-28 00:00:00+00:00, run_after=2026-03-29 00:00:00+00:00
+[2026-03-28T22:44:16.593+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.110 seconds
+[2026-03-28T22:44:46.990+0000] {processor.py:161} INFO - Started process (PID=836) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:44:46.991+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:44:46.994+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:44:46.993+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:44:47.011+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:44:47.044+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:44:47.044+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:44:47.082+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:44:47.082+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-28 00:00:00+00:00, run_after=2026-03-29 00:00:00+00:00
+[2026-03-28T22:44:47.107+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.122 seconds
+[2026-03-28T22:45:17.628+0000] {processor.py:161} INFO - Started process (PID=892) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:45:17.629+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:45:17.633+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:45:17.632+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:45:17.647+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:45:17.667+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:45:17.667+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:45:17.688+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:45:17.688+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-28 00:00:00+00:00, run_after=2026-03-29 00:00:00+00:00
+[2026-03-28T22:45:17.709+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.085 seconds
+[2026-03-28T22:45:47.902+0000] {processor.py:161} INFO - Started process (PID=948) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:45:47.903+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:45:47.905+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:45:47.905+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:45:47.919+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:45:47.939+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:45:47.938+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:45:47.964+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:45:47.964+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-28 00:00:00+00:00, run_after=2026-03-29 00:00:00+00:00
+[2026-03-28T22:45:47.992+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.094 seconds
+[2026-03-28T22:46:35.225+0000] {processor.py:161} INFO - Started process (PID=998) to work on /opt/airflow/dags/talend_final.py
+[2026-03-28T22:46:35.228+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/talend_final.py for tasks to queue
+[2026-03-28T22:46:35.235+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:46:35.234+0000] {dagbag.py:538} INFO - Filling up the DagBag from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:46:35.269+0000] {processor.py:840} INFO - DAG(s) 'talend_dwh_pipeline' retrieved from /opt/airflow/dags/talend_final.py
+[2026-03-28T22:46:35.306+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:46:35.305+0000] {dag.py:3036} INFO - Sync 1 DAGs
+[2026-03-28T22:46:35.357+0000] {logging_mixin.py:188} INFO - [2026-03-28T22:46:35.357+0000] {dag.py:3823} INFO - Setting next_dagrun for talend_dwh_pipeline to 2026-03-28 00:00:00+00:00, run_after=2026-03-29 00:00:00+00:00
+[2026-03-28T22:46:35.398+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/talend_final.py took 0.189 seconds

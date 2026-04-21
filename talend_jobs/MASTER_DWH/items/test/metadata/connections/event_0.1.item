@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendMetadata="http://www.talend.org/metadata/connection/2010" xmlns:orgomg.cwm.resource.relational="http:///orgomg/cwm/resource/relational.ecore">
+  <TalendMetadata:DatabaseConnection xmi:id="_YP3wkPkgEfCwKMeHK7NKHQ" name="event" id="_AC8SgPkgEfCwKMeHK7NKHQ" label="event" dataPackage="_uWUNUAt2EfG4PfwVdlu5Aw" DatabaseType="Microsoft SQL Server" DriverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver" URL="jdbc:sqlserver://localhost:1433;DatabaseName=Event_SA;trustServerCertificate=true" dbVersionString="MSSQL_PROP" Port="1433" Username="event" Password="enc:system.encryption.key.v1:kLyzFKRFI8Y1eu7PpuRtriPV7YxBBnj0fCXrFE2gWQ==" ServerName="localhost" DatasourceName="" FileFieldName="" SID="Event_SA" SqlSynthax="" StringQuote="" NullChar="" DbmsId="id_MSSQL" ProductId="SQL_SERVER" AdditionalParams="trustServerCertificate=true" StandardSQL="true" SQLMode="false" UiSchema="dbo">
+    <taggedValue xmi:id="_YP3wkfkgEfCwKMeHK7NKHQ" tag="Is Conn Need Reload" value="true"/>
+    <taggedValue xmi:id="_YQmJUPkgEfCwKMeHK7NKHQ" tag="package filter" value=""/>
+    <taggedValue xmi:id="_YQxvgPkgEfCwKMeHK7NKHQ" tag="Status" value=""/>
+    <taggedValue xmi:id="_YQxvgfkgEfCwKMeHK7NKHQ" tag="Version" value="0.1"/>
+    <taggedValue xmi:id="_YQxvgvkgEfCwKMeHK7NKHQ" tag="Purpose" value=""/>
+    <taggedValue xmi:id="_YQxvg_kgEfCwKMeHK7NKHQ" tag="Description" value=""/>
+    <taggedValue xmi:id="_YQxvhPkgEfCwKMeHK7NKHQ" tag="Author" value=""/>
+    <taggedValue xmi:id="_YQxvhfkgEfCwKMeHK7NKHQ" tag="otherParameter"/>
+    <taggedValue xmi:id="_SmrEsPkmEfCjOsQKm7c4jQ" tag="DB ProductName" value="Microsoft SQL Server"/>
+    <taggedValue xmi:id="_SmrEsfkmEfCjOsQKm7c4jQ" tag="DB ProductVersion" value="16.00.1165"/>
+    <taggedValue xmi:id="_SmrEsvkmEfCjOsQKm7c4jQ" tag="DB IdentifierQuoteString" value="&quot;"/>
+    <parameters xmi:id="_YP3wkvkgEfCwKMeHK7NKHQ" key="CONN_PARA_KEY_USERNAME" value="event"/>
+    <parameters xmi:id="_QK_FYPkmEfCjOsQKm7c4jQ" key="CONN_PARA_KEY_MAPRDB_TABLE_NS_MAPPING" value=""/>
+  </TalendMetadata:DatabaseConnection>
+  <orgomg.cwm.resource.relational:Catalog xmi:id="_uWUNUAt2EfG4PfwVdlu5Aw" name="Event_SA" dataManager="_YP3wkPkgEfCwKMeHK7NKHQ">
+    <ownedElement xsi:type="orgomg.cwm.resource.relational:Schema" xmi:id="_uWUNUQt2EfG4PfwVdlu5Aw" name="dbo"/>
+  </orgomg.cwm.resource.relational:Catalog>
+</xmi:XMI>

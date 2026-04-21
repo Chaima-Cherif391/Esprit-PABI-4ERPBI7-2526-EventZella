@@ -1,0 +1,49 @@
+[2026-03-29T20:30:30.498+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: talend_dwh_pipeline.run_master_dwh manual__2026-03-29T20:30:27.219790+00:00 [queued]>
+[2026-03-29T20:30:30.520+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: talend_dwh_pipeline.run_master_dwh manual__2026-03-29T20:30:27.219790+00:00 [queued]>
+[2026-03-29T20:30:30.521+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 1
+[2026-03-29T20:30:30.541+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): run_master_dwh> on 2026-03-29 20:30:27.219790+00:00
+[2026-03-29T20:30:30.552+0000] {standard_task_runner.py:60} INFO - Started process 521 to run task
+[2026-03-29T20:30:30.556+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'talend_dwh_pipeline', 'run_master_dwh', 'manual__2026-03-29T20:30:27.219790+00:00', '--job-id', '102', '--raw', '--subdir', 'DAGS_FOLDER/talend_dwh_pipeline.py', '--cfg-path', '/tmp/tmpp4zg0tm0']
+[2026-03-29T20:30:30.559+0000] {standard_task_runner.py:88} INFO - Job 102: Subtask run_master_dwh
+[2026-03-29T20:30:30.659+0000] {task_command.py:423} INFO - Running <TaskInstance: talend_dwh_pipeline.run_master_dwh manual__2026-03-29T20:30:27.219790+00:00 [running]> on host 2d24ba4c9d65
+[2026-03-29T20:30:30.804+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='talend_dwh_pipeline' AIRFLOW_CTX_TASK_ID='run_master_dwh' AIRFLOW_CTX_EXECUTION_DATE='2026-03-29T20:30:27.219790+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-03-29T20:30:27.219790+00:00'
+[2026-03-29T20:30:30.807+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-03-29T20:30:30.809+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'bash /opt/***/talend_jobs/MASTER_DWH/MASTER_DWH_run.sh ']
+[2026-03-29T20:30:30.826+0000] {subprocess.py:86} INFO - Output:
+[2026-03-29T20:30:32.059+0000] {subprocess.py:93} INFO - Exception in component tDBOutput_1 (date_dwh)
+[2026-03-29T20:30:32.060+0000] {subprocess.py:93} INFO - com.microsoft.sqlserver.jdbc.SQLServerException: The TCP/IP connection to the host localhost, port 1433 has failed. Error: "Connection refused. Verify the connection properties. Make sure that an instance of SQL Server is running on the host and accepting TCP/IP connections at the port. Make sure that TCP connections to the port are not blocked by a firewall.".
+[2026-03-29T20:30:32.061+0000] {subprocess.py:93} INFO - 	at com.microsoft.sqlserver.jdbc.SQLServerException.makeFromDriverError(SQLServerException.java:250)
+[2026-03-29T20:30:32.061+0000] {subprocess.py:93} INFO - 	at com.microsoft.sqlserver.jdbc.SQLServerException.convertConnectExceptionToSQLServerException(SQLServerException.java:316)
+[2026-03-29T20:30:32.062+0000] {subprocess.py:93} INFO - 	at com.microsoft.sqlserver.jdbc.SocketFinder.findSocket(IOBuffer.java:2611)
+[2026-03-29T20:30:32.063+0000] {subprocess.py:93} INFO - 	at com.microsoft.sqlserver.jdbc.TDSChannel.open(IOBuffer.java:736)
+[2026-03-29T20:30:32.064+0000] {subprocess.py:93} INFO - 	at com.microsoft.sqlserver.jdbc.SQLServerConnection.connectHelper(SQLServerConnection.java:4201)
+[2026-03-29T20:30:32.066+0000] {subprocess.py:93} INFO - 	at com.microsoft.sqlserver.jdbc.SQLServerConnection.login(SQLServerConnection.java:3817)
+[2026-03-29T20:30:32.067+0000] {subprocess.py:93} INFO - 	at com.microsoft.sqlserver.jdbc.SQLServerConnection.connectInternal(SQLServerConnection.java:3591)
+[2026-03-29T20:30:32.068+0000] {subprocess.py:93} INFO - 	at com.microsoft.sqlserver.jdbc.SQLServerConnection.connect(SQLServerConnection.java:2286)
+[2026-03-29T20:30:32.068+0000] {subprocess.py:93} INFO - 	at com.microsoft.sqlserver.jdbc.SQLServerDriver.connect(SQLServerDriver.java:1371)
+[2026-03-29T20:30:32.069+0000] {subprocess.py:93} INFO - 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:681)
+[2026-03-29T20:30:32.069+0000] {subprocess.py:93} INFO - 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:229)
+[2026-03-29T20:30:32.070+0000] {subprocess.py:93} INFO - 	at test.date_dwh_0_1.date_dwh.tRowGenerator_1Process(date_dwh.java:1202)
+[2026-03-29T20:30:32.070+0000] {subprocess.py:93} INFO - 	at test.date_dwh_0_1.date_dwh.runJobInTOS(date_dwh.java:2386)
+[2026-03-29T20:30:32.070+0000] {subprocess.py:93} INFO - 	at test.date_dwh_0_1.date_dwh.runJob(date_dwh.java:2225)
+[2026-03-29T20:30:32.071+0000] {subprocess.py:93} INFO - 	at test.master_dwh_0_1.MASTER_DWH.tRunJob_1Process(MASTER_DWH.java:651)
+[2026-03-29T20:30:32.071+0000] {subprocess.py:93} INFO - 	at test.master_dwh_0_1.MASTER_DWH.runJobInTOS(MASTER_DWH.java:5280)
+[2026-03-29T20:30:32.071+0000] {subprocess.py:93} INFO - 	at test.master_dwh_0_1.MASTER_DWH.main(MASTER_DWH.java:5111)
+[2026-03-29T20:30:32.072+0000] {subprocess.py:93} INFO - Exception in component tRunJob_1 (MASTER_DWH)
+[2026-03-29T20:30:32.072+0000] {subprocess.py:93} INFO - java.lang.RuntimeException: Child job running failed.
+[2026-03-29T20:30:32.073+0000] {subprocess.py:93} INFO - com.microsoft.sqlserver.jdbc.SQLServerException: The TCP/IP connection to the host localhost, port 1433 has failed. Error: "Connection refused. Verify the connection properties. Make sure that an instance of SQL Server is running on the host and accepting TCP/IP connections at the port. Make sure that TCP connections to the port are not blocked by a firewall.".
+[2026-03-29T20:30:32.073+0000] {subprocess.py:93} INFO - 	at test.master_dwh_0_1.MASTER_DWH.tRunJob_1Process(MASTER_DWH.java:664)
+[2026-03-29T20:30:32.073+0000] {subprocess.py:93} INFO - 	at test.master_dwh_0_1.MASTER_DWH.runJobInTOS(MASTER_DWH.java:5280)
+[2026-03-29T20:30:32.074+0000] {subprocess.py:93} INFO - 	at test.master_dwh_0_1.MASTER_DWH.main(MASTER_DWH.java:5111)
+[2026-03-29T20:30:32.085+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2026-03-29T20:30:32.101+0000] {taskinstance.py:2698} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 433, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 212, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2026-03-29T20:30:32.106+0000] {taskinstance.py:1138} INFO - Marking task as FAILED. dag_id=talend_dwh_pipeline, task_id=run_master_dwh, execution_date=20260329T203027, start_date=20260329T203030, end_date=20260329T203032
+[2026-03-29T20:30:32.132+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 102 for task run_master_dwh (Bash command failed. The command returned a non-zero exit code 1.; 521)
+[2026-03-29T20:30:32.174+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 1
+[2026-03-29T20:30:32.222+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check
