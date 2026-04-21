@@ -5,6 +5,7 @@ import { DashboardCeoComponent } from './Ceo/dashboard-ceo/dashboard-ceo.compone
 import { DashboardMarketingComponent } from './Marketing/dashboard-marketing/dashboard-marketing.component';
 import { ContentCeoComponent } from './Ceo/content-ceo/content-ceo.component';
 import { AuthGuard } from './guards/auth.guard';
+import { PriceRegressionComponent } from './Ceo/price-regression/price-regression.component';
 
 const routes: Routes = [
 // {path : '', redirectTo : 'login', pathMatch : 'full'},
@@ -23,6 +24,8 @@ const routes: Routes = [
     canActivate: [AuthGuard], data: { role: 'MARKETING' } },
   { path: 'content-ceo',      component: ContentCeoComponent,
     canActivate: [AuthGuard], data: { role: 'CEO' } },
+  { path: 'price-regression', component: PriceRegressionComponent },
+
 
 // if (user.role === 'CEO') {
 //   this.router.navigate(['/dashboard-ceo']);

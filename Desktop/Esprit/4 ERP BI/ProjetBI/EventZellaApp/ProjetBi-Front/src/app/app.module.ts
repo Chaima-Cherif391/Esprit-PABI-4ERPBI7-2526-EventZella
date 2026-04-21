@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardCeoComponent } from './Ceo/dashboard-ceo/dashboard-ceo.component';
 import { DashboardMarketingComponent } from './Marketing/dashboard-marketing/dashboard-marketing.component';
 import { ContentCeoComponent } from './Ceo/content-ceo/content-ceo.component';
+import { PriceRegressionComponent } from './Ceo/price-regression/price-regression.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ContentCeoComponent } from './Ceo/content-ceo/content-ceo.component';
     LoginComponent,
     DashboardCeoComponent,
     DashboardMarketingComponent,
-    ContentCeoComponent
+    ContentCeoComponent,
+    PriceRegressionComponent
   ],
   imports: [
     BrowserModule,
