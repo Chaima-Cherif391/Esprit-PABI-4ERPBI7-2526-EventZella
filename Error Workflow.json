@@ -1,0 +1,93 @@
+{
+  "name": "Error Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        16
+      ],
+      "id": "0a3a374c-4065-4445-9cc7-1f0ae98dddd0",
+      "name": "Error Trigger",
+      "retryOnFail": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = $input.first().json;\n\nreturn [\n  {\n    json: {\n      workflow: err.workflow?.name || \"Unknown workflow\",\n      node: err.execution?.lastNodeExecuted || \"Unknown node\",\n      message: err.execution?.error?.message || \"No error message\",\n      stack: err.execution?.error?.stack || \"No stack trace\",\n      execution_id: err.execution?.id,\n      mode: err.execution?.mode,\n      url: err.execution?.url,\n\n      time: new Date().toLocaleString(),\n\n      severity: \"HIGH\"\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "39e72062-cbdf-48be-8511-bfb64444e3ed",
+      "name": "Code in JavaScript8"
+    },
+    {
+      "parameters": {
+        "fromEmail": "mariem.chouchene@esprit.tn",
+        "toEmail": "mariem.chouchene@esprit.tn",
+        "subject": "=🚨 {{$json.severity}} ERROR - {{$json.workflow}}",
+        "html": "=<h2 style=\"color:red;\">🚨 Workflow Error Detected</h2>\n\n<p><strong>Workflow:</strong> {{$json.workflow}}</p>\n<p><strong>Node:</strong> {{$json.node}}</p>\n<p><strong>Execution ID:</strong> {{$json.execution_id}}</p>\n<p><strong>Mode:</strong> {{$json.mode}}</p>\n<p><strong>Time:</strong> {{$json.time}}</p>\n\n<hr>\n\n<p><strong>Error Message:</strong></p>\n<pre style=\"background:#f4f4f4;padding:10px;border-radius:5px;\">\n{{$json.message}}\n</pre>\n\n<p><strong>Stack Trace:</strong></p>\n<pre style=\"background:#f4f4f4;padding:10px;border-radius:5px;\">\n{{$json.stack}}\n</pre>\n\n<hr>\n\n<p>\n👉 <a href=\"{{$json.url}}\" target=\"_blank\">\nOpen Execution in n8n\n</a>\n</p>\n\n<hr>\n\n<p style=\"color:gray;\">n8n BI Monitoring System</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        176,
+        0
+      ],
+      "id": "0050065b-0bc8-46e4-8f5b-f3d62dcea977",
+      "name": "📩 Email Alert1",
+      "webhookId": "08510b06-486b-4d28-8c1a-879d2bc15e24",
+      "notesInFlow": true,
+      "credentials": {
+        "smtp": {
+          "id": "XM36fGnBixJSir5P",
+          "name": "SMTP account"
+        }
+      },
+      "notes": "Sends email notification for high-risk customers."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript8": {
+      "main": [
+        [
+          {
+            "node": "📩 Email Alert1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9c57237f-d265-4117-8898-e0d5b3359ae9",
+  "meta": {
+    "instanceId": "0a13205f11d55b3b3a750f5918219c63703848ed15a914fe594ca48c6320599f"
+  },
+  "id": "qcc7KDOF6Pk86bbT",
+  "tags": []
+}

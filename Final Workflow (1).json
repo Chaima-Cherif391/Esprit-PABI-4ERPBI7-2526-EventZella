@@ -1,0 +1,1703 @@
+{
+  "name": "Final Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT TOP 1\n\n    -- 🔹 FEATURES PRINCIPALES\n    f.price,\n    f.marketing_spend,\n    f.market_count,\n    f.nbr_reservations,\n    f.nbr_visitors,\n    l.city,\n    l.country,\n\n    -- 🔹 EVENT DATE\n    e.event_date,\n\n    -- 🔥 FULL NAME (corrigé proprement)\n    LTRIM(RTRIM(\n        ISNULL(b.first_name, '') +\n        CASE \n            WHEN b.first_name IS NOT NULL AND b.last_name IS NOT NULL \n            THEN ' ' ELSE '' \n        END +\n        ISNULL(b.last_name, '')\n    )) AS full_name,\n\n    -- 🔹 FEATURES TEMPORELLES\n    MONTH(e.event_date) AS month,\n    YEAR(e.event_date) AS year,\n\n    CASE \n        WHEN MONTH(e.event_date) IN (6,7,8) THEN 1\n        ELSE 0\n    END AS is_summer,\n\n    -- 🔹 DIMENSIONS\n    ev.rating,\n    t.trend_score,\n\n    -- 🔹 FEATURES DERIVÉES\n    (f.price * 1.0) AS entertainer_price,\n\n    COUNT(f.id_event) OVER (PARTITION BY f.market_count) AS nb_events,\n\n    (f.marketing_spend * 1.0 / NULLIF(f.price, 0)) AS marketing_ratio\n\nFROM event_DWH.dbo.FACT_VENTES f\n\nLEFT JOIN event_DWH.dbo.Dim_Event e\n    ON f.id_event = e.id_event\n\nLEFT JOIN event_DWH.dbo.DIM_EVALUATION ev\n    ON f.id_evaluation = ev.id_evaluation\n\nLEFT JOIN event_DWH.dbo.Dim_Trends t\n    ON f.id_trend = t.id_trend\n\nLEFT JOIN event_DWH.dbo.Dim_Beneficiary b\n    ON f.id_beneficiary = b.id_beneficiary\n\nLEFT JOIN event_DWH.dbo.Dim_Localisation l\n    ON f.id_localisation = l.id_localisation;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        -1760,
+        240
+      ],
+      "id": "64261f2c-ff49-4995-ba32-a4ee5b8abb4b",
+      "name": "📊 SQL Data Extraction  ",
+      "notesInFlow": true,
+      "credentials": {
+        "microsoftSql": {
+          "id": "gHv4U8Dmv8L04vlu",
+          "name": "Microsoft SQL account"
+        }
+      },
+      "disabled": true,
+      "notes": "Loads data from FACT_VENTES"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "let pred = $json.prediction;\nlet prob = Number($json.probability) || 0;\n\n// 🎯 Status\nlet status = pred === 1 ? \"Loyal Customer\" : \"Not Loyal\";\n\n// 🎯 Confidence %\nlet confidence = (prob * 100).toFixed(1);\n\n// 🎯 Interpretation\nlet interpretation = \"\";\n\nif (prob > 0.7) {\n  interpretation = \"High confidence prediction\";\n} else if (prob > 0.5) {\n  interpretation = \"Moderate confidence\";\n} else {\n  interpretation = \"Low confidence\";\n}\n\n// 🔥 FULL NAME\nlet full_name = $json.full_name;\nif (!full_name || full_name.trim() === \"\") {\n  full_name = \"Unknown Customer\";\n}\n\nreturn {\n  json: {\n    ...$json,\n    full_name,\n    customer_status: status,\n    confidence: confidence + \"%\",\n    confidence_value: Number(confidence),\n    interpretation\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        0
+      ],
+      "id": "27ca708d-aa79-495d-9bdb-c10fa9cc36f8",
+      "name": "⚠️ Monitoring",
+      "notesInFlow": true,
+      "notes": "Logs predictions for analysis"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"price\": {{$json.price}},\n  \"marketing_spend\": {{$json.marketing_spend}},\n  \"market_count\": {{$json.market_count}},\n  \"trend_score\": {{$json.trend_score}},\n  \"rating\": {{$json.rating}},\n  \"entertainer_price\": {{$json.entertainer_price}},\n  \"nb_events\": {{$json.nb_events}},\n   \"nb_reservations\": {{$json[\"nbr_reservations\"]}},\n  \"nb_visitors\": {{$json[\"nbr_visitors\"]}},\n  \"month\": {{$json.month}},\n  \"year\": {{$json.year}},\n  \"is_summer\": {{$json.is_summer}},\n  \"marketing_ratio\": {{$json.marketing_ratio}}\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1520,
+        16
+      ],
+      "id": "6b5a0efc-3e3b-412a-b274-92e0e47d84ee",
+      "name": "🔄 Data Preparation",
+      "notesInFlow": true,
+      "notes": "Prepares data for ML"
+    },
+    {
+      "parameters": {
+        "fromEmail": "mariem.chouchene@esprit.tn",
+        "toEmail": "mariem.chouchene@esprit.tn",
+        "subject": "🚨 Low Fidelity Alert",
+        "html": "=<h2>🚨 High Risk Customers Report</h2>\n\n<p><b>Total:</b> {{$json.count}}</p>\n\n<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\" style=\"border-collapse:collapse;\">\n  <tr style=\"background:#f2f2f2;\">\n    <th>Customer</th>\n    <th>Status</th>\n    <th>Risk Score</th>\n    <th>Decision</th>\n  </tr>\n\n  {{$json.table}}\n</table>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        96,
+        64
+      ],
+      "id": "6cec7a12-25a7-48c1-9fc7-456562ecd87b",
+      "name": "📩 Email Alert",
+      "webhookId": "08510b06-486b-4d28-8c1a-879d2bc15e24",
+      "notesInFlow": true,
+      "credentials": {
+        "smtp": {
+          "id": "XM36fGnBixJSir5P",
+          "name": "SMTP account"
+        }
+      },
+      "notes": "Sends email notification for high-risk customers."
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "let confidence = Number($json.confidence_value) || 0;\nlet status = $json.customer_status;\n\n// 🔥 SCORE DE RISQUE (plus la confiance est basse → plus le risque est élevé)\nlet risk_score = 100 - confidence;\n\n// 🔥 Ajustement selon le type client\nif (status === \"Not Loyal\") {\n  risk_score += 10;\n}\n\n// 🔥 Normalisation\nrisk_score = Math.max(0, Math.min(100, risk_score));\n\n// 🎯 Niveau de risque\nlet risk_level = \"\";\n\nif (risk_score > 70) {\n  risk_level = \"HIGH RISK\";\n} else if (risk_score > 40) {\n  risk_level = \"MEDIUM RISK\";\n} else {\n  risk_level = \"LOW RISK\";\n}\n\n// 🚨 Urgence\nlet urgency = \"Normal\";\n\nif (risk_score > 85) {\n  urgency = \"Critical\";\n} else if (risk_score > 70) {\n  urgency = \"High\";\n} else if (risk_score > 40) {\n  urgency = \"Medium\";\n}\n\n// 💡 Decision (simple et propre)\nlet decision = \"\";\n\nif (status === \"Not Loyal\" && risk_score > 70) {\n  decision = \"🚨 Immediate retention action required\";\n}\nelse if (status === \"Not Loyal\") {\n  decision = \"⚠️ Monitor customer behavior\";\n}\nelse {\n  decision = \"✅ Customer stable\";\n}\n\n// 📊 Recommendation\nlet recommendation = \"\";\n\nif (risk_score > 70) {\n  recommendation = \"Contact customer immediately\";\n}\nelse if (risk_score > 40) {\n  recommendation = \"Monitor engagement and send offers\";\n}\nelse {\n  recommendation = \"No action needed\";\n}\n\nreturn {\n  json: {\n    ...$json,\n    risk_score,\n    risk_level,\n    urgency,\n    decision,\n    recommendation\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        0
+      ],
+      "id": "4efb6c18-c786-4fc8-829c-0eea1c036e40",
+      "name": "Risk Scoring",
+      "notesInFlow": true,
+      "notes": "Calculates customer risk score and determines urgency and action."
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2000,
+        240
+      ],
+      "id": "ce305957-0387-4a71-a8cd-29fd402f8f3d",
+      "name": "Schedule Trigger",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -944,
+        32
+      ],
+      "id": "ee4d067d-1495-4005-8b21-606d5e48abe1",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5000/predict?model=classification",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=[\n  {\n    \"price\": {{$json.price}},\n    \"marketing_spend\": {{$json.marketing_spend}},\n    \"market_count\": {{$json.market_count}},\n    \"nbr_reservations\": {{$json.nbr_reservations}},\n    \"nbr_visitors\": {{$json.nbr_visitors}},\n    \"rating\": {{$json.rating}},\n    \"trend_score\": {{$json.trend_score}}\n  }\n]",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1152,
+        -96
+      ],
+      "id": "f348abb5-32ac-45a5-8347-b96d5bc3b6b2",
+      "name": "Customer Loyalty Prediction",
+      "notesInFlow": true,
+      "executeOnce": false,
+      "notes": "Predicts whether the customer is loyal or not using ML model."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "87e782ad-c6a8-43e1-b6be-612c1b1db6f4",
+              "leftValue": "={{$json.risk_level}}",
+              "rightValue": "HIGH RISK",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -320,
+        80
+      ],
+      "id": "d614898d-6934-4dce-945b-a2bbd6aeaf09",
+      "name": "High Risk Filter",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Filters customers with high risk score for alerting."
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔥 trier par risque (du plus critique au moins critique)\nitems.sort((a, b) => (b.json.risk_score || 0) - (a.json.risk_score || 0));\n\nlet htmlRows = \"\";\n\nfor (const item of items) {\n  const d = item.json;\n\n  // 🛡 fallback valeurs\n  const name = d.full_name || \"Unknown\";\n  const status = d.customer_status || \"-\";\n  const risk = d.risk_score || 0;\n  const decision = d.decision || \"-\";\n\n  // 🎨 couleur selon risque\n  let color = \"green\";\n  if (risk > 70) color = \"red\";\n  else if (risk > 40) color = \"orange\";\n\n  htmlRows += `\n    <tr>\n      <td>${name}</td>\n      <td>${status}</td>\n      <td style=\"color:${color}; font-weight:bold;\">${risk}</td>\n      <td>${decision}</td>\n    </tr>\n  `;\n}\n\nreturn [{\n  json: {\n    table: htmlRows,\n    count: items.length\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        64
+      ],
+      "id": "dabab5b8-61e0-4986-b97f-1b4e0392d7ed",
+      "name": "Prepare Email Report",
+      "notesInFlow": true,
+      "notes": "Prepare Email Report"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1biKepM8Y2DwwtqiPSqdKnObM7ORJkUY6S746PRCci1w",
+          "mode": "list",
+          "cachedResultName": "Customer_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1biKepM8Y2DwwtqiPSqdKnObM7ORJkUY6S746PRCci1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1biKepM8Y2DwwtqiPSqdKnObM7ORJkUY6S746PRCci1w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ new Date().toISOString() }}",
+            "confidence": "={{$json.confidence}}",
+            "risk_score": "={{$json.risk_score}}",
+            "risk_level": "={{$json.risk_level}}",
+            "full_name": "={{$json.full_name}}",
+            "urgency": "={{$json.urgency}}",
+            "recommendation": "={{$json.recommendation}}",
+            "customer_status": "={{$json.customer_status}}"
+          },
+          "matchingColumns": [
+            "date"
+          ],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customer_status",
+              "displayName": "customer_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "risk_score",
+              "displayName": "risk_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "risk_level",
+              "displayName": "risk_level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "urgency",
+              "displayName": "urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "recommendation",
+              "displayName": "recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -336,
+        -112
+      ],
+      "id": "908d0248-565f-4ad8-bb01-3f81041743e8",
+      "name": "Log Customer Risk",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "S65xPfQTuLc0PPwk",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Stores customer risk data into Google Sheets for tracking and reporting."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5000/predict?model=clustering",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"market_count\": {{$json.market_count}},\n  \"nb_events\": {{$json.nb_events}},\n  \"month\": {{$json.month}},\n  \"year\": {{$json.year}},\n  \"is_summer\": {{$json.is_summer}},\n  \"marketing_ratio\": {{$json.marketing_ratio}},\n  \"price\": {{$json.price}}\n\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1152,
+        240
+      ],
+      "id": "e7fb277e-55b5-41f5-9004-0289e931e9d1",
+      "name": "📊 Cluster Low-Potential Regions",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const d = item.json;\n\n  // 🔹 Conversion rate (très important en BI)\n  const visitors = d.nbr_visitors || 1;\n  const reservations = d.nbr_reservations || 0;\n  const conversion = reservations / visitors; // ratio réel\n\n  // 🔹 Score équilibré (normalisé)\n  const score =\n    (conversion * 100) * 0.5 +                 // performance business\n    (d.rating || 0) * 5 * 0.2 +                // qualité\n    (d.trend_score || 0) * 0.1 -               // tendance\n    (d.marketing_spend || 0) / 1000 * 0.1 -    // coût marketing réduit\n    (d.entertainer_price || 0) / 1000 * 0.1;   // coût produit réduit\n\n  // 🔹 Classification logique\n  let level = \"HIGH\";\n  if (score < 40) level = \"LOW\";\n  else if (score < 70) level = \"MEDIUM\";\n\n  return {\n    json: {\n      ...d,\n      potential_score: score,\n      potential_level: level,\n\n      // 🔹 Texte Gemini propre\n      gemini_text: `City ${d.city} belongs to cluster ${d.cluster}. \nIt has ${visitors} visitors and ${reservations} reservations. \nConversion rate: ${(conversion * 100).toFixed(2)}%. \nPotential score: ${score.toFixed(2)} (${level}).`\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        336
+      ],
+      "id": "7b368a6d-d54c-4664-ad99-2bd88cf08c51",
+      "name": "⚙️ Format Data for AI Analysis",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Transform and structure data before sending to AI model"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBwTFfnO9pNAPQJuuUm4OlTktVj9VpiQJU",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are a BI expert.\\n\\nCity: {{$json.city}}\\nCluster: {{$json.cluster}}\\nScore: {{$json.potential_score}}\\nLevel: {{$json.potential_level}}\\nVisitors: {{$json.nbr_visitors}}\\nReservations: {{$json.nbr_reservations}}\\n\\nTask:\\nProvide a clear and structured BI insight.\\n\\nRules:\\n- Keep it concise but informative\\n- Use business-oriented language\\n- Avoid unnecessary explanations\\n\\nFormat (strict):\\n- Summary: <1–2 sentences>\\n- Why: <1–2 key reasons>\\n- Action: <2–3 practical recommendations>\\n\\nKeep the answer well-structured and easy to read.\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -288,
+        336
+      ],
+      "id": "08aa508f-6e1f-43e8-a345-07bc867a4d4f",
+      "name": "🧠 AI Insights Generation",
+      "notesInFlow": true,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "PqhFGolS8IGRKJoq",
+          "name": "Unnamed credential"
+        }
+      },
+      "disabled": true,
+      "notes": "Generate business insights using AI (LLM / analysis engine)"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -64,
+        336
+      ],
+      "id": "34c6d930-4833-4127-a330-1277f90e512b",
+      "name": "🔗 Combine ML + AI Results",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Merge clustering output with AI-generated insights"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\n\n// 🔹 Gemini text\nconst rawText = item.candidates?.[0]?.content?.parts?.[0]?.text || \"No insight available.\";\n\n// 🔹 Data\nconst city = item.city || \"Unknown\";\nconst cluster = item.cluster ?? \"-\";\nconst score = item.potential_score ?? \"-\";\nconst level = item.potential_level || \"-\";\n\n// 🔹 Clean text\nconst insight = rawText\n  .replace(/\\*\\*/g, '')\n  .replace(/###/g, '')\n  .replace(/\\n/g, '<br>');\n\n// 🔹 Dynamic color\nconst levelColor =\n  level === \"HIGH\" ? \"#2e7d32\" :\n  level === \"MEDIUM\" ? \"#f9a825\" :\n  \"#e53935\";\n\n// 🔹 HTML DESIGN\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  margin: 0;\n  background: #f4f6fb;\n}\n\n.container {\n  max-width: 900px;\n  margin: 30px auto;\n  background: #fff;\n  border-radius: 16px;\n  overflow: hidden;\n  box-shadow: 0 6px 18px rgba(0,0,0,0.1);\n}\n\n.header {\n  background: linear-gradient(135deg, #1a237e, #3949ab);\n  color: white;\n  padding: 30px;\n}\n\n.header h1 {\n  margin: 0;\n}\n\n.content {\n  padding: 30px;\n}\n\n.grid {\n  display: flex;\n  gap: 15px;\n  margin-bottom: 25px;\n}\n\n.card {\n  flex: 1;\n  background: #f8faff;\n  border: 1px solid #e3e8f2;\n  border-radius: 12px;\n  padding: 18px;\n  text-align: center;\n}\n\n.card h3 {\n  margin: 0;\n  font-size: 13px;\n  color: #777;\n}\n\n.card .value {\n  font-size: 20px;\n  font-weight: bold;\n  color: #1a237e;\n}\n\n.level {\n  color: white;\n  padding: 6px 12px;\n  border-radius: 20px;\n  background: ${levelColor};\n  display: inline-block;\n}\n\n.insight {\n  background: #fff5f5;\n  border-left: 6px solid ${levelColor};\n  padding: 20px;\n  border-radius: 10px;\n}\n\n.footer {\n  text-align: center;\n  font-size: 12px;\n  color: #999;\n  padding: 20px;\n}\n</style>\n</head>\n\n<body>\n\n<div class=\"container\">\n\n  <div class=\"header\">\n    <h1>BI Insight Report</h1>\n    <p>${new Date().toLocaleDateString('fr-FR')}</p>\n  </div>\n\n  <div class=\"content\">\n\n    <div class=\"grid\">\n      <div class=\"card\">\n        <h3>City</h3>\n        <div class=\"value\">${city}</div>\n      </div>\n\n      <div class=\"card\">\n        <h3>Cluster</h3>\n        <div class=\"value\">${cluster}</div>\n      </div>\n\n      <div class=\"card\">\n        <h3>Score</h3>\n        <div class=\"value\">\n          ${typeof score === \"number\" ? score.toFixed(2) : score}\n        </div>\n      </div>\n\n      <div class=\"card\">\n        <h3>Level</h3>\n        <div class=\"value\">\n          <span class=\"level\">${level}</span>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"insight\">\n      ${insight}\n    </div>\n\n  </div>\n\n  <div class=\"footer\">\n    Generated automatically from BI workflow\n  </div>\n\n</div>\n\n</body>\n</html>\n`;\n\n// 🔹 Return for PDFShift\nreturn [\n  {\n    json: {\n      pdfshift_body: {\n        source: html,\n        landscape: false,\n        use_print: false,\n        format: \"A4\"\n      }\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        336
+      ],
+      "id": "d038b731-12b1-4acb-a396-743a83a8069b",
+      "name": "📄 Build Final Report",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Format final output into a readable report (JSON / HTML / text)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdfshift.io/v3/convert/pdf",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{JSON.stringify($json.pdfshift_body)}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        304,
+        336
+      ],
+      "id": "078af09e-b9a5-44ae-9aea-a520874a6f53",
+      "name": "🧠 Generate PDF Report (Gemini AI)",
+      "notesInFlow": true,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "PqhFGolS8IGRKJoq",
+          "name": "Unnamed credential"
+        }
+      },
+      "disabled": true,
+      "notes": "Generate a structured PDF report using Gemini AI based on clustering and analytics results"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT  TOP 10\n    FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM') AS month,\n    SUM(nbr_reservations) AS nbr_reservations\nFROM FACT_VENTES\nWHERE Date_PK IS NOT NULL\nGROUP BY FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM')\nORDER BY month ASC",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        -1776,
+        688
+      ],
+      "id": "372a4b42-7054-4e83-88d5-7aabe5aa1aec",
+      "name": "📊 Load Historical Data",
+      "notesInFlow": true,
+      "credentials": {
+        "microsoftSql": {
+          "id": "gHv4U8Dmv8L04vlu",
+          "name": "Microsoft SQL account"
+        }
+      },
+      "disabled": true,
+      "notes": "Retrieve monthly reservations data for forecasting"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst data = items.map(item => ({\n  month: item.json.month,\n  nbr_reservations: parseInt(item.json.nbr_reservations)\n}));\n\nreturn [{ json: { data: data } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1552,
+        688
+      ],
+      "id": "d68e9959-48a6-4472-a9b7-2fbdb898f2c1",
+      "name": "⚙️ Preprocess Time Series",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Format and structure data for time series forecasting model"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5000/api/timeseries/forecast ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1360,
+        688
+      ],
+      "id": "d193dcf8-8b1d-4738-b55e-ddabc91c9396",
+      "name": "📈 Forecast Future Demand",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Call API to generate future reservation forecasts (ARIMA / ETS)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = $input.first().json;\n\nconst forecast = result.forecast_next_months;\nconst months = JSON.stringify(forecast.map(f => f.month));\nconst values = JSON.stringify(forecast.map(f => f.predicted_reservations));\n\nconst html = `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"><\\/script>\n</head>\n<body style=\"background:#1a1a2e; padding:20px; font-family:Arial\">\n  <h2 style=\"color:white; text-align:center\">📈 Forecast Réservations - ${result.best_model}</h2>\n  <h4 style=\"color:#aaa; text-align:center\">MAPE: ${result.mape_arima}% | MAE: ${result.mae_arima}</h4>\n\n  <table style=\"color:white; margin:auto; border-collapse:collapse; margin-bottom:20px\">\n    <tr style=\"background:#00d4ff; color:black\">\n      <th style=\"padding:10px 20px\">Mois</th>\n      <th style=\"padding:10px 20px\">Réservations prévues</th>\n    </tr>\n    ${forecast.map((f, i) => `\n    <tr style=\"background:${i % 2 === 0 ? '#16213e' : '#0f3460'}\">\n      <td style=\"padding:10px 20px; text-align:center\">${f.month}</td>\n      <td style=\"padding:10px 20px; text-align:center\">${f.predicted_reservations.toLocaleString()}</td>\n    </tr>`).join('')}\n  </table>\n\n  <canvas id=\"chart\"></canvas>\n\n  <script>\n    new Chart(document.getElementById('chart'), {\n      type: 'line',\n      data: {\n        labels: ${months},\n        datasets: [{\n          label: 'Réservations prévues',\n          data: ${values},\n          borderColor: '#00d4ff',\n          backgroundColor: 'rgba(0,212,255,0.1)',\n          borderWidth: 3,\n          pointRadius: 6,\n          fill: true,\n          tension: 0.4\n        }]\n      },\n      options: {\n        plugins: { legend: { labels: { color: 'white' } } },\n        scales: {\n          x: { ticks: { color: 'white' }, grid: { color: '#333' } },\n          y: { ticks: { color: 'white' }, grid: { color: '#333' } }\n        }\n      }\n    });\n  <\\/script>\n</body>\n</html>`;\n\nconst encoded = Buffer.from(html).toString('base64');\nconst dataUrl = `data:text/html;base64,${encoded}`;\n\nreturn [{\n  json: {\n    best_model: result.best_model,\n    mape_arima: result.mape_arima,\n    mae_arima: result.mae_arima,\n    forecast: result.forecast_next_months,\n    open_in_browser: dataUrl\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1104,
+        688
+      ],
+      "id": "80e72c76-881b-4b1b-ba7f-7d4d611effa0",
+      "name": "📄 Build Forecast Dashboard",
+      "disabled": true,
+      "notes": "Format forecast results into chart/table for visualization"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT TOP 100\n    f.price,\n    f.nbr_reservations,\n    f.nbr_visitors,\n    f.marketing_spend,\n    f.market_count,\n    ev.rating\nFROM FACT_VENTES f\nLEFT JOIN Dim_Evaluation ev ON f.id_evaluation = ev.id_evaluation\nWHERE f.price IS NOT NULL",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        -1776,
+        928
+      ],
+      "id": "28424886-e20e-4a6c-9934-2288560362f1",
+      "name": "📊 Extract Anomaly Data",
+      "notesInFlow": true,
+      "credentials": {
+        "microsoftSql": {
+          "id": "gHv4U8Dmv8L04vlu",
+          "name": "Microsoft SQL account"
+        }
+      },
+      "disabled": true,
+      "notes": "Retrieve historical data for anomaly detection"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1584,
+        928
+      ],
+      "id": "f2330986-cc6c-4f70-bf99-884f61e87e0c",
+      "name": "⚙️ Aggregate  Data",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Group and prepare data for anomaly detection model"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5000/api/anomalies/detect",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type ",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($input.first().json.data) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1344,
+        928
+      ],
+      "id": "ce18803f-d403-4db4-a1d2-1cc5e67a7992",
+      "name": "🚨 Run Anomaly Detection Model",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Call API to detect anomalies using ML models (Isolation Forest / LOF)"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "predict-price",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2016,
+        1168
+      ],
+      "id": "2869caf7-8f4a-4456-b4a1-1f82098db20b",
+      "name": "🌐 Receive Pricing Request",
+      "webhookId": "6b0279bf-25b3-42c0-88c2-e5507b222fab",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Receive incoming request for optimal price prediction"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      market_count: $json.body.market_count,\n      nbr_visitors: $json.body.nbr_visitors,\n      nbr_reservations: $json.body.nbr_reservations,\n      marketing_spend: $json.body.marketing_spend,\n      rating: $json.body.rating,\n      trend_score: $json.body.trend_score,\n      growth_rate_pct: $json.body.growth_rate_pct,\n      capacity_min: $json.body.capacity_min,\n      capacity_max: $json.body.capacity_max,\n      season_encoded: $json.body.season_encoded,\n      event_type_encoded: $json.body.event_type_encoded,\n      venue_type_encoded: $json.body.venue_type_encoded,\n      city_encoded: $json.body.city_encoded\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1824,
+        1168
+      ],
+      "id": "24e92a52-0dd5-4d08-9e04-3635bf524423",
+      "name": "⚙️ Prepare Pricing Features",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Format input data and extract features for price prediction model"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5000/predict?model=regression",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"market_count\": {{$json.market_count}},\n  \"nbr_visitors\": {{$json.nbr_visitors}},\n  \"nbr_reservations\": {{$json.nbr_reservations}},\n  \"marketing_spend\": {{$json.marketing_spend}},\n  \"rating\": {{$json.rating}},\n  \"trend_score\": {{$json.trend_score}},\n  \"growth_rate_pct\": {{$json.growth_rate_pct}},\n  \"capacity_min\": {{$json.capacity_min}},\n  \"capacity_max\": {{$json.capacity_max}},\n  \"season_encoded\": {{$json.season_encoded}},\n  \"event_type_encoded\": {{$json.event_type_encoded}},\n  \"venue_type_encoded\": {{$json.venue_type_encoded}},\n  \"city_encoded\": {{$json.city_encoded}}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1616,
+        1168
+      ],
+      "id": "cc13d57d-c5f9-4832-93df-cea42fdb9c4b",
+      "name": "💰 Predict Optimal Price (ML Model)",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Call ML API to predict optimal service price based on features"
+    },
+    {
+      "parameters": {
+        "jsCode": "const predicted = $json.predicted_price;\n\n// récupérer les données d'entrée depuis le Webhook\nconst input = $('🌐 Receive Pricing Request').first().json.body;\n\nconst market_count = Number(input.market_count || 0);\nconst nbr_visitors = Number(input.nbr_visitors || 0);\nconst nbr_reservations = Number(input.nbr_reservations || 0);\nconst marketing_spend = Number(input.marketing_spend || 0);\nconst rating = Number(input.rating || 0);\nconst trend_score = Number(input.trend_score || 0);\nconst growth_rate_pct = Number(input.growth_rate_pct || 0);\n\n// calcul simple de demande\nlet demand = 'Medium';\nif (nbr_reservations === 0 || nbr_visitors < 500) {\n  demand = 'Low';\n} else if (nbr_reservations > 200 && nbr_visitors > 3000 && rating >= 4) {\n  demand = 'High';\n}\n\n// calcul simple du risque\nlet risk = 'Medium';\nif (market_count > 50 || nbr_reservations === 0 || rating < 3) {\n  risk = 'High';\n} else if (market_count < 10 && nbr_reservations > 150 && rating >= 4) {\n  risk = 'Low';\n}\n\n// calcul simple de confiance\nlet confidence = 70;\n\nif (nbr_reservations === 0) confidence -= 25;\nif (market_count > 100) confidence -= 15;\nif (rating >= 4) confidence += 10;\nif (trend_score > 0) confidence += 5;\nif (growth_rate_pct > 0) confidence += 5;\n\nconfidence = Math.max(20, Math.min(confidence, 95));\n\n// prix recommandé\nlet recommended_price = predicted;\n\nif (demand === 'High' && risk === 'Low') {\n  recommended_price = predicted * 1.05;\n} else if (demand === 'Low' || risk === 'High') {\n  recommended_price = predicted * 0.95;\n}\n\n// recommandation texte\nlet recommendation = 'Keep a balanced pricing strategy.';\n\nif (demand === 'Low' || risk === 'High') {\n  recommendation = 'Lower or maintain the price. Market conditions are weak or risky.';\n} else if (demand === 'High' && risk === 'Low') {\n  recommendation = 'A slight price increase is recommended due to strong demand.';\n}\n\nreturn [\n  {\n    json: {\n      predicted_price: predicted,\n      recommended_price: Math.round(recommended_price),\n      confidence_score: Math.round(confidence),\n      expected_demand: demand,\n      risk_level: risk,\n      strategic_recommendation: recommendation,\n      scenarios: {\n        conservative: Math.round(predicted * 0.90),\n        balanced: Math.round(predicted),\n        aggressive: Math.round(predicted * 1.05)\n      }\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1408,
+        1168
+      ],
+      "id": "ed12a0ad-6803-47ee-99c0-6e97dcaf3383",
+      "name": "📄 Format Pricing Response",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Structure prediction result into clean response (price, insights)"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -1120,
+        1168
+      ],
+      "id": "0980ac4b-1106-42b4-9eed-52c90cde1371",
+      "name": "📤 Send Pricing Response",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Return predicted optimal price to application"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const d = item.json;\n\n  const actual = d.nbr_reservations || 0;\n  const expected = d.predicted_reservations || 1;\n\n  const deviation = actual - expected;\n  const deviation_pct = (deviation / expected) * 100;\n\n  const is_anomaly = Math.abs(deviation_pct) > 30;\n\n  let severity = \"LOW\";\n  if (Math.abs(deviation_pct) > 50) severity = \"HIGH\";\n  else if (Math.abs(deviation_pct) > 30) severity = \"MEDIUM\";\n\n  return {\n    json: {\n      ...d,\n      deviation,\n      deviation_pct,\n      is_anomaly,\n      severity\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1104,
+        928
+      ],
+      "id": "55e6b028-fccc-45fb-963f-a717c84c6379",
+      "name": "Code in JavaScript",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  return {\n    json: {\n      city: item.json.city || \"Unknown\",\n      cluster: item.json.cluster,\n      nbr_visitors: item.json.nbr_visitors,\n      nbr_reservations: item.json.nbr_reservations\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        784
+      ],
+      "id": "c447e274-5473-40c3-9d58-8cd3033cc87b",
+      "name": "Code in JavaScript1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const d = item.json;\n\n  return {\n    json: {\n      anomalies_detected: d.consensus?.anomalies_detected || 0,\n      anomalies_pct: d.consensus?.anomalies_pct || 0,\n      anomaly_main_feature: d.feature_comparison?.[0]?.feature || \"N/A\",\n      anomaly_impact: d.feature_comparison?.[0]?.difference_pct || 0\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        1136
+      ],
+      "id": "716c7e92-9eaa-4b1a-bbba-fa0739f0ffb3",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  return {\n    json: {\n      best_model: item.json.best_model,\n      mape: item.json.mape_arima,\n      mae: item.json.mae_arima,\n      forecast: item.json.forecast_next_months\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        960
+      ],
+      "id": "d68e1beb-6d5c-450a-94d9-82fa8bdd86db",
+      "name": "Code in JavaScript3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        96,
+        672
+      ],
+      "id": "86e1d273-bfcd-4f01-bb2b-368d93882eb0",
+      "name": "Merge1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\n\n// 🔹 KPI\nconst visitors = d.nbr_visitors ?? d.visitors ?? 0;\nconst reservations = d.nbr_reservations ?? d.reservations ?? 0;\n\n// 🔹 conversion rate\nconst conversion_rate = visitors > 0 ? reservations / visitors : 0;\n\n// 🔹 classification\nlet performance = \"\";\nlet recommendation = \"\";\n\nif ((d.anomalies_pct ?? d.anomaly_rate ?? 0) > 5 || (d.mape ?? 0) > 20) {\n  performance = \"Poor Performance\";\n  recommendation = \"Improve data quality and forecasting model.\";\n}\nelse if (conversion_rate < 0.1) {\n  performance = \"Low Conversion\";\n  recommendation = \"Optimize pricing and marketing strategy.\";\n}\nelse {\n  performance = \"Good Performance\";\n  recommendation = \"Maintain strategy and explore upsell opportunities.\";\n}\n\n// 🔹 output FINAL\nreturn [\n  {\n    json: {\n      // KPI\n      city: d.city || \"-\",\n      cluster: d.cluster ?? \"-\",\n\n      visitors: visitors,\n      reservations: reservations,\n      conversion_rate: Number(conversion_rate.toFixed(3)),\n\n      // Anomaly\n      anomalies: d.anomalies_detected ?? d.anomalies ?? 0,\n      anomaly_rate: d.anomalies_pct ?? d.anomaly_rate ?? 0,\n      anomaly_feature: d.anomaly_main_feature ?? d.anomaly_feature ?? \"N/A\",\n\n      // Forecast\n      forecast: d.forecast || [],\n      model: d.best_model ?? d.model ?? \"N/A\",\n      mape: d.mape ?? 0,\n      mae: d.mae ?? 0,\n\n      // 🔥 classification\n      performance_category: performance,\n      recommendation: recommendation\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        896
+      ],
+      "id": "90987688-f4eb-4959-911f-efe9ebfc22bf",
+      "name": "Code in JavaScript4",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        80,
+        896
+      ],
+      "id": "544f35ab-56ac-4270-831d-b8657e0c250c",
+      "name": "Merge2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdfshift.io/v3/convert/pdf",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  source: $json.source,\n  format: \"A4\",\n  landscape: false,\n  use_print: false\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1264,
+        896
+      ],
+      "id": "55600429-d014-46bc-a79c-8e5d73208ef9",
+      "name": "🧠 Generate PDF Report (Gemini AI)1",
+      "notesInFlow": true,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "PqhFGolS8IGRKJoq",
+          "name": "Unnamed credential"
+        }
+      },
+      "disabled": true,
+      "notes": "Generate a structured PDF report using Gemini AI based on clustering and analytics results"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBwTFfnO9pNAPQJuuUm4OlTktVj9VpiQJU",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are a BI expert.\\n\\nCity: {{$json.city}}\\nCluster: {{$json.cluster}}\\nVisitors: {{$json.visitors}}\\nReservations: {{$json.reservations}}\\n\\nAnomalies: {{$json.anomalies}} detected ({{$json.anomaly_rate}}%)\\nMain issue: {{$json.anomaly_feature}}\\n\\nForecast Model: {{$json.model}}\\nMAPE: {{$json.mape}}\\n\\nTask:\\nProvide a professional business analysis with insights and recommendations.\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        544,
+        896
+      ],
+      "id": "ddf12c36-062d-40e5-88a6-b0a44183635c",
+      "name": "🧠 AI Insights Generation1",
+      "notesInFlow": true,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "PqhFGolS8IGRKJoq",
+          "name": "Unnamed credential"
+        }
+      },
+      "disabled": true,
+      "notes": "Generate business insights using AI (LLM / analysis engine)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\n\n// 🔥 extraction AI robuste (très important)\nconst ai =\n  d.candidates?.[0]?.content?.parts?.[0]?.text ||\n  d.ai_insight ||\n  \"No AI insight\";\n\n// 🔹 sécurisation forecast\nconst forecast = Array.isArray(d.forecast) ? d.forecast : [];\n\n// 🔹 output final CLEAN\nreturn [\n  {\n    json: {\n      // KPI\n      city: d.city || \"-\",\n      cluster: d.cluster ?? \"-\",\n\n      visitors: d.visitors ?? 0,\n      reservations: d.reservations ?? 0,\n      conversion_rate: d.conversion_rate ?? 0,\n\n      // Anomaly\n      anomalies: d.anomalies ?? 0,\n      anomaly_rate: d.anomaly_rate ?? 0,\n      anomaly_feature: d.anomaly_feature || \"N/A\",\n\n      // Forecast\n      forecast: forecast,\n      model: d.model || \"N/A\",\n      mape: d.mape ?? 0,\n      mae: d.mae ?? 0,\n\n      // 🔥 classification (ne pas perdre !)\n      performance_category: d.performance_category || \"N/A\",\n      recommendation: d.recommendation || \"N/A\",\n\n      // 🔥 AI insight\n      ai_insight: ai\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        896
+      ],
+      "id": "96ee7ad8-5416-4563-95d0-d41a13c1e8b4",
+      "name": "Code in JavaScript5",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\n\n// 🔹 sécurité\nconst forecast = Array.isArray(d.forecast) ? d.forecast : [];\nconst ai = d.ai_insight || \"No AI insight\";\n\n// 🔹 graph\nconst months = JSON.stringify(forecast.map(f => f.month));\nconst values = JSON.stringify(forecast.map(f => f.predicted_reservations));\n\n// 🔹 HTML PRO\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\n\n<style>\nbody {\n  font-family: Arial;\n  background: #0f172a;\n  color: white;\n  padding: 30px;\n}\n\n.container {\n  max-width: 1100px;\n  margin: auto;\n}\n\nh1 {\n  text-align: center;\n  margin-bottom: 30px;\n  color: #38bdf8;\n}\n\n.kpi {\n  display: flex;\n  justify-content: space-between;\n  margin-bottom: 30px;\n}\n\n.card {\n  background: #1e293b;\n  padding: 20px;\n  border-radius: 10px;\n  width: 23%;\n  text-align: center;\n  box-shadow: 0 0 10px rgba(0,0,0,0.3);\n}\n\n.card h3 {\n  color: #38bdf8;\n}\n\n.section {\n  background: #1e293b;\n  padding: 20px;\n  border-radius: 10px;\n  margin-bottom: 30px;\n}\n\n.highlight {\n  color: #facc15;\n  font-weight: bold;\n}\n\ntable {\n  width: 100%;\n  border-collapse: collapse;\n}\n\nth {\n  background: #38bdf8;\n  color: black;\n  padding: 10px;\n}\n\ntd {\n  padding: 10px;\n  text-align: center;\n}\n\ntr:nth-child(even) {\n  background: #0f172a;\n}\n\n</style>\n</head>\n\n<body>\n\n<div class=\"container\">\n\n<h1>📊 BI Automated Report</h1>\n\n<!-- KPI -->\n<div class=\"kpi\">\n  <div class=\"card\"><h3>City</h3><p>${d.city || \"-\"}</p></div>\n  <div class=\"card\"><h3>Cluster</h3><p>${d.cluster ?? \"-\"}</p></div>\n  <div class=\"card\"><h3>Visitors</h3><p>${d.visitors ?? 0}</p></div>\n  <div class=\"card\"><h3>Reservations</h3><p>${d.reservations ?? 0}</p></div>\n</div>\n\n<!-- Classification -->\n<div class=\"section\">\n  <h2>📌 Performance Analysis</h2>\n  <p><span class=\"highlight\">Category:</span> ${d.performance_category || \"N/A\"}</p>\n  <p><span class=\"highlight\">Recommendation:</span> ${d.recommendation || \"N/A\"}</p>\n  <p><span class=\"highlight\">Conversion Rate:</span> ${d.conversion_rate ?? 0}</p>\n</div>\n\n<!-- Anomaly -->\n<div class=\"section\">\n  <h2>⚠️ Anomaly Detection</h2>\n  <p><strong>Detected:</strong> ${d.anomalies ?? 0}</p>\n  <p><strong>Rate:</strong> ${d.anomaly_rate ?? 0}%</p>\n  <p><strong>Main Issue:</strong> ${d.anomaly_feature || \"N/A\"}</p>\n</div>\n\n<!-- Forecast -->\n<div class=\"section\">\n  <h2>📈 Forecast Analysis</h2>\n  <p><strong>Model:</strong> ${d.model || \"N/A\"}</p>\n  <p><strong>MAPE:</strong> ${d.mape ?? 0}</p>\n\n  <table>\n    <tr><th>Month</th><th>Predicted Reservations</th></tr>\n    ${forecast.map(f => `\n      <tr>\n        <td>${f.month}</td>\n        <td>${Math.round(f.predicted_reservations)}</td>\n      </tr>\n    `).join('')}\n  </table>\n\n  <canvas id=\"chart\"></canvas>\n</div>\n\n<!-- AI -->\n<div class=\"section\">\n  <h2>🤖 AI Insights</h2>\n  <p>${ai.replace(/\\\\n/g, \"<br>\")}</p>\n</div>\n\n</div>\n\n<script>\nnew Chart(document.getElementById('chart'), {\n  type: 'line',\n  data: {\n    labels: ${months},\n    datasets: [{\n      label: 'Forecast',\n      data: ${values},\n      borderColor: '#38bdf8',\n      backgroundColor: 'rgba(56,189,248,0.2)',\n      fill: true,\n      tension: 0.4\n    }]\n  },\n  options: {\n    plugins: {\n      legend: { labels: { color: 'white' } }\n    },\n    scales: {\n      x: { ticks: { color: 'white' } },\n      y: { ticks: { color: 'white' } }\n    }\n  }\n});\n</script>\n\n</body>\n</html>\n`;\n\n// 🔹 output PDF API\nreturn [\n  {\n    json: {\n      source: html,\n      format: \"A4\",\n      landscape: false\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        896
+      ],
+      "id": "019593a1-d333-4a86-ade1-1ab2621c3646",
+      "name": "Code in JavaScript6",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        736,
+        896
+      ],
+      "id": "c76aefef-ddf7-4305-b50a-efd51bba6ff2",
+      "name": "Merge3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT TOP 1\n\n    -- 🔹 FEATURES PRINCIPALES\n    f.price,\n    f.marketing_spend,\n    f.market_count,\n    f.nbr_reservations,\n    f.nbr_visitors,\n    l.city,\n    l.country,\n\n    -- 🔹 EVENT DATE\n    e.event_date,\n\n    -- 🔥 FULL NAME (corrigé proprement)\n    LTRIM(RTRIM(\n        ISNULL(b.first_name, '') +\n        CASE \n            WHEN b.first_name IS NOT NULL AND b.last_name IS NOT NULL \n            THEN ' ' ELSE '' \n        END +\n        ISNULL(b.last_name, '')\n    )) AS full_name,\n\n    -- 🔹 FEATURES TEMPORELLES\n    MONTH(e.event_date) AS month,\n    YEAR(e.event_date) AS year,\n\n    CASE \n        WHEN MONTH(e.event_date) IN (6,7,8) THEN 1\n        ELSE 0\n    END AS is_summer,\n\n    -- 🔹 DIMENSIONS\n    ev.rating,\n    t.trend_score,\n\n    -- 🔹 FEATURES DERIVÉES\n    (f.price * 1.0) AS entertainer_price,\n\n    COUNT(f.id_event) OVER (PARTITION BY f.market_count) AS nb_events,\n\n    (f.marketing_spend * 1.0 / NULLIF(f.price, 0)) AS marketing_ratio\n\nFROM event_DWH.dbo.FACT_VENTES f\n\nLEFT JOIN event_DWH.dbo.Dim_Event e\n    ON f.id_event = e.id_event\n\nLEFT JOIN event_DWH.dbo.DIM_EVALUATION ev\n    ON f.id_evaluation = ev.id_evaluation\n\nLEFT JOIN event_DWH.dbo.Dim_Trends t\n    ON f.id_trend = t.id_trend\n\nLEFT JOIN event_DWH.dbo.Dim_Beneficiary b\n    ON f.id_beneficiary = b.id_beneficiary\n\nLEFT JOIN event_DWH.dbo.Dim_Localisation l\n    ON f.id_localisation = l.id_localisation;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        -1760,
+        16
+      ],
+      "id": "203d405e-3b3b-4c3e-8632-014f9ebe4b95",
+      "name": "📊 SQL Data Extraction  1",
+      "notesInFlow": true,
+      "credentials": {
+        "microsoftSql": {
+          "id": "gHv4U8Dmv8L04vlu",
+          "name": "Microsoft SQL account"
+        }
+      },
+      "notes": "Loads data from FACT_VENTES"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2000,
+        16
+      ],
+      "id": "c53e0df3-3312-4574-af04-2c0f0a9e3807",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"price\": {{$json.price}},\n  \"marketing_spend\": {{$json.marketing_spend}},\n  \"market_count\": {{$json.market_count}},\n  \"trend_score\": {{$json.trend_score}},\n  \"rating\": {{$json.rating}},\n  \"entertainer_price\": {{$json.entertainer_price}},\n  \"nb_events\": {{$json.nb_events}},\n   \"nb_reservations\": {{$json[\"nbr_reservations\"]}},\n  \"nb_visitors\": {{$json[\"nbr_visitors\"]}},\n  \"month\": {{$json.month}},\n  \"year\": {{$json.year}},\n  \"is_summer\": {{$json.is_summer}},\n  \"marketing_ratio\": {{$json.marketing_ratio}},\n  nb_events:  {{$json.nb_events}}\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1520,
+        240
+      ],
+      "id": "2f854327-3a54-49f0-828a-89ace31df2bf",
+      "name": "🔄 Data Preparation1",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Prepares data for ML"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2016,
+        688
+      ],
+      "id": "a11495a5-0f8e-4fd6-b772-9caca7094c7a",
+      "name": "Schedule Trigger2"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2016,
+        928
+      ],
+      "id": "8cb57886-0731-4cf5-a207-f8606cb90cab",
+      "name": "Schedule Trigger3"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -912,
+        336
+      ],
+      "id": "5a163ff7-bd5a-4687-8be2-0034ea2c82a2",
+      "name": "🔗 Merge Input Sources",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Combine automatic and manual datasets into a unified input"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1152,
+        448
+      ],
+      "id": "f5fca319-ddc1-410f-af8d-6abac9452896",
+      "name": "🔄 Prepare Input Data ",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Manual input for testing or debugging scenarios"
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\n\n// 🔹 exemple score (adapte selon ton modèle)\nconst score = d.risk_score || d.churn_prob || 0;\n\n// 🔹 classification\nlet category = \"\";\nlet description = \"\";\nlet action = \"\";\n\n// 🎯 logique métier\nif (score >= 0.7) {\n  category = \"High Risk\";\n  description = \"Customer highly likely to churn or low engagement.\";\n  action = \"Immediate action: retention campaign, discounts.\";\n}\n\nelse if (score >= 0.4) {\n  category = \"Medium Risk\";\n  description = \"Customer shows moderate risk.\";\n  action = \"Target with personalized offers.\";\n}\n\nelse {\n  category = \"Low Risk\";\n  description = \"Customer stable and loyal.\";\n  action = \"Maintain engagement and upsell.\";\n}\n\n// 🔹 output\nreturn [\n  {\n    json: {\n      ...d,\n      risk_category: category,\n      risk_description: description,\n      risk_action: action\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        592
+      ],
+      "id": "163ac05e-76cc-4f60-afd4-278a9f6d756f",
+      "name": "Code in JavaScript7",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        112,
+        1104
+      ],
+      "id": "3fcf5a8f-8607-4a3f-9685-ea3ebe39c627",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2608,
+        480
+      ],
+      "id": "8bfaf1a9-80d8-4300-acda-5265a7165de8",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "throw new Error(\"🔥 Test Error Workflow\");"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        -112
+      ],
+      "id": "90b7b73d-3616-497e-8d94-50f0accc8644",
+      "name": "Code in JavaScript8"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "📊 SQL Data Extraction  ": {
+      "main": [
+        [
+          {
+            "node": "🔄 Data Preparation1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔄 Data Preparation": {
+      "main": [
+        [
+          {
+            "node": "Customer Loyalty Prediction",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "⚠️ Monitoring": {
+      "main": [
+        [
+          {
+            "node": "Risk Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Risk Scoring": {
+      "main": [
+        [
+          {
+            "node": "High Risk Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Customer Risk",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "📊 SQL Data Extraction  ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Monitoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Loyalty Prediction": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Risk Filter": {
+      "main": [
+        [
+          {
+            "node": "Prepare Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Email Report": {
+      "main": [
+        [
+          {
+            "node": "📩 Email Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Cluster Low-Potential Regions": {
+      "main": [
+        [
+          {
+            "node": "🔗 Merge Input Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Format Data for AI Analysis": {
+      "main": [
+        [
+          {
+            "node": "🧠 AI Insights Generation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "🔗 Combine ML + AI Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "🧠 AI Insights Generation": {
+      "main": [
+        [
+          {
+            "node": "🔗 Combine ML + AI Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔗 Combine ML + AI Results": {
+      "main": [
+        [
+          {
+            "node": "📄 Build Final Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📄 Build Final Report": {
+      "main": [
+        [
+          {
+            "node": "🧠 Generate PDF Report (Gemini AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Load Historical Data": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Preprocess Time Series",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Preprocess Time Series": {
+      "main": [
+        [
+          {
+            "node": "📈 Forecast Future Demand",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📈 Forecast Future Demand": {
+      "main": [
+        [
+          {
+            "node": "📄 Build Forecast Dashboard",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Extract Anomaly Data": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Aggregate  Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Aggregate  Data": {
+      "main": [
+        [
+          {
+            "node": "🚨 Run Anomaly Detection Model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🌐 Receive Pricing Request": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Prepare Pricing Features",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Prepare Pricing Features": {
+      "main": [
+        [
+          {
+            "node": "💰 Predict Optimal Price (ML Model)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💰 Predict Optimal Price (ML Model)": {
+      "main": [
+        [
+          {
+            "node": "📄 Format Pricing Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📄 Format Pricing Response": {
+      "main": [
+        [
+          {
+            "node": "📤 Send Pricing Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🚨 Run Anomaly Detection Model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "🧠 AI Insights Generation1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "🧠 AI Insights Generation1": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript5": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        [
+          {
+            "node": "🧠 Generate PDF Report (Gemini AI)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "📊 SQL Data Extraction  1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 SQL Data Extraction  1": {
+      "main": [
+        [
+          {
+            "node": "🔄 Data Preparation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔄 Data Preparation1": {
+      "main": [
+        [
+          {
+            "node": "📊 Cluster Low-Potential Regions",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "🔄 Prepare Input Data ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger2": {
+      "main": [
+        [
+          {
+            "node": "📊 Load Historical Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger3": {
+      "main": [
+        [
+          {
+            "node": "📊 Extract Anomaly Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔗 Merge Input Sources": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Format Data for AI Analysis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔄 Prepare Input Data ": {
+      "main": [
+        [
+          {
+            "node": "🔗 Merge Input Sources",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript7": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "📊 SQL Data Extraction  1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📊 SQL Data Extraction  ",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📊 Load Historical Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📊 Extract Anomaly Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Customer Risk": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "qcc7KDOF6Pk86bbT",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "5cf4d071-3990-4a1e-8c1a-b0046a58e4e1",
+  "meta": {
+    "instanceId": "0a13205f11d55b3b3a750f5918219c63703848ed15a914fe594ca48c6320599f"
+  },
+  "id": "4UbDdst1AqBhjRWd",
+  "tags": []
+}
