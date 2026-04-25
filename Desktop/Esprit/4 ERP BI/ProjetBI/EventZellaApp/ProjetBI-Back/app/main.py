@@ -1,7 +1,9 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from flask import Flask, jsonify
+from flask_cors import CORS
 from app.database import Base, engine
-from app.routers import auth
+from app.core.config import CORS_ALLOWED_ORIGINS
+from app.routers.auth import auth_api_bp, auth_legacy_bp
+from app.routers.ml import ml_bp, legacy_ml_bp
 
 try:
     Base.metadata.create_all(bind=engine)
@@ -9,18 +11,23 @@ try:
 except Exception as e:
     print(f"⚠️ Erreur DB : {e}")
 
-app = FastAPI(title="EventZella API", version="1.0.0")
+app = Flask(__name__)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+origins = [origin.strip() for origin in CORS_ALLOWED_ORIGINS.split(",") if origin.strip()]
+
+CORS(
+    app,
+    resources={r"/*": {"origins": origins}},
+    supports_credentials=True,
+    allow_headers=["Content-Type", "Authorization", "Accept"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 )
 
-app.include_router(auth.router)
+app.register_blueprint(auth_api_bp)
+app.register_blueprint(auth_legacy_bp)
+app.register_blueprint(ml_bp)
+app.register_blueprint(legacy_ml_bp)
 
-@app.get("/")
+@app.route("/", methods=["GET"])
 def root():
-    return {"message": "EventZella API 🚀"}
+    return jsonify({"message": "Unified BI API", "status": "ok"})

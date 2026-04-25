@@ -56,7 +56,7 @@ export class PriceRegressionComponent {
       city_encoded: Number(this.formData.city_encoded)
     };
 
-    console.log('Payload envoyé à n8n :');
+    console.log('Payload envoye au backend unifie :');
     console.log(JSON.stringify(payload, null, 2));
 
     this.predictionService.predictPrice(payload).subscribe({

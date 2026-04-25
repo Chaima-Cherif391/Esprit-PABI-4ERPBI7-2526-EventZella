@@ -1,22 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import urllib.parse
-
-# Connection string directe comme pyodbc (qui fonctionne !)
-connection_string = (
-    "DRIVER={ODBC Driver 17 for SQL Server};"
-    "SERVER=localhost\\MSSQLSERVER1;"
-    "DATABASE=event_DWH;"
-    "Trusted_Connection=yes;"
-    "TrustServerCertificate=yes;"
-)
-
-# Encoder pour SQLAlchemy
-params = urllib.parse.quote_plus(connection_string)
-DATABASE_URL = f"mssql+pyodbc:///?odbc_connect={params}"
-
-print(">>> Connexion via odbc_connect directe")
+from app.core.config import DATABASE_URL
 
 engine = create_engine(
     DATABASE_URL,
@@ -25,6 +10,8 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+print(">>> SQL Server connection initialized")
 
 def get_db():
     db = SessionLocal()

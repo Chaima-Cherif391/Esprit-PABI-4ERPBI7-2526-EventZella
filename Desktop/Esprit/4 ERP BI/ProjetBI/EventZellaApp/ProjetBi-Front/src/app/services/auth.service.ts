@@ -10,12 +10,12 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
 
-private API = 'http://127.0.0.1:8000';
+private API = 'http://127.0.0.1:8000/api/auth';
 
   constructor(private http: HttpClient, private router: Router) {}
 
   login(email: string, password: string) {
-    return this.http.post<any>(`${this.API}/auth/login`, { email, password }).pipe(
+    return this.http.post<any>(`${this.API}/login`, { email, password }).pipe(
       tap(res => {
         localStorage.setItem('token', res.access_token);
         localStorage.setItem('user', JSON.stringify(res.user));

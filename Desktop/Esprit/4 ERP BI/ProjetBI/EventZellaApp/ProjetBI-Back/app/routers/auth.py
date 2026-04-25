@@ -1,107 +1,160 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-from app.database import get_db
+from flask import Blueprint, request, jsonify
+from app.database import SessionLocal
 from app.models.user import User
-from app.schemas.user import UserCreate, UserLogin, UserOut, Token
+from app.schemas.user import UserCreate, UserLogin, UserOut
 from app.core.security import hash_password, verify_password, create_access_token, decode_token
-from fastapi.security import OAuth2PasswordBearer
-
-router = APIRouter(prefix="/auth", tags=["Authentication"])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+from pydantic import ValidationError
 
 VALID_ROLES = ["CEO", "MARKETING"]
 
-# ──────────────────────────────────────────
-# REGISTER
-# ──────────────────────────────────────────
-@router.post("/register", response_model=UserOut, status_code=201)
-def register(payload: UserCreate, db: Session = Depends(get_db)):
 
-    # Vérifier rôle valide
-    if payload.role not in VALID_ROLES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Rôle invalide. Choisir parmi : {VALID_ROLES}"
-        )
+def _get_token_from_header():
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return None
+    return auth_header.split(" ")[1]
 
-    # Vérifier email unique
-    existing = db.query(User).filter(User.email == payload.email).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Email déjà utilisé")
 
-    user = User(
-        full_name=payload.full_name,
-        email=payload.email,
-        password=hash_password(payload.password),
-        role=payload.role
-    )
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+def create_auth_blueprint(name: str, url_prefix: str) -> Blueprint:
+    bp = Blueprint(name, __name__, url_prefix=url_prefix)
 
-# ──────────────────────────────────────────
-# LOGIN
-# ──────────────────────────────────────────
-@router.post("/login", response_model=Token)
-def login(payload: UserLogin, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == payload.email).first()
+    @bp.route("/register", methods=["POST"])
+    def register():
+        db = SessionLocal()
+        try:
+            try:
+                payload = UserCreate(**request.get_json(force=True, silent=True) or {})
+            except ValidationError as exc:
+                return jsonify({"detail": exc.errors()}), 422
+            except Exception:
+                return jsonify({"detail": "Invalid JSON"}), 400
 
-    if not user or not verify_password(payload.password, user.password):
-        raise HTTPException(status_code=401, detail="Email ou mot de passe incorrect")
+            if payload.role not in VALID_ROLES:
+                return jsonify({"detail": f"Invalid role. Use one of {VALID_ROLES}"}), 400
 
-    if not user.is_active:
-        raise HTTPException(status_code=403, detail="Compte désactivé")
+            existing = db.query(User).filter(User.email == payload.email).first()
+            if existing:
+                return jsonify({"detail": "Email already used"}), 400
 
-    token = create_access_token({"sub": str(user.id), "role": user.role})
-    return {"access_token": token, "token_type": "bearer", "user": user}
+            try:
+                password_hash = hash_password(payload.password)
+            except ValueError as exc:
+                return jsonify({"detail": str(exc)}), 400
+            except RuntimeError:
+                return jsonify({"detail": "Password hashing failed"}), 500
 
-# ──────────────────────────────────────────
-# GET CURRENT USER
-# ──────────────────────────────────────────
-@router.get("/me", response_model=UserOut)
-def get_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    try:
-        payload = decode_token(token)
-        user_id = int(payload.get("sub"))
-    except Exception:
-        raise HTTPException(status_code=401, detail="Token invalide")
+            user = User(
+                full_name=payload.full_name,
+                email=payload.email,
+                password=password_hash,
+                role=payload.role,
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
 
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Utilisateur introuvable")
-    return user
+            return jsonify(UserOut.model_validate(user).model_dump(mode="json")), 201
+        finally:
+            db.close()
 
-# ──────────────────────────────────────────
-# ROUTE PROTÉGÉE CEO SEULEMENT
-# ──────────────────────────────────────────
-@router.get("/ceo-only")
-def ceo_dashboard(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    try:
-        payload = decode_token(token)
-        user_id = int(payload.get("sub"))
-    except Exception:
-        raise HTTPException(status_code=401, detail="Token invalide")
+    @bp.route("/login", methods=["POST"])
+    def login():
+        db = SessionLocal()
+        try:
+            data = request.get_json(force=True, silent=True) or {}
+            try:
+                payload = UserLogin(**data)
+            except ValidationError as exc:
+                return jsonify({"detail": exc.errors()}), 422
+            except Exception:
+                return jsonify({"detail": "Invalid JSON"}), 400
 
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user or user.role != "CEO":
-        raise HTTPException(status_code=403, detail="Accès réservé au CEO")
+            user = db.query(User).filter(User.email == payload.email).first()
+            if not user or not verify_password(payload.password, user.password):
+                return jsonify({"detail": "Invalid email or password"}), 401
 
-    return {"message": f"Bienvenue CEO {user.full_name} 👑"}
+            if not user.is_active:
+                return jsonify({"detail": "Account disabled"}), 403
 
-# ──────────────────────────────────────────
-# ROUTE PROTÉGÉE MARKETING SEULEMENT
-# ──────────────────────────────────────────
-@router.get("/marketing-only")
-def marketing_dashboard(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    try:
-        payload = decode_token(token)
-        user_id = int(payload.get("sub"))
-    except Exception:
-        raise HTTPException(status_code=401, detail="Token invalide")
+            token = create_access_token({"sub": str(user.id), "role": user.role})
+            return jsonify(
+                {
+                    "access_token": token,
+                    "token_type": "bearer",
+                    "user": UserOut.model_validate(user).model_dump(mode="json"),
+                }
+            ), 200
+        finally:
+            db.close()
 
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user or user.role != "MARKETING":
-        raise HTTPException(status_code=403, detail="Accès réservé au Marketing")
+    @bp.route("/me", methods=["GET"])
+    def get_me():
+        token = _get_token_from_header()
+        if not token:
+            return jsonify({"detail": "Not authenticated"}), 401
 
-    return {"message": f"Bienvenue {user.full_name} 📊"}
+        db = SessionLocal()
+        try:
+            try:
+                payload = decode_token(token)
+                user_id = int(payload.get("sub"))
+            except Exception:
+                return jsonify({"detail": "Invalid token"}), 401
+
+            user = db.query(User).filter(User.id == user_id).first()
+            if not user:
+                return jsonify({"detail": "User not found"}), 404
+
+            return jsonify(UserOut.model_validate(user).model_dump(mode="json")), 200
+        finally:
+            db.close()
+
+    @bp.route("/ceo-only", methods=["GET"])
+    def ceo_dashboard():
+        token = _get_token_from_header()
+        if not token:
+            return jsonify({"detail": "Not authenticated"}), 401
+
+        db = SessionLocal()
+        try:
+            try:
+                payload = decode_token(token)
+                user_id = int(payload.get("sub"))
+            except Exception:
+                return jsonify({"detail": "Invalid token"}), 401
+
+            user = db.query(User).filter(User.id == user_id).first()
+            if not user or user.role != "CEO":
+                return jsonify({"detail": "CEO only access"}), 403
+
+            return jsonify({"message": f"Welcome CEO {user.full_name}"}), 200
+        finally:
+            db.close()
+
+    @bp.route("/marketing-only", methods=["GET"])
+    def marketing_dashboard():
+        token = _get_token_from_header()
+        if not token:
+            return jsonify({"detail": "Not authenticated"}), 401
+
+        db = SessionLocal()
+        try:
+            try:
+                payload = decode_token(token)
+                user_id = int(payload.get("sub"))
+            except Exception:
+                return jsonify({"detail": "Invalid token"}), 401
+
+            user = db.query(User).filter(User.id == user_id).first()
+            if not user or user.role != "MARKETING":
+                return jsonify({"detail": "Marketing only access"}), 403
+
+            return jsonify({"message": f"Welcome {user.full_name}"}), 200
+        finally:
+            db.close()
+
+    return bp
+
+
+auth_api_bp = create_auth_blueprint("auth_api", "/api/auth")
+auth_legacy_bp = create_auth_blueprint("auth_legacy", "/auth")

@@ -36,11 +36,11 @@ export interface PredictionResponse {
   providedIn: 'root'
 })
 export class PredictionService {
-  private webhookUrl = 'http://localhost:5678/webhook/predict-price';
+  private apiUrl = 'http://127.0.0.1:8000/api/ml/predict-price';
 
   constructor(private http: HttpClient) {}
 
   predictPrice(data: PredictionRequest): Observable<PredictionResponse> {
-    return this.http.post<PredictionResponse>(this.webhookUrl, data);
+    return this.http.post<PredictionResponse>(this.apiUrl, data);
   }
 }
