@@ -1,0 +1,123 @@
+<!-- layout.component.html -->
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <div class="navbar-brand" (click)="goHome()" style="cursor: pointer;">
+      <div class="logo-icon-sm">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <div class="navbar-title">
+        CEO Dashboard
+      </div>
+    </div>
+
+    <div class="navbar-actions">
+      <!-- Price Regression Link -->
+      <div class="icon-btn regression-btn" (click)="openRegression()" title="Price Regression Analysis">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+
+      <!-- PDF Export (n8n) -->
+      <div class="icon-btn export-pdf" (click)="exportPDF()" title="Export PDF">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ff4757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <path d="M12 18v-6m0 0l-3 3m3-3l3 3"></path>
+        </svg>
+      </div>
+
+      <!-- Forecast (Dedicated Route) -->
+      <div class="icon-btn forecast-btn" (click)="openForecast()" title="Time-Series Forecast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Clock part -->
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+          <!-- Curve part overlay -->
+          <path d="M8 16l2-2 2 2 4-4" stroke-width="2.5"></path>
+        </svg>
+      </div>
+
+      <!-- Excel Export (Google Sheets) -->
+      <div class="icon-btn export-excel" (click)="exportExcel()" title="Export to Google Sheets">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="3" y1="15" x2="21" y2="15"></line>
+          <line x1="9" y1="3" x2="9" y2="21"></line>
+          <line x1="15" y1="3" x2="15" y2="21"></line>
+        </svg>
+      </div>
+
+      <div class="icon-btn" (click)="toggleNotifs()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        <span class="notif-dot" *ngIf="unreadNotifs > 0">{{ unreadNotifs }}</span>
+
+        <!-- Dropdown des Notifications -->
+        <div class="notif-dropdown" *ngIf="isNotifOpen" (click)="$event.stopPropagation()">
+          <div class="notif-header">
+            <span>Notifications</span>
+            <button (click)="markNotifsRead()" *ngIf="unreadNotifs > 0">Tout lire</button>
+          </div>
+          <div class="notif-list">
+            <div class="notif-item" *ngFor="let n of notifications" [class.unread]="!n.is_read" (click)="viewNotif(n)">
+              <div class="notif-title">{{ n.title }}</div>
+              <div class="notif-msg">{{ n.message }}</div>
+              <div class="notif-time">{{ n.created_at | date:'shortTime' }}</div>
+            </div>
+            <div class="notif-empty" *ngIf="notifications.length === 0">
+              Aucune notification
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="user-profile-sm">
+        <div class="user-avatar-sm">{{ userInitials }}</div>
+        <div class="user-info-sm">
+          <div class="user-name-sm">{{ fullName }}</div>
+          <div class="user-role-sm">{{ userRole }}</div>
+        </div>
+      </div>
+
+      <button class="btn-logout" (click)="logout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+        Logout
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── CONTENU DYNAMIQUE (Power BI & router-outlet) ── -->
+  <div class="content" style="height: calc(100vh - 80px); padding: 0; position: relative;">
+    <iframe *ngIf="iframeKey" [src]="powerBiUrl" width="100%" height="100%" frameborder="0" allowFullScreen="true"
+      style="border: none;"></iframe>
+
+    <!-- Keep router-outlet hidden or below if needed in the future, or remove it. I'll just keep it hidden -->
+    <div style="display: none;">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Forecast Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body style="background:#1a1a2e; padding:20px; font-family:Arial">
+
+  <h2 style="color:white; text-align:center">
+    📈 Forecast Réservations - ARIMA
+  </h2>
+
+  <h4 style="color:#aaa; text-align:center">
+    MAPE: 18.66% | MAE: 3079
+  </h4>
+
+  <table style="color:white; margin:auto; border-collapse:collapse; margin-bottom:20px">
+    <tr style="background:#00d4ff; color:black">
+      <th style="padding:10px 20px">Mois</th>
+      <th style="padding:10px 20px">Réservations prévues</th>
+    </tr>
+
+    
+    <tr style="background:#16213e">
+      <td style="padding:10px 20px; text-align:center">2022-11</td>
+      <td style="padding:10px 20px; text-align:center">18 927</td>
+    </tr>
+    <tr style="background:#0f3460">
+      <td style="padding:10px 20px; text-align:center">2022-12</td>
+      <td style="padding:10px 20px; text-align:center">19 156</td>
+    </tr>
+    <tr style="background:#16213e">
+      <td style="padding:10px 20px; text-align:center">2023-01</td>
+      <td style="padding:10px 20px; text-align:center">18 978</td>
+    </tr>
+    <tr style="background:#0f3460">
+      <td style="padding:10px 20px; text-align:center">2023-02</td>
+      <td style="padding:10px 20px; text-align:center">19 116</td>
+    </tr>
+    <tr style="background:#16213e">
+      <td style="padding:10px 20px; text-align:center">2023-03</td>
+      <td style="padding:10px 20px; text-align:center">19 009</td>
+    </tr>
+    <tr style="background:#0f3460">
+      <td style="padding:10px 20px; text-align:center">2023-04</td>
+      <td style="padding:10px 20px; text-align:center">19 092</td>
+    </tr>
+
+  </table>
+
+  <canvas id="chart"></canvas>
+
+  <script>
+    new Chart(document.getElementById('chart'), {
+      type: 'line',
+      data: {
+        labels: ["2022-11","2022-12","2023-01","2023-02","2023-03","2023-04"],
+        datasets: [{
+          label: 'Réservations prévues',
+          data: [18927,19156,18978,19116,19009,19092],
+          borderColor: '#00d4ff',
+          backgroundColor: 'rgba(0,212,255,0.1)',
+          borderWidth: 3,
+          pointRadius: 6,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            labels: { color: 'white' }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: 'white' },
+            grid: { color: '#333' }
+          },
+          y: {
+            ticks: { color: 'white' },
+            grid: { color: '#333' }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

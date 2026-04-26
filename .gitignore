@@ -1,0 +1,17 @@
+# Angular
+node_modules/
+dist/
+.angular/
+
+# Logs
+npm-debug.log*
+
+# FastAPI / Python
+__pycache__/
+*.pyc
+.venv/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
