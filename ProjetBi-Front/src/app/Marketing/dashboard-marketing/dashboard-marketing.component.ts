@@ -26,8 +26,8 @@ export class DashboardMarketingComponent implements OnInit {
   isChatOpen = false;
   chatInput = '';
   isTyping = false;
-  chatMessages: { role: 'ai' | 'user', text: string }[] = [
-    { role: 'ai', text: 'Bonjour ! Je suis votre assistant IA Marketing. Comment puis-je vous aider avec vos rapports Power BI ?' }
+  chatMessages: any[] = [
+    { role: 'ai', text: 'Messagerie instantanée avec le CEO. Vos messages sont éphémères.' }
   ];
 
   private readonly BACKEND_URL = 'http://localhost:8000';
@@ -48,6 +48,18 @@ export class DashboardMarketingComponent implements OnInit {
 
     this.updatePowerBiUrl();
     this.startNotificationPolling();
+  }
+
+  ngOnInit() {
+    const user = this.auth.getUser();
+    this.fullName = user?.full_name || 'Marketing User';
+    this.userRole = user?.role || 'MARKETING';
+    this.userInitials = this.getInitials(this.fullName);
+    this.startPolling();
+  }
+
+  getInitials(name: string): string {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
   }
 
   startNotificationPolling() {
@@ -110,17 +122,6 @@ export class DashboardMarketingComponent implements OnInit {
     setTimeout(() => { this.iframeKey = Date.now(); }, 100);
   }
 
-  ngOnInit() {
-    const user = this.auth.getUser();
-    this.fullName = user?.full_name || 'Marketing User';
-    this.userRole = user?.role || 'Marketing';
-    this.userInitials = this.getInitials(this.fullName);
-  }
-
-  getInitials(name: string): string {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-  }
-
   goHome(): void {
     const role = this.auth.getRole();
     if (role === 'CEO') this.router.navigate(['/dashboard-ceo']);
@@ -152,27 +153,53 @@ export class DashboardMarketingComponent implements OnInit {
     this.auth.logout();
   }
 
+  unreadMessagesCount = 0;
+
   toggleChat() {
     this.isChatOpen = !this.isChatOpen;
+    if (this.isChatOpen) {
+      this.unreadMessagesCount = 0;
+    }
   }
 
   sendMessage() {
     if (!this.chatInput.trim()) return;
-    const userMsg = this.chatInput;
-    this.chatMessages.push({ role: 'user', text: userMsg });
-    this.chatInput = '';
-    this.isTyping = true;
-
-    this.http.post<{ answer: string }>(`${this.BACKEND_URL}/api/chat`, { message: userMsg }, { headers: this.HEADERS }).subscribe({
-      next: (res) => {
-        this.isTyping = false;
-        this.chatMessages.push({ role: 'ai', text: res.answer || "Désolé, je n'ai pas pu analyser ces données." });
-      },
-      error: () => {
-        this.isTyping = false;
-        this.chatMessages.push({ role: 'ai', text: "Erreur de connexion avec l'assistant IA via le tunnel." });
+    const msgData = {
+      sender: 'MARKETING',
+      text: this.chatInput,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    this.http.post(`${this.BACKEND_URL}/api/chat/send`, msgData, { headers: this.HEADERS }).subscribe({
+      next: () => {
+        this.chatInput = '';
+        this.syncMessages();
       }
     });
+  }
+
+  syncMessages() {
+    this.http.get<any[]>(`${this.BACKEND_URL}/api/chat/sync`, { headers: this.HEADERS }).subscribe({
+      next: (msgs) => {
+        if (msgs.length > this.chatMessages.length && !this.isChatOpen) {
+          const newMsgs = msgs.slice(this.chatMessages.length);
+          const fromOther = newMsgs.filter(m => m.sender !== 'MARKETING').length;
+          this.unreadMessagesCount += fromOther;
+        }
+
+        this.chatMessages = msgs.map(m => ({
+          role: m.sender === 'MARKETING' ? 'user' : 'ai',
+          text: m.text,
+          time: m.timestamp
+        }));
+      }
+    });
+  }
+
+  startPolling() {
+    setInterval(() => {
+      this.syncMessages(); // On sync tout le temps pour le compteur
+    }, 3000);
   }
 
   isActive(route: string): boolean {

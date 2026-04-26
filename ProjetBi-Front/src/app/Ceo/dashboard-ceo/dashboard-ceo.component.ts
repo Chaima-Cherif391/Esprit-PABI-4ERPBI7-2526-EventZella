@@ -26,8 +26,8 @@ export class DashboardCeoComponent implements OnInit {
   isChatOpen = false;
   chatInput = '';
   isTyping = false;
-  chatMessages: { role: 'ai' | 'user', text: string }[] = [
-    { role: 'ai', text: 'Bonjour ! Je suis votre assistant IA. Comment puis-je vous aider avec vos rapports Power BI aujourd\'hui ?' }
+  chatMessages: any[] = [
+    { role: 'ai', text: 'Messagerie instantanée avec le service Marketing. Vos messages sont éphémères.' }
   ];
 
   private readonly BACKEND_URL = 'http://localhost:8000';
@@ -56,6 +56,7 @@ export class DashboardCeoComponent implements OnInit {
     this.fullName = user?.full_name || 'CEO User';
     this.userRole = user?.role || 'CEO';
     this.userInitials = this.getInitials(this.fullName);
+    this.startPolling();
   }
 
   startNotificationPolling() {
@@ -64,7 +65,7 @@ export class DashboardCeoComponent implements OnInit {
   }
 
   checkNotifications() {
-    this.http.get<{count: number}>(`${this.BACKEND_URL}/api/notifications/unread-count`, { headers: this.HEADERS }).subscribe({
+    this.http.get<{ count: number }>(`${this.BACKEND_URL}/api/notifications/unread-count`, { headers: this.HEADERS }).subscribe({
       next: (res) => {
         this.unreadNotifs = res.count;
       },
@@ -165,27 +166,55 @@ export class DashboardCeoComponent implements OnInit {
     this.auth.logout();
   }
 
+  unreadMessagesCount = 0;
+
   toggleChat() {
     this.isChatOpen = !this.isChatOpen;
+    if (this.isChatOpen) {
+      this.unreadMessagesCount = 0; // Reset quand on ouvre
+    }
   }
 
   sendMessage() {
     if (!this.chatInput.trim()) return;
-    const userMsg = this.chatInput;
-    this.chatMessages.push({ role: 'user', text: userMsg });
-    this.chatInput = '';
-    this.isTyping = true;
+    const msgData = {
+      sender: 'CEO',
+      text: this.chatInput,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
 
-    this.http.post<{ answer: string }>(`${this.BACKEND_URL}/api/chat`, { message: userMsg }, { headers: this.HEADERS }).subscribe({
-      next: (res) => {
-        this.isTyping = false;
-        this.chatMessages.push({ role: 'ai', text: res.answer || "Désolé, je n'ai pas pu analyser ces données." });
-      },
-      error: () => {
-        this.isTyping = false;
-        this.chatMessages.push({ role: 'ai', text: "Erreur de connexion avec l'assistant IA via le tunnel." });
+    this.http.post(`${this.BACKEND_URL}/api/chat/send`, msgData, { headers: this.HEADERS }).subscribe({
+      next: () => {
+        this.chatInput = '';
+        this.syncMessages();
       }
     });
+  }
+
+  syncMessages() {
+    this.http.get<any[]>(`${this.BACKEND_URL}/api/chat/sync`, { headers: this.HEADERS }).subscribe({
+      next: (msgs) => {
+        // Si le nombre de messages a augmenté et que le chat est fermé
+        if (msgs.length > this.chatMessages.length && !this.isChatOpen) {
+          // On compte combien de nouveaux messages viennent de l'autre
+          const newMsgs = msgs.slice(this.chatMessages.length);
+          const fromOther = newMsgs.filter(m => m.sender !== 'CEO').length;
+          this.unreadMessagesCount += fromOther;
+        }
+
+        this.chatMessages = msgs.map(m => ({
+          role: m.sender === 'CEO' ? 'user' : 'ai',
+          text: m.text,
+          time: m.timestamp
+        }));
+      }
+    });
+  }
+
+  startPolling() {
+    setInterval(() => {
+      this.syncMessages(); // On sync tout le temps pour le compteur
+    }, 3000);
   }
 
   isActive(route: string): boolean {

@@ -37,10 +37,8 @@
       <!-- Forecast (Dedicated Route) -->
       <div class="icon-btn forecast-btn" (click)="openForecast()" title="Time-Series Forecast">
         <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <!-- Clock part -->
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
-          <!-- Curve part overlay -->
           <path d="M8 16l2-2 2 2 4-4" stroke-width="2.5"></path>
         </svg>
       </div>
@@ -63,7 +61,6 @@
         </svg>
         <span class="notif-dot" *ngIf="unreadNotifs > 0">{{ unreadNotifs }}</span>
 
-        <!-- Dropdown des Notifications -->
         <div class="notif-dropdown" *ngIf="isNotifOpen" (click)="$event.stopPropagation()">
           <div class="notif-header">
             <span>Notifications</span>
@@ -75,17 +72,17 @@
               <div class="notif-msg">{{ n.message }}</div>
               <div class="notif-time">{{ n.created_at | date:'shortTime' }}</div>
             </div>
-            <div class="notif-empty" *ngIf="notifications.length === 0">
-              Aucune notification
-            </div>
+            <div class="notif-empty" *ngIf="notifications.length === 0">Aucune notification</div>
           </div>
         </div>
       </div>
 
-      <div class="icon-btn">
+      <!-- ICON MESSAGERIE -->
+      <div class="icon-btn" (click)="toggleChat()" title="Messages directs">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
+        <span class="notif-dot" *ngIf="unreadMessagesCount > 0">{{ unreadMessagesCount }}</span>
       </div>
 
       <div class="divider"></div>
@@ -98,25 +95,44 @@
         </div>
       </div>
 
-      <button class="btn-logout" (click)="logout()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <polyline points="16 17 21 12 16 7" />
-          <line x1="21" y1="12" x2="9" y2="12" />
-        </svg>
-        Logout
-      </button>
+      <button class="btn-logout" (click)="logout()">Logout</button>
     </div>
   </nav>
 
-  <!-- ── CONTENU DYNAMIQUE (Power BI & router-outlet) ── -->
+  <!-- CONTENU -->
   <div class="content" style="height: calc(100vh - 80px); padding: 0; position: relative;">
     <iframe *ngIf="iframeKey" [src]="powerBiUrl" width="100%" height="100%" frameborder="0" allowFullScreen="true"
       style="border: none;"></iframe>
+    <div style="display: none;"><router-outlet></router-outlet></div>
+  </div>
 
-    <!-- Keep router-outlet hidden or below if needed in the future, or remove it. I'll just keep it hidden -->
-    <div style="display: none;">
-      <router-outlet></router-outlet>
+  <!-- CHAT WINDOW -->
+  <div class="chat-window" [class.open]="isChatOpen">
+    <div class="chat-header">
+      <div class="chat-title">
+        <span class="status-dot"></span>
+        Messagerie (Marketing)
+      </div>
+      <button class="close-chat" (click)="toggleChat()">×</button>
+    </div>
+    
+    <div class="chat-messages">
+      <div *ngFor="let msg of chatMessages" class="message" [class.user]="msg.role === 'user'" [class.ai]="msg.role === 'ai'">
+        <div class="message-content">
+          {{ msg.text }}
+          <div class="message-time">{{ msg.time }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" [(ngModel)]="chatInput" (keyup.enter)="sendMessage()" placeholder="Écrivez un message...">
+      <button (click)="sendMessage()" [disabled]="!chatInput.trim()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
     </div>
   </div>
 

@@ -8,6 +8,7 @@ from app.routers.chat import chat_bp
 from app.routers.notifications import notif_bp
 from app.routers.forecast import forecast_bp
 from app.routers.pdf_export import pdf_bp
+from app.routers.chat_relay import chat_relay_bp
 
 try:
     Base.metadata.create_all(bind=engine)
@@ -35,6 +36,7 @@ app.register_blueprint(chat_bp)
 app.register_blueprint(notif_bp)
 app.register_blueprint(forecast_bp)
 app.register_blueprint(pdf_bp)
+app.register_blueprint(chat_relay_bp)
 
 @app.route("/", methods=["GET"])
 def root():
