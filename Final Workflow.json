@@ -10,8 +10,8 @@
       "type": "n8n-nodes-base.microsoftSql",
       "typeVersion": 1.1,
       "position": [
-        -1760,
-        240
+        -1808,
+        256
       ],
       "id": "64261f2c-ff49-4995-ba32-a4ee5b8abb4b",
       "name": "📊 SQL Data Extraction  ",
@@ -22,7 +22,6 @@
           "name": "Microsoft SQL account"
         }
       },
-      "disabled": true,
       "notes": "Loads data from FACT_VENTES"
     },
     {
@@ -33,8 +32,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -752,
-        0
+        -768,
+        -64
       ],
       "id": "27ca708d-aa79-495d-9bdb-c10fa9cc36f8",
       "name": "⚠️ Monitoring",
@@ -51,8 +50,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1520,
-        16
+        -1536,
+        -48
       ],
       "id": "6b5a0efc-3e3b-412a-b274-92e0e47d84ee",
       "name": "🔄 Data Preparation",
@@ -70,8 +69,8 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        96,
-        64
+        160,
+        0
       ],
       "id": "6cec7a12-25a7-48c1-9fc7-456562ecd87b",
       "name": "📩 Email Alert",
@@ -93,8 +92,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -560,
-        0
+        -576,
+        -64
       ],
       "id": "4efb6c18-c786-4fc8-829c-0eea1c036e40",
       "name": "Risk Scoring",
@@ -118,8 +117,7 @@
         240
       ],
       "id": "ce305957-0387-4a71-a8cd-29fd402f8f3d",
-      "name": "Schedule Trigger",
-      "disabled": true
+      "name": "Schedule Trigger"
     },
     {
       "parameters": {
@@ -130,8 +128,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -944,
-        32
+        -960,
+        -32
       ],
       "id": "ee4d067d-1495-4005-8b21-606d5e48abe1",
       "name": "Merge"
@@ -139,7 +137,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://127.0.0.1:5000/predict?model=classification",
+        "url": "http://127.0.0.1:8000/predict?model=classification",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "=[\n  {\n    \"price\": {{$json.price}},\n    \"marketing_spend\": {{$json.marketing_spend}},\n    \"market_count\": {{$json.market_count}},\n    \"nbr_reservations\": {{$json.nbr_reservations}},\n    \"nbr_visitors\": {{$json.nbr_visitors}},\n    \"rating\": {{$json.rating}},\n    \"trend_score\": {{$json.trend_score}}\n  }\n]",
@@ -148,8 +146,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -1152,
-        -96
+        -1248,
+        -48
       ],
       "id": "f348abb5-32ac-45a5-8347-b96d5bc3b6b2",
       "name": "Customer Loyalty Prediction",
@@ -185,13 +183,12 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -320,
-        80
+        -304,
+        16
       ],
       "id": "d614898d-6934-4dce-945b-a2bbd6aeaf09",
       "name": "High Risk Filter",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Filters customers with high risk score for alerting."
     },
     {
@@ -201,8 +198,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -96,
-        64
+        0,
+        0
       ],
       "id": "dabab5b8-61e0-4986-b97f-1b4e0392d7ed",
       "name": "Prepare Email Report",
@@ -328,8 +325,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -336,
-        -112
+        -288,
+        -192
       ],
       "id": "908d0248-565f-4ad8-bb01-3f81041743e8",
       "name": "Log Customer Risk",
@@ -345,7 +342,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://127.0.0.1:5000/predict?model=clustering",
+        "url": "http://127.0.0.1:8000/predict?model=clustering",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"market_count\": {{$json.market_count}},\n  \"nb_events\": {{$json.nb_events}},\n  \"month\": {{$json.month}},\n  \"year\": {{$json.year}},\n  \"is_summer\": {{$json.is_summer}},\n  \"marketing_ratio\": {{$json.marketing_ratio}},\n  \"price\": {{$json.price}}\n\n}",
@@ -358,8 +355,7 @@
         240
       ],
       "id": "e7fb277e-55b5-41f5-9004-0289e931e9d1",
-      "name": "📊 Cluster Low-Potential Regions",
-      "disabled": true
+      "name": "📊 Cluster Low-Potential Regions"
     },
     {
       "parameters": {
@@ -368,19 +364,18 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -464,
+        -656,
         336
       ],
       "id": "7b368a6d-d54c-4664-ad99-2bd88cf08c51",
       "name": "⚙️ Format Data for AI Analysis",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Transform and structure data before sending to AI model"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBwTFfnO9pNAPQJuuUm4OlTktVj9VpiQJU",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyD6B7NrLTM9t5BnAOh6eCa5A3muf5MVtqY",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendHeaders": true,
@@ -394,7 +389,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -288,
+        -464,
         336
       ],
       "id": "08aa508f-6e1f-43e8-a345-07bc867a4d4f",
@@ -418,7 +413,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -64,
+        -240,
         336
       ],
       "id": "34c6d930-4833-4127-a330-1277f90e512b",
@@ -434,7 +429,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        128,
+        0,
         336
       ],
       "id": "d038b731-12b1-4acb-a396-743a83a8069b",
@@ -463,7 +458,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        304,
+        208,
         336
       ],
       "id": "078af09e-b9a5-44ae-9aea-a520874a6f53",
@@ -481,92 +476,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT  TOP 10\n    FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM') AS month,\n    SUM(nbr_reservations) AS nbr_reservations\nFROM FACT_VENTES\nWHERE Date_PK IS NOT NULL\nGROUP BY FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM')\nORDER BY month ASC",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.microsoftSql",
-      "typeVersion": 1.1,
-      "position": [
-        -1776,
-        688
-      ],
-      "id": "372a4b42-7054-4e83-88d5-7aabe5aa1aec",
-      "name": "📊 Load Historical Data",
-      "notesInFlow": true,
-      "credentials": {
-        "microsoftSql": {
-          "id": "gHv4U8Dmv8L04vlu",
-          "name": "Microsoft SQL account"
-        }
-      },
-      "disabled": true,
-      "notes": "Retrieve monthly reservations data for forecasting"
-    },
-    {
-      "parameters": {
-        "jsCode": "const items = $input.all();\n\nconst data = items.map(item => ({\n  month: item.json.month,\n  nbr_reservations: parseInt(item.json.nbr_reservations)\n}));\n\nreturn [{ json: { data: data } }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1552,
-        688
-      ],
-      "id": "d68e9959-48a6-4472-a9b7-2fbdb898f2c1",
-      "name": "⚙️ Preprocess Time Series",
-      "notesInFlow": true,
-      "disabled": true,
-      "notes": "Format and structure data for time series forecasting model"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "http://127.0.0.1:5000/api/timeseries/forecast ",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ $json }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        -1360,
-        688
-      ],
-      "id": "d193dcf8-8b1d-4738-b55e-ddabc91c9396",
-      "name": "📈 Forecast Future Demand",
-      "notesInFlow": true,
-      "disabled": true,
-      "notes": "Call API to generate future reservation forecasts (ARIMA / ETS)"
-    },
-    {
-      "parameters": {
-        "jsCode": "const result = $input.first().json;\n\nconst forecast = result.forecast_next_months;\nconst months = JSON.stringify(forecast.map(f => f.month));\nconst values = JSON.stringify(forecast.map(f => f.predicted_reservations));\n\nconst html = `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"><\\/script>\n</head>\n<body style=\"background:#1a1a2e; padding:20px; font-family:Arial\">\n  <h2 style=\"color:white; text-align:center\">📈 Forecast Réservations - ${result.best_model}</h2>\n  <h4 style=\"color:#aaa; text-align:center\">MAPE: ${result.mape_arima}% | MAE: ${result.mae_arima}</h4>\n\n  <table style=\"color:white; margin:auto; border-collapse:collapse; margin-bottom:20px\">\n    <tr style=\"background:#00d4ff; color:black\">\n      <th style=\"padding:10px 20px\">Mois</th>\n      <th style=\"padding:10px 20px\">Réservations prévues</th>\n    </tr>\n    ${forecast.map((f, i) => `\n    <tr style=\"background:${i % 2 === 0 ? '#16213e' : '#0f3460'}\">\n      <td style=\"padding:10px 20px; text-align:center\">${f.month}</td>\n      <td style=\"padding:10px 20px; text-align:center\">${f.predicted_reservations.toLocaleString()}</td>\n    </tr>`).join('')}\n  </table>\n\n  <canvas id=\"chart\"></canvas>\n\n  <script>\n    new Chart(document.getElementById('chart'), {\n      type: 'line',\n      data: {\n        labels: ${months},\n        datasets: [{\n          label: 'Réservations prévues',\n          data: ${values},\n          borderColor: '#00d4ff',\n          backgroundColor: 'rgba(0,212,255,0.1)',\n          borderWidth: 3,\n          pointRadius: 6,\n          fill: true,\n          tension: 0.4\n        }]\n      },\n      options: {\n        plugins: { legend: { labels: { color: 'white' } } },\n        scales: {\n          x: { ticks: { color: 'white' }, grid: { color: '#333' } },\n          y: { ticks: { color: 'white' }, grid: { color: '#333' } }\n        }\n      }\n    });\n  <\\/script>\n</body>\n</html>`;\n\nconst encoded = Buffer.from(html).toString('base64');\nconst dataUrl = `data:text/html;base64,${encoded}`;\n\nreturn [{\n  json: {\n    best_model: result.best_model,\n    mape_arima: result.mape_arima,\n    mae_arima: result.mae_arima,\n    forecast: result.forecast_next_months,\n    open_in_browser: dataUrl\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1104,
-        688
-      ],
-      "id": "80e72c76-881b-4b1b-ba7f-7d4d611effa0",
-      "name": "📄 Build Forecast Dashboard",
-      "disabled": true,
-      "notes": "Format forecast results into chart/table for visualization"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT TOP 100\n    f.price,\n    f.nbr_reservations,\n    f.nbr_visitors,\n    f.marketing_spend,\n    f.market_count,\n    ev.rating\nFROM FACT_VENTES f\nLEFT JOIN Dim_Evaluation ev ON f.id_evaluation = ev.id_evaluation\nWHERE f.price IS NOT NULL",
+        "query": "SELECT TOP 10\n    f.price,\n    f.nbr_reservations,\n    f.nbr_visitors,\n    f.marketing_spend,\n    f.market_count,\n    ev.rating\nFROM FACT_VENTES f\nLEFT JOIN Dim_Evaluation ev ON f.id_evaluation = ev.id_evaluation\nWHERE f.price IS NOT NULL",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftSql",
@@ -584,7 +494,6 @@
           "name": "Microsoft SQL account"
         }
       },
-      "disabled": true,
       "notes": "Retrieve historical data for anomaly detection"
     },
     {
@@ -601,13 +510,12 @@
       "id": "f2330986-cc6c-4f70-bf99-884f61e87e0c",
       "name": "⚙️ Aggregate  Data",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Group and prepare data for anomaly detection model"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "http://127.0.0.1:5000/api/anomalies/detect",
+        "url": "http://127.0.0.1:8000/api/anomalies/detect",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -631,7 +539,6 @@
       "id": "ce18803f-d403-4db4-a1d2-1cc5e67a7992",
       "name": "🚨 Run Anomaly Detection Model",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Call API to detect anomalies using ML models (Isolation Forest / LOF)"
     },
     {
@@ -651,7 +558,6 @@
       "name": "🌐 Receive Pricing Request",
       "webhookId": "6b0279bf-25b3-42c0-88c2-e5507b222fab",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Receive incoming request for optimal price prediction"
     },
     {
@@ -667,13 +573,12 @@
       "id": "24e92a52-0dd5-4d08-9e04-3635bf524423",
       "name": "⚙️ Prepare Pricing Features",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Format input data and extract features for price prediction model"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "http://127.0.0.1:5000/predict?model=regression",
+        "url": "http://127.0.0.1:8000/predict?model=regression",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"market_count\": {{$json.market_count}},\n  \"nbr_visitors\": {{$json.nbr_visitors}},\n  \"nbr_reservations\": {{$json.nbr_reservations}},\n  \"marketing_spend\": {{$json.marketing_spend}},\n  \"rating\": {{$json.rating}},\n  \"trend_score\": {{$json.trend_score}},\n  \"growth_rate_pct\": {{$json.growth_rate_pct}},\n  \"capacity_min\": {{$json.capacity_min}},\n  \"capacity_max\": {{$json.capacity_max}},\n  \"season_encoded\": {{$json.season_encoded}},\n  \"event_type_encoded\": {{$json.event_type_encoded}},\n  \"venue_type_encoded\": {{$json.venue_type_encoded}},\n  \"city_encoded\": {{$json.city_encoded}}\n}",
@@ -688,7 +593,6 @@
       "id": "cc13d57d-c5f9-4832-93df-cea42fdb9c4b",
       "name": "💰 Predict Optimal Price (ML Model)",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Call ML API to predict optimal service price based on features"
     },
     {
@@ -704,7 +608,6 @@
       "id": "ed12a0ad-6803-47ee-99c0-6e97dcaf3383",
       "name": "📄 Format Pricing Response",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Structure prediction result into clean response (price, insights)"
     },
     {
@@ -720,22 +623,7 @@
       "id": "0980ac4b-1106-42b4-9eed-52c90cde1371",
       "name": "📤 Send Pricing Response",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Return predicted optimal price to application"
-    },
-    {
-      "parameters": {
-        "jsCode": "return items.map(item => {\n  const d = item.json;\n\n  const actual = d.nbr_reservations || 0;\n  const expected = d.predicted_reservations || 1;\n\n  const deviation = actual - expected;\n  const deviation_pct = (deviation / expected) * 100;\n\n  const is_anomaly = Math.abs(deviation_pct) > 30;\n\n  let severity = \"LOW\";\n  if (Math.abs(deviation_pct) > 50) severity = \"HIGH\";\n  else if (Math.abs(deviation_pct) > 30) severity = \"MEDIUM\";\n\n  return {\n    json: {\n      ...d,\n      deviation,\n      deviation_pct,\n      is_anomaly,\n      severity\n    }\n  };\n});"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1104,
-        928
-      ],
-      "id": "55e6b028-fccc-45fb-963f-a717c84c6379",
-      "name": "Code in JavaScript",
-      "disabled": true
     },
     {
       "parameters": {
@@ -748,8 +636,7 @@
         784
       ],
       "id": "c447e274-5473-40c3-9d58-8cd3033cc87b",
-      "name": "Code in JavaScript1",
-      "disabled": true
+      "name": "Code in JavaScript1"
     },
     {
       "parameters": {
@@ -775,8 +662,7 @@
         960
       ],
       "id": "d68e1beb-6d5c-450a-94d9-82fa8bdd86db",
-      "name": "Code in JavaScript3",
-      "disabled": true
+      "name": "Code in JavaScript3"
     },
     {
       "parameters": {
@@ -793,8 +679,7 @@
         672
       ],
       "id": "86e1d273-bfcd-4f01-bb2b-368d93882eb0",
-      "name": "Merge1",
-      "disabled": true
+      "name": "Merge1"
     },
     {
       "parameters": {
@@ -807,8 +692,7 @@
         896
       ],
       "id": "90987688-f4eb-4959-911f-efe9ebfc22bf",
-      "name": "Code in JavaScript4",
-      "disabled": true
+      "name": "Code in JavaScript4"
     },
     {
       "parameters": {
@@ -823,8 +707,7 @@
         896
       ],
       "id": "544f35ab-56ac-4270-831d-b8657e0c250c",
-      "name": "Merge2",
-      "disabled": true
+      "name": "Merge2"
     },
     {
       "parameters": {
@@ -852,13 +735,12 @@
           "name": "Unnamed credential"
         }
       },
-      "disabled": true,
       "notes": "Generate a structured PDF report using Gemini AI based on clustering and analytics results"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBwTFfnO9pNAPQJuuUm4OlTktVj9VpiQJU",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyAu4fXh0D3YER3p2PlQ8ZuhC22Rlxi5uZo",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendHeaders": true,
@@ -884,7 +766,6 @@
           "name": "Unnamed credential"
         }
       },
-      "disabled": true,
       "notes": "Generate business insights using AI (LLM / analysis engine)"
     },
     {
@@ -898,8 +779,7 @@
         896
       ],
       "id": "96ee7ad8-5416-4563-95d0-d41a13c1e8b4",
-      "name": "Code in JavaScript5",
-      "disabled": true
+      "name": "Code in JavaScript5"
     },
     {
       "parameters": {
@@ -912,8 +792,7 @@
         896
       ],
       "id": "019593a1-d333-4a86-ade1-1ab2621c3646",
-      "name": "Code in JavaScript6",
-      "disabled": true
+      "name": "Code in JavaScript6"
     },
     {
       "parameters": {
@@ -930,8 +809,7 @@
         896
       ],
       "id": "c76aefef-ddf7-4305-b50a-efd51bba6ff2",
-      "name": "Merge3",
-      "disabled": true
+      "name": "Merge3"
     },
     {
       "parameters": {
@@ -942,8 +820,8 @@
       "type": "n8n-nodes-base.microsoftSql",
       "typeVersion": 1.1,
       "position": [
-        -1760,
-        16
+        -1776,
+        -48
       ],
       "id": "203d405e-3b3b-4c3e-8632-014f9ebe4b95",
       "name": "📊 SQL Data Extraction  1",
@@ -969,8 +847,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.3,
       "position": [
-        -2000,
-        16
+        -2016,
+        -48
       ],
       "id": "c53e0df3-3312-4574-af04-2c0f0a9e3807",
       "name": "Schedule Trigger1"
@@ -991,27 +869,7 @@
       "id": "2f854327-3a54-49f0-828a-89ace31df2bf",
       "name": "🔄 Data Preparation1",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Prepares data for ML"
-    },
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "minutes"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.3,
-      "position": [
-        -2016,
-        688
-      ],
-      "id": "a11495a5-0f8e-4fd6-b772-9caca7094c7a",
-      "name": "Schedule Trigger2"
     },
     {
       "parameters": {
@@ -1047,7 +905,6 @@
       "id": "5a163ff7-bd5a-4687-8be2-0034ea2c82a2",
       "name": "🔗 Merge Input Sources",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Combine automatic and manual datasets into a unified input"
     },
     {
@@ -1064,7 +921,6 @@
       "id": "f5fca319-ddc1-410f-af8d-6abac9452896",
       "name": "🔄 Prepare Input Data ",
       "notesInFlow": true,
-      "disabled": true,
       "notes": "Manual input for testing or debugging scenarios"
     },
     {
@@ -1078,8 +934,7 @@
         592
       ],
       "id": "163ac05e-76cc-4f60-afd4-278a9f6d756f",
-      "name": "Code in JavaScript7",
-      "disabled": true
+      "name": "Code in JavaScript7"
     },
     {
       "parameters": {
@@ -1101,11 +956,12 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -2608,
-        480
+        -2784,
+        64
       ],
       "id": "8bfaf1a9-80d8-4300-acda-5265a7165de8",
-      "name": "When clicking ‘Execute workflow’"
+      "name": "When clicking ‘Execute workflow’",
+      "disabled": true
     },
     {
       "parameters": {
@@ -1114,11 +970,287 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -96,
-        -112
+        -16,
+        -192
       ],
       "id": "90b7b73d-3616-497e-8d94-50f0accc8644",
-      "name": "Code in JavaScript8"
+      "name": "Code in JavaScript8",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://9a52-196-229-172-155.ngrok-free.app/api/notifications/trigger",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"title\": \"Nouvel Email\",\n  \"message\": \" High Risk Customers\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        480,
+        0
+      ],
+      "id": "2df2cde3-8e49-4e42-b8e0-b1421f6883d9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT  TOP 10\n    FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM') AS month,\n    SUM(nbr_reservations) AS nbr_reservations\nFROM FACT_VENTES\nWHERE Date_PK IS NOT NULL\nGROUP BY FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM')\nORDER BY month ASC",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        384,
+        1728
+      ],
+      "id": "ee207962-dc60-4103-860c-7485c172f3d0",
+      "name": "📊 Load Historical Data",
+      "notesInFlow": true,
+      "credentials": {
+        "microsoftSql": {
+          "id": "gHv4U8Dmv8L04vlu",
+          "name": "Microsoft SQL account"
+        }
+      },
+      "disabled": true,
+      "notes": "Retrieve monthly reservations data for forecasting"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst data = items.map(item => ({\n  month: item.json.month,\n  nbr_reservations: parseInt(item.json.nbr_reservations)\n}));\n\nreturn [{ json: { data: data } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        1728
+      ],
+      "id": "9e1166eb-3d8b-43cf-8650-739f5480f9ed",
+      "name": "⚙️ Preprocess Time Series",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Format and structure data for time series forecasting model"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/api/timeseries/forecast ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        800,
+        1728
+      ],
+      "id": "e67bf48e-f8d3-43a5-bebf-dfcf5d71ac2b",
+      "name": "📈 Forecast Future Demand",
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Call API to generate future reservation forecasts (ARIMA / ETS)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = $input.first().json;\n\nconst forecast = result.forecast_next_months;\nconst months = JSON.stringify(forecast.map(f => f.month));\nconst values = JSON.stringify(forecast.map(f => f.predicted_reservations));\n\nconst html = `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"><\\/script>\n</head>\n<body style=\"background:#1a1a2e; padding:20px; font-family:Arial\">\n  <h2 style=\"color:white; text-align:center\">📈 Forecast Réservations - ${result.best_model}</h2>\n  <h4 style=\"color:#aaa; text-align:center\">MAPE: ${result.mape_arima}% | MAE: ${result.mae_arima}</h4>\n\n  <table style=\"color:white; margin:auto; border-collapse:collapse; margin-bottom:20px\">\n    <tr style=\"background:#00d4ff; color:black\">\n      <th style=\"padding:10px 20px\">Mois</th>\n      <th style=\"padding:10px 20px\">Réservations prévues</th>\n    </tr>\n    ${forecast.map((f, i) => `\n    <tr style=\"background:${i % 2 === 0 ? '#16213e' : '#0f3460'}\">\n      <td style=\"padding:10px 20px; text-align:center\">${f.month}</td>\n      <td style=\"padding:10px 20px; text-align:center\">${f.predicted_reservations.toLocaleString()}</td>\n    </tr>`).join('')}\n  </table>\n\n  <canvas id=\"chart\"></canvas>\n\n  <script>\n    new Chart(document.getElementById('chart'), {\n      type: 'line',\n      data: {\n        labels: ${months},\n        datasets: [{\n          label: 'Réservations prévues',\n          data: ${values},\n          borderColor: '#00d4ff',\n          backgroundColor: 'rgba(0,212,255,0.1)',\n          borderWidth: 3,\n          pointRadius: 6,\n          fill: true,\n          tension: 0.4\n        }]\n      },\n      options: {\n        plugins: { legend: { labels: { color: 'white' } } },\n        scales: {\n          x: { ticks: { color: 'white' }, grid: { color: '#333' } },\n          y: { ticks: { color: 'white' }, grid: { color: '#333' } }\n        }\n      }\n    });\n  <\\/script>\n</body>\n</html>`;\n\nconst encoded = Buffer.from(html).toString('base64');\nconst dataUrl = `data:text/html;base64,${encoded}`;\n\nreturn [{\n  json: {\n    best_model: result.best_model,\n    mape_arima: result.mape_arima,\n    mae_arima: result.mae_arima,\n    forecast: result.forecast_next_months,\n    open_in_browser: dataUrl\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        1728
+      ],
+      "id": "b6ced4cc-f344-4848-af35-afc0545481e6",
+      "name": "📄 Build Forecast Dashboard",
+      "disabled": true,
+      "notes": "Format forecast results into chart/table for visualization"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        1728
+      ],
+      "id": "f48d313f-a5a9-4e70-9636-c755ae785518",
+      "name": "Schedule Trigger2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT  TOP 100\n    FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM') AS month,\n    SUM(nbr_reservations) AS nbr_reservations\nFROM FACT_VENTES\nWHERE Date_PK IS NOT NULL\nGROUP BY FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM')\nORDER BY month ASC",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        -1744,
+        704
+      ],
+      "id": "c96800ec-a450-4ec3-8b0c-8a4e9e158f54",
+      "name": "📊 Load Historical Data1",
+      "notesInFlow": true,
+      "credentials": {
+        "microsoftSql": {
+          "id": "gHv4U8Dmv8L04vlu",
+          "name": "Microsoft SQL account"
+        }
+      },
+      "notes": "Retrieve monthly reservations data for forecasting"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst data = items.map(item => ({\n  month: item.json.month,\n  nbr_reservations: parseInt(item.json.nbr_reservations)\n}));\n\nreturn [{ json: { data: data } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1520,
+        704
+      ],
+      "id": "262e87f4-b709-45bf-b0d7-8267e939e98a",
+      "name": "⚙️ Preprocess Time Series1",
+      "notesInFlow": true,
+      "notes": "Format and structure data for time series forecasting model"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/api/timeseries/forecast ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1328,
+        704
+      ],
+      "id": "5973e32a-9659-4129-a9b4-9099d0497278",
+      "name": "📈 Forecast Future Demand1",
+      "notesInFlow": true,
+      "notes": "Call API to generate future reservation forecasts (ARIMA / ETS)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = $input.first().json;\n\nconst forecast = result.forecast_next_months || [];\n\n// Sécurité (évite crash si vide)\nconst months = JSON.stringify(forecast.map(f => f.month));\nconst values = JSON.stringify(forecast.map(f => f.predicted_reservations));\n\nconst html = `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Forecast Dashboard</title>\n  <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"><\\/script>\n</head>\n<body style=\"background:#1a1a2e; padding:20px; font-family:Arial\">\n\n  <h2 style=\"color:white; text-align:center\">\n    📈 Forecast Réservations - ${result.best_model || 'N/A'}\n  </h2>\n\n  <h4 style=\"color:#aaa; text-align:center\">\n    MAPE: ${result.mape_arima || 0}% | MAE: ${result.mae_arima || 0}\n  </h4>\n\n  <table style=\"color:white; margin:auto; border-collapse:collapse; margin-bottom:20px\">\n    <tr style=\"background:#00d4ff; color:black\">\n      <th style=\"padding:10px 20px\">Mois</th>\n      <th style=\"padding:10px 20px\">Réservations prévues</th>\n    </tr>\n\n    ${forecast.map((f, i) => `\n    <tr style=\"background:${i % 2 === 0 ? '#16213e' : '#0f3460'}\">\n      <td style=\"padding:10px 20px; text-align:center\">${f.month}</td>\n      <td style=\"padding:10px 20px; text-align:center\">${(f.predicted_reservations || 0).toLocaleString()}</td>\n    </tr>`).join('')}\n\n  </table>\n\n  <canvas id=\"chart\"></canvas>\n\n  <script>\n    new Chart(document.getElementById('chart'), {\n      type: 'line',\n      data: {\n        labels: ${months},\n        datasets: [{\n          label: 'Réservations prévues',\n          data: ${values},\n          borderColor: '#00d4ff',\n          backgroundColor: 'rgba(0,212,255,0.1)',\n          borderWidth: 3,\n          pointRadius: 6,\n          fill: true,\n          tension: 0.4\n        }]\n      },\n      options: {\n        plugins: {\n          legend: {\n            labels: { color: 'white' }\n          }\n        },\n        scales: {\n          x: {\n            ticks: { color: 'white' },\n            grid: { color: '#333' }\n          },\n          y: {\n            ticks: { color: 'white' },\n            grid: { color: '#333' }\n          }\n        }\n      }\n    });\n  <\\/script>\n\n</body>\n</html>`;\n\n// 👉 RETURN HTML DIRECTEMENT (IMPORTANT)\nreturn [\n  {\n    json: {},\n    binary: {\n      data: {\n        data: Buffer.from(html),\n        mimeType: 'text/html'\n      }\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1136,
+        704
+      ],
+      "id": "82150ffb-56c0-4172-8710-c06bbd91633c",
+      "name": "📄 Build Forecast Dashboard1",
+      "notes": "Format forecast results into chart/table for visualization"
+    },
+    {
+      "parameters": {
+        "path": "forecast",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1968,
+        704
+      ],
+      "id": "a6f69eb3-89bb-4acb-a812-b660b1ae837a",
+      "name": "Webhook",
+      "webhookId": "561bbe8a-8efa-4e77-b9d4-7f586efe9086"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -928,
+        704
+      ],
+      "id": "01152bd7-37e5-463d-83ae-2c7df409894f",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "path": "generate-pdf",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2400,
+        480
+      ],
+      "id": "673f5745-7154-4eb7-a36d-7b00f13e2866",
+      "name": "Webhook1",
+      "webhookId": "cf200e29-838e-40bf-b098-b5fe76dc3fef"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/pdf"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1456,
+        896
+      ],
+      "id": "c2bfc198-af0a-4224-82a1-c3459c265818",
+      "name": "Respond to Webhook1"
     }
   ],
   "pinData": {},
@@ -1223,6 +1355,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Prepare Email Report",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1291,44 +1430,6 @@
         [
           {
             "node": "🧠 Generate PDF Report (Gemini AI)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "📊 Load Historical Data": {
-      "main": [
-        [
-          {
-            "node": "⚙️ Preprocess Time Series",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "⚙️ Preprocess Time Series": {
-      "main": [
-        [
-          {
-            "node": "📈 Forecast Future Demand",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "📈 Forecast Future Demand": {
-      "main": [
-        [
-          {
-            "node": "📄 Build Forecast Dashboard",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Code in JavaScript3",
             "type": "main",
             "index": 0
           }
@@ -1405,7 +1506,7 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript",
+            "node": "Code in JavaScript2",
             "type": "main",
             "index": 0
           }
@@ -1505,17 +1606,6 @@
         ]
       ]
     },
-    "Code in JavaScript": {
-      "main": [
-        [
-          {
-            "node": "Code in JavaScript2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Code in JavaScript6": {
       "main": [
         [
@@ -1570,17 +1660,6 @@
           },
           {
             "node": "🔄 Prepare Input Data ",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Schedule Trigger2": {
-      "main": [
-        [
-          {
-            "node": "📊 Load Historical Data",
             "type": "main",
             "index": 0
           }
@@ -1649,28 +1728,7 @@
     },
     "When clicking ‘Execute workflow’": {
       "main": [
-        [
-          {
-            "node": "📊 SQL Data Extraction  1",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "📊 SQL Data Extraction  ",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "📊 Load Historical Data",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "📊 Extract Anomaly Data",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Log Customer Risk": {
@@ -1683,9 +1741,166 @@
           }
         ]
       ]
+    },
+    "🧠 Generate PDF Report (Gemini AI)": {
+      "main": [
+        []
+      ]
+    },
+    "📩 Email Alert": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Load Historical Data": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Preprocess Time Series",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Preprocess Time Series": {
+      "main": [
+        [
+          {
+            "node": "📈 Forecast Future Demand",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📈 Forecast Future Demand": {
+      "main": [
+        [
+          {
+            "node": "📄 Build Forecast Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger2": {
+      "main": [
+        [
+          {
+            "node": "📊 Load Historical Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Load Historical Data1": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Preprocess Time Series1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Preprocess Time Series1": {
+      "main": [
+        [
+          {
+            "node": "📈 Forecast Future Demand1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📈 Forecast Future Demand1": {
+      "main": [
+        [
+          {
+            "node": "📄 Build Forecast Dashboard1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📄 Build Forecast Dashboard1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "📊 Load Historical Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "📊 SQL Data Extraction  1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📊 SQL Data Extraction  ",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📊 Load Historical Data1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📊 Extract Anomaly Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧠 Generate PDF Report (Gemini AI)1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
@@ -1694,7 +1909,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "5cf4d071-3990-4a1e-8c1a-b0046a58e4e1",
+  "versionId": "bf58dbe0-46ce-4bcc-af17-2a44ffab3ffe",
   "meta": {
     "instanceId": "0a13205f11d55b3b3a750f5918219c63703848ed15a914fe594ca48c6320599f"
   },
