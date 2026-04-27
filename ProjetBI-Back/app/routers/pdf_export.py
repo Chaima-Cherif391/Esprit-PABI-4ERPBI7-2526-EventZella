@@ -17,20 +17,34 @@ PDFSHIFT_API_KEY = "sk_21df17b1910fc9af84bee9be8332123be784b304"
 def download_latest_pdf():
     pdf_content = None
     
-    # 1. Tentative via n8n (On augmente le timeout à 30 secondes car le PDF est lourd)
+    # 1. Tentative via n8n (On augmente le timeout car le PDF est lourd)
     for url in [URL_TEST, URL_PROD]:
         try:
-            print(f"Tentative d'appel n8n sur: {url}")
-            resp = requests.get(url, timeout=40) 
+            print(f"--- Appel n8n: {url} ---")
+            resp = requests.get(url, timeout=60) 
+            print(f"Status: {resp.status_code}, Type: {resp.headers.get('Content-Type')}")
+
             if resp.status_code == 200:
+                # Cas A: Flux binaire direct (le plus courant)
                 if 'application/pdf' in resp.headers.get('Content-Type', ''):
                     pdf_content = resp.content
-                    print(f"✅ Succès n8n sur {url}")
+                    print(f"✅ PDF binaire reçu de n8n")
                     break
-                else:
-                    print(f"⚠️ n8n a répondu mais pas avec un PDF (Type: {resp.headers.get('Content-Type')})")
+                # Cas B: n8n renvoie du JSON (peut arriver selon config n8n)
+                elif 'application/json' in resp.headers.get('Content-Type', ''):
+                    json_data = resp.json()
+                    print(f"⚠️ n8n a renvoyé du JSON au lieu d'un binaire: {str(json_data)[:200]}...")
+                    # Si n8n renvoie une URL PDFShift, on la télécharge
+                    if isinstance(json_data, dict) and 'url' in json_data:
+                        print(f"⬇️ Téléchargement du PDF depuis l'URL fournie...")
+                        pdf_resp = requests.get(json_data['url'], timeout=30)
+                        if pdf_resp.status_code == 200:
+                            pdf_content = pdf_resp.content
+                            break
+            else:
+                print(f"❌ n8n a répondu avec une erreur {resp.status_code}")
         except Exception as e:
-            print(f"❌ Echec sur {url}: {e}")
+            print(f"❌ Erreur lors de l'appel n8n: {e}")
             continue
 
     # 2. SI n8n ECHOUE -> Appel DIRECT à PDFShift
