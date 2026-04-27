@@ -30,7 +30,7 @@ export class DashboardCeoComponent implements OnInit {
     { role: 'ai', text: 'Messagerie instantanée avec le service Marketing. Vos messages sont éphémères.' }
   ];
 
-  private readonly BACKEND_URL = 'http://localhost:8000';
+  private BACKEND_URL = '';
   private readonly HEADERS = new HttpHeaders().set('ngrok-skip-browser-warning', 'any');
 
   constructor(
@@ -39,6 +39,7 @@ export class DashboardCeoComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private http: HttpClient
   ) {
+    this.BACKEND_URL = this.auth.getBackendUrl();
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {

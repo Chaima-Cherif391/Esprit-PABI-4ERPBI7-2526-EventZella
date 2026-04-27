@@ -10,7 +10,14 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
 
-private API = 'http://127.0.0.1:8000/api/auth';
+  private BASE_URL = 'http://www.eventzella.com:8000';
+  private API = `${this.BASE_URL}/api/auth`;
+
+  getBackendUrl() {
+    return this.BASE_URL;
+  }
+
+
 
   constructor(private http: HttpClient, private router: Router) {}
 

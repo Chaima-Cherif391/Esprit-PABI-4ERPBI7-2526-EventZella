@@ -17,7 +17,7 @@ export class ForecastComponent implements OnInit {
   userRole = '';
   userInitials = '';
 
-  private readonly BACKEND_URL = 'http://localhost:8000';
+  private BACKEND_URL = '';
   private readonly HEADERS = new HttpHeaders().set('ngrok-skip-browser-warning', 'any');
 
   constructor(
@@ -25,7 +25,9 @@ export class ForecastComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private router: Router,
     private auth: AuthService
-  ) {}
+  ) {
+    this.BACKEND_URL = this.auth.getBackendUrl();
+  }
 
   ngOnInit() {
     const user = this.auth.getUser();

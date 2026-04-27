@@ -101,7 +101,9 @@
 
   <!-- CONTENU -->
   <div class="content" style="height: calc(100vh - 80px); padding: 0; position: relative;">
-    <iframe *ngIf="iframeKey" [src]="powerBiUrl" width="100%" height="100%" frameborder="0" allowFullScreen="true"
+    <iframe *ngIf="iframeKey" [src]="powerBiUrl" width="100%" height="100%" frameborder="0" 
+      allowFullScreen="true"
+      allow="storage-access; encrypted-media; clipboard-write"
       style="border: none;"></iframe>
   </div>
 

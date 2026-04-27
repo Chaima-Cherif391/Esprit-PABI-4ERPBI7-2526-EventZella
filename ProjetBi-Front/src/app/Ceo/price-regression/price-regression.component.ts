@@ -78,7 +78,7 @@ export class PriceRegressionComponent implements OnInit {
   }
 
   exportPDF(): void {
-    const backendUrl = 'http://localhost:8000';
+    const backendUrl = this.auth.getBackendUrl();
     const url = `${backendUrl}/api/pdf/download?token=skip`;
     alert('Le rapport PDF va s\'ouvrir dans un nouvel onglet...');
     window.open(url, '_blank');

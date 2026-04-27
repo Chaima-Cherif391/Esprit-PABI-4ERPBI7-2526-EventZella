@@ -18,8 +18,6 @@ except Exception as e:
 
 app = Flask(__name__)
 
-origins = [origin.strip() for origin in CORS_ALLOWED_ORIGINS.split(",") if origin.strip()]
-
 CORS(
     app,
     resources={r"/*": {"origins": "*"}},
@@ -28,6 +26,7 @@ CORS(
     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 )
 
+# Blueprints
 app.register_blueprint(auth_api_bp)
 app.register_blueprint(auth_legacy_bp)
 app.register_blueprint(ml_bp)
