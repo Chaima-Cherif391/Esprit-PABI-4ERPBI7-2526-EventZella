@@ -1,0 +1,24 @@
+artifact_path: file:///C:/Users/Mega Pc/lst-interpreter/Esprit-PABI-4ERPBI7-2526-EventZella/Desktop/Esprit/4
+  ERP BI/ProjetBI/EventZellaApp/ProjetBI-Back/mlruns/387407370585588337/models/m-e55605d968f3468fb4ea4aa21061652f/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.10.8
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+    skops_trusted_types: null
+mlflow_version: 3.11.1
+model_id: m-e55605d968f3468fb4ea4aa21061652f
+model_size_bytes: 5108380
+model_uuid: m-e55605d968f3468fb4ea4aa21061652f
+prompts: null
+run_id: a84c9eb74ecc45779676b5ec57d0dabf
+utc_time_created: '2026-04-27 12:18:14.971331'

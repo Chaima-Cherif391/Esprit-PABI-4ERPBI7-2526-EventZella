@@ -1,0 +1,21 @@
+artifact_path: file:///C:/Users/Mega Pc/lst-interpreter/Esprit-PABI-4ERPBI7-2526-EventZella/Desktop/Esprit/4
+  ERP BI/ProjetBI/EventZellaApp/ProjetBI-Back/mlruns/387407370585588337/models/m-2c05a63b3aaf46adb1b5cc2d1e432955/artifacts
+flavors:
+  python_function:
+    data: model.statsmodels
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.statsmodels
+    python_version: 3.10.8
+  statsmodels:
+    code: null
+    data: model.statsmodels
+    statsmodels_version: 0.14.6
+mlflow_version: 3.11.1
+model_id: m-2c05a63b3aaf46adb1b5cc2d1e432955
+model_size_bytes: 145296
+model_uuid: m-2c05a63b3aaf46adb1b5cc2d1e432955
+prompts: null
+run_id: ea9c396e5264449e896266a22f23d365
+utc_time_created: '2026-04-27 12:18:32.003210'
