@@ -1,0 +1,204 @@
+/* ── VARIABLES ── */
+:host {
+  --accent: #16C0DE;
+  --accent-dim: rgba(22, 192, 222, 0.12);
+  --accent-glow: rgba(22, 192, 222, 0.25);
+  --dark: #050E1A;
+  --dark2: #091623;
+  --dark3: #0D1F30;
+  --dark4: #122840;
+  --border: rgba(22, 192, 222, 0.15);
+  --border-soft: rgba(255, 255, 255, 0.06);
+  --text-primary: #F0F6FF;
+  --text-muted: rgba(240, 246, 255, 0.45);
+  --text-mid: rgba(240, 246, 255, 0.70);
+  --navbar-h: 72px;
+
+  display: block;
+  min-height: 100vh;
+  background: var(--dark);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.navbar {
+  height: var(--navbar-h);
+  background: rgba(9, 22, 35, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.back-arrow {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.navbar-brand:hover .back-arrow {
+  color: var(--accent);
+  transform: translateX(-4px);
+}
+
+.back-arrow svg { width: 18px; height: 18px; }
+
+.logo-icon-sm {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--accent), #0077b6);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(22, 192, 222, 0.3);
+}
+
+.logo-icon-sm svg { width: 24px; height: 24px; fill: var(--dark); }
+
+.navbar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.navbar-actions { display: flex; align-items: center; gap: 16px; }
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(13, 31, 48, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.icon-btn:hover {
+  background: rgba(22, 192, 222, 0.1);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.icon-btn svg { width: 20px; height: 20px; color: var(--text-mid); }
+
+.btn-label {
+  position: absolute;
+  bottom: -22px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transition: all 0.2s;
+}
+.icon-btn:hover .btn-label { opacity: 1; bottom: -18px; }
+
+.divider { width: 1px; height: 32px; background: rgba(255, 255, 255, 0.1); margin: 0 8px; }
+
+.user-profile-sm {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: rgba(13, 31, 48, 0.4);
+}
+
+.user-avatar-sm {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #70e1f5, #ffd194);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  color: #050E1A;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-name-sm { font-size: 14px; font-weight: 600; color: white; }
+.user-role-sm { font-size: 11px; color: var(--accent); text-transform: uppercase; }
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #ff4757, #ff6b81);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-logout:hover { transform: scale(1.05); }
+
+/* ── CONTENT ── */
+.content-scroll {
+  flex: 1;
+  position: relative;
+  background: white;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.loading-state {
+  position: absolute;
+  inset: 0;
+  background: var(--dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(22, 192, 222, 0.1);
+  border-left-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

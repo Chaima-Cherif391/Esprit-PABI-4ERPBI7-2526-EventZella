@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+</head>
+<body>
+
+  <!-- BACKGROUND IMAGE -->
+  <div class="bg"></div>
+
+  <!-- PAGE -->
+  <div class="page">
+
+    <!-- LEFT : Texte -->
+    <div class="left-content">
+  <img src="/images/eventzilla-logo.png" alt="logo" class="tag-logo">
+     <h4>
+  <span style="color: var(--accent); font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.3em; display: block; margin-bottom: 6px;">✦ WELCOME</span>
+  LOGIN PAGE
+</h4>
+   <p style="font-size: 18px; font-family: 'Palatino', serif; line-height: 1.7; color: rgba(255,255,255,0.80); border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; max-width: 400px;">
+Eventzilla is the only platform offering event organizers enterprise-level features – from registration to marketing, management and analytics – all through an easy-to-use interface and at an affordable price.</p>
+    </div>
+
+  <!-- RIGHT -->
+  <div class="form-card">
+    <h2>Login to your profile</h2>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+    <div class="input-group">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      <input type="email" placeholder="Enter email"
+             [(ngModel)]="email" autocomplete="email"/>
+    </div>
+
+    <div class="input-group">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <input type="password" placeholder="Enter Password"
+             [(ngModel)]="password" autocomplete="current-password"/>
+    </div>
+
+    <button class="btn-login" (click)="onLogin()" [disabled]="loading">
+      {{ loading ? 'Connexion...' : 'Login' }}
+    </button>
+
+      <!-- <div class="divider">or</div>
+
+      <div class="social-login">
+        <div class="social-btn" title="Google">
+          <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.15 0 5.64 1.08 7.55 2.84l5.6-5.6C33.7 3.56 29.22 1.5 24 1.5 14.98 1.5 7.3 7.1 4.1 15.06l6.52 5.06C12.3 14.02 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24c0-1.6-.14-3.14-.4-4.63H24v8.75h12.67c-.55 2.93-2.2 5.41-4.68 7.08l7.2 5.6C43.2 36.6 46.5 30.8 46.5 24z"/><path fill="#FBBC05" d="M10.62 28.47A14.5 14.5 0 0 1 9.5 24c0-1.57.27-3.08.74-4.5L3.72 14.44A22.47 22.47 0 0 0 1.5 24c0 3.6.87 7 2.42 10l6.7-5.53z"/><path fill="#34A853" d="M24 46.5c5.3 0 9.76-1.76 13.02-4.77l-7.2-5.6c-1.76 1.18-4.02 1.87-5.82 1.87-6.3 0-11.7-4.52-13.62-10.6l-6.52 5.06C7.3 40.9 14.98 46.5 24 46.5z"/></svg>
+        </div>
+        <div class="social-btn" title="Facebook">
+          <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.88v2.27h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+        </div>
+        <div class="social-btn" title="X (Twitter)">
+          <svg viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L2.002 2.25h6.478l4.26 5.633 5.504-5.633zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </div>
+      </div> -->
+
+    </div>
+  </div>
+</body>
+</html>

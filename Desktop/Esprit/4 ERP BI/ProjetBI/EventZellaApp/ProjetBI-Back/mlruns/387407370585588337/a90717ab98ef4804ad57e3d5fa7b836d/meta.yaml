@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/Mega Pc/lst-interpreter/Esprit-PABI-4ERPBI7-2526-EventZella/Desktop/Esprit/4
+  ERP BI/ProjetBI/EventZellaApp/ProjetBI-Back/mlruns/387407370585588337/a90717ab98ef4804ad57e3d5fa7b836d/artifacts
+end_time: 1777303452528
+entry_point_name: ''
+experiment_id: '387407370585588337'
+lifecycle_stage: active
+run_id: a90717ab98ef4804ad57e3d5fa7b836d
+run_name: Regression_RandomForest_Price
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777303437341
+status: 3
+tags: []
+user_id: Mega Pc

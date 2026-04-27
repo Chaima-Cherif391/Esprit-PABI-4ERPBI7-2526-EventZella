@@ -1,0 +1,11 @@
+artifact_location: file:///C:/Users/Mega Pc/lst-interpreter/Esprit-PABI-4ERPBI7-2526-EventZella/Desktop/Esprit/4
+  ERP BI/ProjetBI/EventZellaApp/ProjetBI-Back/mlruns/387407370585588337/models/m-915da7f838244383baba3290e0be8e1d/artifacts
+creation_timestamp: 1777303441870
+experiment_id: '387407370585588337'
+last_updated_timestamp: 1777303452502
+model_id: m-915da7f838244383baba3290e0be8e1d
+model_type: null
+name: model
+source_run_id: a90717ab98ef4804ad57e3d5fa7b836d
+status: 2
+status_message: null

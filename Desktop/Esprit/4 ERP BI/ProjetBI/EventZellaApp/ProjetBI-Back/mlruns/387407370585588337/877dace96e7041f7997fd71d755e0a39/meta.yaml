@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/Mega Pc/lst-interpreter/Esprit-PABI-4ERPBI7-2526-EventZella/Desktop/Esprit/4
+  ERP BI/ProjetBI/EventZellaApp/ProjetBI-Back/mlruns/387407370585588337/877dace96e7041f7997fd71d755e0a39/artifacts
+end_time: 1777303474408
+entry_point_name: ''
+experiment_id: '387407370585588337'
+lifecycle_stage: active
+run_id: 877dace96e7041f7997fd71d755e0a39
+run_name: Anomaly_IsolationForest
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777303469105
+status: 3
+tags: []
+user_id: Mega Pc
