@@ -35,6 +35,81 @@ export class PriceRegressionComponent implements OnInit {
   loading = false;
   errorMessage = '';
 
+  seasons = [
+    { label: 'Spring', value: 1 },
+    { label: 'Summer', value: 2 },
+    { label: 'Autumn', value: 3 },
+    { label: 'Winter', value: 4 }
+  ];
+
+  eventTypes = [
+    { label: 'Wedding', value: 0 },
+    { label: 'Conference', value: 1 },
+    { label: 'Concert', value: 2 },
+    { label: 'Birthday', value: 3 },
+    { label: 'Gala', value: 4 }
+  ];
+
+  venueTypes = [
+    { label: 'Hotel', value: 0 },
+    { label: 'Banquet Hall', value: 1 },
+    { label: 'Outdoor', value: 2 },
+    { label: 'Restaurant', value: 3 }
+  ];
+
+  capacityRanges = [
+    '50-100',
+    '100-200',
+    '200-400',
+    '200-500',
+    '300-500',
+    '500-1000',
+    '1000-2000'
+  ];
+
+  selectedCapacityRange = '300-500';
+
+  marketingSpendOptions = [
+    { label: 'Low (0 - 5k TND)', value: '2500' },
+    { label: 'Medium (5k - 15k TND)', value: '10000' },
+    { label: 'High (15k - 30k TND)', value: '22500' },
+    { label: 'Premium (30k+ TND)', value: '40000' }
+  ];
+  selectedMarketingSpend = '22500';
+
+  visitorOptions = [
+    { label: 'Small (0 - 500)', value: '250' },
+    { label: 'Medium (500 - 2,000)', value: '1250' },
+    { label: 'Large (2,000 - 5,000)', value: '3500' },
+    { label: 'Massive (5,000+)', value: '8000' }
+  ];
+  selectedVisitors = '3500';
+
+  reservationOptions = [
+    { label: '0 - 50', value: '25' },
+    { label: '50 - 150', value: '100' },
+    { label: '150 - 300', value: '225' },
+    { label: '300+', value: '450' }
+  ];
+  selectedReservations = '225';
+
+  cities = [
+    { label: 'Tunis', value: 16 },
+    { label: 'Sousse', value: 15 },
+    { label: 'Sfax', value: 14 },
+    { label: 'Hammamet', value: 13 },
+    { label: 'Djerba', value: 12 },
+    { label: 'Bizerte', value: 11 },
+    { label: 'Nabeul', value: 10 },
+    { label: 'Monastir', value: 9 },
+    { label: 'Mahdia', value: 8 },
+    { label: 'Kairouan', value: 7 },
+    { label: 'Gabès', value: 6 },
+    { label: 'Gafsa', value: 5 },
+    { label: 'Tozeur', value: 4 },
+    { label: 'Ariana', value: 3 }
+  ];
+
   fullName = '';
   userRole = '';
   userInitials = '';
@@ -94,9 +169,48 @@ export class PriceRegressionComponent implements OnInit {
     this.auth.logout();
   }
 
+  validateForm(): string | null {
+    const keys = Object.keys(this.formData);
+    for (let key of keys) {
+      const val = (this.formData as any)[key];
+      if (val === null || val === undefined || val === '') {
+         return 'Please fill out all fields.';
+      }
+    }
+    if (this.formData.market_count < 0) return "Competitors cannot be negative.";
+    if (this.formData.nbr_visitors < 0) return "Number of visitors cannot be negative.";
+    if (this.formData.nbr_reservations < 0) return "Number of reservations cannot be negative.";
+    if (this.formData.marketing_spend < 0) return "Marketing spend cannot be negative.";
+    if (this.formData.rating < 1 || this.formData.rating > 5) return "Rating must be between 1 and 5.";
+    if (this.formData.capacity_min < 0) return "Minimum capacity cannot be negative.";
+    if (this.formData.capacity_max < 0) return "Maximum capacity cannot be negative.";
+    if (this.formData.capacity_max < this.formData.capacity_min) return "Maximum capacity must be greater than or equal to minimum capacity.";
+    if (this.formData.season_encoded < 1 || this.formData.season_encoded > 4) return "Season must be between 1 and 4.";
+    
+    return null;
+  }
+
   predictPrice(): void {
-    this.loading = true;
     this.errorMessage = '';
+    
+    // Convert selected capacity range string to min and max
+    if (this.selectedCapacityRange.includes('-')) {
+      const parts = this.selectedCapacityRange.split('-');
+      this.formData.capacity_min = parseInt(parts[0], 10);
+      this.formData.capacity_max = parseInt(parts[1], 10);
+    }
+
+    this.formData.marketing_spend = Number(this.selectedMarketingSpend);
+    this.formData.nbr_visitors = Number(this.selectedVisitors);
+    this.formData.nbr_reservations = Number(this.selectedReservations);
+
+    const validationError = this.validateForm();
+    if (validationError) {
+      this.errorMessage = validationError;
+      return;
+    }
+
+    this.loading = true;
     this.predictedPrice = null;
     this.result = null;
 
@@ -113,7 +227,7 @@ export class PriceRegressionComponent implements OnInit {
       },
       error: (error) => {
         console.error('Prediction error:', error);
-        this.errorMessage = 'Erreur lors de la prédiction.';
+        this.errorMessage = 'An error occurred during prediction.';
         this.loading = false;
       }
     });

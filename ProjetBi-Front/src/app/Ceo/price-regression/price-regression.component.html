@@ -89,20 +89,85 @@
             <p>Adjust signals to generate your next pricing recommendation.</p>
           </div>
 
-          <div class="form-grid">
-            <label class="field"><span>Concurrents</span><input type="number" [(ngModel)]="formData.market_count"></label>
-            <label class="field"><span>Visiteurs</span><input type="number" [(ngModel)]="formData.nbr_visitors"></label>
-            <label class="field"><span>Réservations</span><input type="number" [(ngModel)]="formData.nbr_reservations"></label>
-            <label class="field"><span>Budget marketing</span><input type="number" [(ngModel)]="formData.marketing_spend"></label>
-            <label class="field"><span>Rating</span><input type="number" [(ngModel)]="formData.rating"></label>
-            <label class="field"><span>Trend score</span><input type="number" [(ngModel)]="formData.trend_score"></label>
-            <label class="field"><span>Growth rate %</span><input type="number" [(ngModel)]="formData.growth_rate_pct"></label>
-            <label class="field"><span>Capacity min</span><input type="number" [(ngModel)]="formData.capacity_min"></label>
-            <label class="field"><span>Capacity max</span><input type="number" [(ngModel)]="formData.capacity_max"></label>
-            <label class="field"><span>Season (1-4)</span><input type="number" [(ngModel)]="formData.season_encoded"></label>
-            <label class="field"><span>Event Type</span><input type="number" [(ngModel)]="formData.event_type_encoded"></label>
-            <label class="field"><span>Venue Type</span><input type="number" [(ngModel)]="formData.venue_type_encoded"></label>
-            <label class="field"><span>City</span><input type="number" [(ngModel)]="formData.city_encoded"></label>
+          <div class="form-section">
+            <h4>Market & Performance</h4>
+            <div class="form-grid">
+              <label class="field"><span>Competitors</span><input type="number" min="0" [(ngModel)]="formData.market_count"></label>
+              
+              <label class="field"><span>Visitors</span>
+                <select [(ngModel)]="selectedVisitors">
+                  <option *ngFor="let o of visitorOptions" [value]="o.value">{{ o.label }}</option>
+                </select>
+              </label>
+
+              <label class="field"><span>Reservations</span>
+                <select [(ngModel)]="selectedReservations">
+                  <option *ngFor="let o of reservationOptions" [value]="o.value">{{ o.label }}</option>
+                </select>
+              </label>
+
+              <label class="field"><span>Marketing Spend (TND)</span>
+                <select [(ngModel)]="selectedMarketingSpend">
+                  <option *ngFor="let o of marketingSpendOptions" [value]="o.value">{{ o.label }}</option>
+                </select>
+              </label>
+
+              <label class="field"><span>Rating (1-5)</span><input type="number" min="1" max="5" [(ngModel)]="formData.rating"></label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4>Event Specifications</h4>
+            <div class="form-grid">
+              <label class="field"><span>Event Type</span>
+                <select [(ngModel)]="formData.event_type_encoded">
+                  <option *ngFor="let e of eventTypes" [ngValue]="e.value">{{ e.label }}</option>
+                </select>
+              </label>
+              <label class="field"><span>Venue Type</span>
+                <select [(ngModel)]="formData.venue_type_encoded">
+                  <option *ngFor="let v of venueTypes" [ngValue]="v.value">{{ v.label }}</option>
+                </select>
+              </label>
+              <label class="field"><span>Capacity Range</span>
+                <select [(ngModel)]="selectedCapacityRange">
+                  <option *ngFor="let range of capacityRanges" [value]="range">{{ range }}</option>
+                </select>
+              </label>
+              <label class="field"><span>City</span>
+                <select [(ngModel)]="formData.city_encoded">
+                  <option *ngFor="let c of cities" [ngValue]="c.value">{{ c.label }}</option>
+                </select>
+              </label>
+              <label class="field"><span>Season</span>
+                <select [(ngModel)]="formData.season_encoded">
+                  <option *ngFor="let s of seasons" [ngValue]="s.value">{{ s.label }}</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4>Strategic Indicators</h4>
+            <div class="form-grid-full">
+              <div class="field slider-field">
+                <div class="slider-header">
+                  <span>Trend Score</span>
+                  <span class="slider-value">{{ formData.trend_score }}%</span>
+                </div>
+                <input type="range" min="0" max="100" [(ngModel)]="formData.trend_score" class="custom-slider"
+                  [style.background]="'linear-gradient(to right, #16c0de ' + formData.trend_score + '%, #122840 ' + formData.trend_score + '%)'">
+              </div>
+              
+              <div class="field slider-field">
+                <div class="slider-header">
+                  <span>Growth Rate</span>
+                  <span class="slider-value">{{ formData.growth_rate_pct }}%</span>
+                </div>
+                <input type="range" min="0" max="100" [(ngModel)]="formData.growth_rate_pct" class="custom-slider"
+                  [style.background]="'linear-gradient(to right, #16c0de ' + formData.growth_rate_pct + '%, #122840 ' + formData.growth_rate_pct + '%)'">
+              </div>
+            </div>
           </div>
 
           <button class="predict-btn" (click)="predictPrice()" [disabled]="loading">

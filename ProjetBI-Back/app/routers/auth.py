@@ -159,6 +159,65 @@ def create_auth_blueprint(name: str, url_prefix: str) -> Blueprint:
         finally:
             db.close()
 
+    @bp.route("/users/marketing", methods=["GET"])
+    def get_marketing_users():
+        token = _get_token_from_header()
+        if not token:
+            return jsonify({"detail": "Not authenticated"}), 401
+
+        db = SessionLocal()
+        try:
+            users = db.query(User).filter(User.role == "MARKETING").all()
+            return jsonify([UserOut.model_validate(u).model_dump(mode="json") for u in users]), 200
+        finally:
+            db.close()
+
+    @bp.route("/users/<int:user_id>", methods=["PUT"])
+    def update_user(user_id):
+        token = _get_token_from_header()
+        if not token:
+            return jsonify({"detail": "Not authenticated"}), 401
+
+        db = SessionLocal()
+        try:
+            user = db.query(User).filter(User.id == user_id).first()
+            if not user:
+                return jsonify({"detail": "User not found"}), 404
+
+            data = request.get_json(force=True, silent=True) or {}
+            if "full_name" in data:
+                user.full_name = data["full_name"]
+            if "email" in data:
+                user.email = data["email"]
+            if "is_active" in data:
+                user.is_active = data["is_active"]
+            if "password" in data and data["password"]:
+                user.password = hash_password(data["password"])
+
+            db.commit()
+            db.refresh(user)
+            return jsonify(UserOut.model_validate(user).model_dump(mode="json")), 200
+        finally:
+            db.close()
+
+    @bp.route("/users/<int:user_id>", methods=["DELETE"])
+    def delete_user(user_id):
+        token = _get_token_from_header()
+        if not token:
+            return jsonify({"detail": "Not authenticated"}), 401
+
+        db = SessionLocal()
+        try:
+            user = db.query(User).filter(User.id == user_id).first()
+            if not user:
+                return jsonify({"detail": "User not found"}), 404
+
+            db.delete(user)
+            db.commit()
+            return jsonify({"detail": "User deleted"}), 200
+        finally:
+            db.close()
+
     return bp
 
 

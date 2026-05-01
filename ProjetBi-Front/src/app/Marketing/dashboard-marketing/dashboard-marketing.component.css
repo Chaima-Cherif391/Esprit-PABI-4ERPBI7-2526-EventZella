@@ -1069,12 +1069,19 @@ tbody tr:hover td {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  scroll-behavior: smooth;
 }
 
 .message {
   max-width: 80%;
   display: flex;
   flex-direction: column;
+  animation: messageSlideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes messageSlideIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .message.user {
@@ -1083,6 +1090,18 @@ tbody tr:hover td {
 
 .message.ai {
   align-self: flex-start;
+}
+
+.message-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  padding: 0 4px;
+}
+
+.message.user .message-meta {
+  text-align: right;
+  color: var(--accent);
 }
 
 .message-content {

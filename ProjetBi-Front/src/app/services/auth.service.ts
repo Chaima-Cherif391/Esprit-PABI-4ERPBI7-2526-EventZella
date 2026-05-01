@@ -10,16 +10,21 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private BASE_URL = 'http://www.eventzella.com:8000';
-  private API = `${this.BASE_URL}/api/auth`;
-
+  // Dynamically determine the base URL based on the current hostname
   getBackendUrl() {
-    return this.BASE_URL;
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:5000'; // Version locale connectée à la BD du PC
+    }
+    return 'http://www.eventzella.com:8000'; // Version déployée Docker
+  }
+
+  private get API() {
+    return `${this.getBackendUrl()}/api/auth`;
   }
 
 
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(email: string, password: string) {
     return this.http.post<any>(`${this.API}/login`, { email, password }).pipe(
@@ -37,11 +42,11 @@ export class AuthService {
   logout() {
     localStorage.clear();
     sessionStorage.clear();
-    
+
     // On ouvre la fenêtre Microsoft de déconnexion
     const logoutWin = window.open(
-      'https://login.microsoftonline.com/common/oauth2/v2.0/logout', 
-      'MicrosoftLogout', 
+      'https://login.microsoftonline.com/common/oauth2/v2.0/logout',
+      'MicrosoftLogout',
       'width=800,height=700,top=50,left=50'
     );
 

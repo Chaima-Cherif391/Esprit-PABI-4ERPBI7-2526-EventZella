@@ -117,8 +117,10 @@
       <button class="close-chat" (click)="toggleChat()">×</button>
     </div>
     
-    <div class="chat-messages">
+    <div class="chat-messages" #chatScroll>
       <div *ngFor="let msg of chatMessages" class="message" [class.user]="msg.role === 'user'" [class.ai]="msg.role === 'ai'">
+        <div class="message-meta" *ngIf="msg.role === 'ai'">CEO</div>
+        <div class="message-meta" *ngIf="msg.role === 'user'">Moi (Marketing)</div>
         <div class="message-content">
           {{ msg.text }}
           <div class="message-time">{{ msg.time }}</div>

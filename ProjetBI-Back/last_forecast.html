@@ -4,83 +4,134 @@
   <meta charset="UTF-8">
   <title>Forecast Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background: #050E1A;
+      color: #F0F6FF;
+      padding: 30px;
+      font-family: 'DM Sans', 'Segoe UI', sans-serif;
+    }
+    h2 {
+      text-align: center;
+      color: white;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto 40px auto;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    th {
+      background: #16C0DE;
+      color: #050E1A;
+      padding: 16px 20px;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    td {
+      padding: 14px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    tr {
+      background: rgba(13, 31, 48, 0.4);
+    }
+    tr:nth-child(even) {
+      background: rgba(13, 31, 48, 0.7);
+    }
+    .chart-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: rgba(13, 31, 48, 0.4);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+  </style>
 </head>
-<body style="background:#1a1a2e; padding:20px; font-family:Arial">
+<body>
 
-  <h2 style="color:white; text-align:center">
-    📈 Forecast Réservations - ETS
+  <h2>
+    📈 Future Demand Projections (Next 6 Months)
   </h2>
 
-  <h4 style="color:#aaa; text-align:center">
-    MAPE: 11.96% | MAE: 2150.57
-  </h4>
-
-  <table style="color:white; margin:auto; border-collapse:collapse; margin-bottom:20px">
-    <tr style="background:#00d4ff; color:black">
-      <th style="padding:10px 20px">Mois</th>
-      <th style="padding:10px 20px">Réservations prévues</th>
+  <table>
+    <tr>
+      <th>Month</th>
+      <th>Expected Reservations</th>
     </tr>
-
-    
-    <tr style="background:#16213e">
-      <td style="padding:10px 20px; text-align:center">2026-01</td>
-      <td style="padding:10px 20px; text-align:center">19 449</td>
+    <tr>
+      <td>2026-01</td>
+      <td>19,449</td>
     </tr>
-    <tr style="background:#0f3460">
-      <td style="padding:10px 20px; text-align:center">2026-02</td>
-      <td style="padding:10px 20px; text-align:center">15 658</td>
+    <tr>
+      <td>2026-02</td>
+      <td>15,658</td>
     </tr>
-    <tr style="background:#16213e">
-      <td style="padding:10px 20px; text-align:center">2026-03</td>
-      <td style="padding:10px 20px; text-align:center">18 359</td>
+    <tr>
+      <td>2026-03</td>
+      <td>18,359</td>
     </tr>
-    <tr style="background:#0f3460">
-      <td style="padding:10px 20px; text-align:center">2026-04</td>
-      <td style="padding:10px 20px; text-align:center">15 643</td>
+    <tr>
+      <td>2026-04</td>
+      <td>15,643</td>
     </tr>
-    <tr style="background:#16213e">
-      <td style="padding:10px 20px; text-align:center">2026-05</td>
-      <td style="padding:10px 20px; text-align:center">21 158</td>
+    <tr>
+      <td>2026-05</td>
+      <td>21,158</td>
     </tr>
-    <tr style="background:#0f3460">
-      <td style="padding:10px 20px; text-align:center">2026-06</td>
-      <td style="padding:10px 20px; text-align:center">17 166</td>
+    <tr>
+      <td>2026-06</td>
+      <td>17,166</td>
     </tr>
-
   </table>
 
-  <canvas id="chart"></canvas>
+  <div class="chart-container">
+    <canvas id="chart"></canvas>
+  </div>
 
   <script>
     new Chart(document.getElementById('chart'), {
       type: 'line',
       data: {
-        labels: ["2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"],
+        labels: ["2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06"],
         datasets: [{
-          label: 'Réservations prévues',
-          data: [19449,15658,18359,15643,21158,17166],
-          borderColor: '#00d4ff',
-          backgroundColor: 'rgba(0,212,255,0.1)',
+          label: 'Expected Reservations',
+          data: [19449, 15658, 18359, 15643, 21158, 17166],
+          borderColor: '#16C0DE',
+          backgroundColor: 'rgba(22, 192, 222, 0.15)',
           borderWidth: 3,
-          pointRadius: 6,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: '#16C0DE',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7,
           fill: true,
           tension: 0.4
         }]
       },
       options: {
+        responsive: true,
         plugins: {
           legend: {
-            labels: { color: 'white' }
+            labels: { color: '#F0F6FF', font: { size: 14 } }
           }
         },
         scales: {
           x: {
-            ticks: { color: 'white' },
-            grid: { color: '#333' }
+            ticks: { color: 'rgba(240, 246, 255, 0.7)' },
+            grid: { color: 'rgba(255, 255, 255, 0.05)' }
           },
           y: {
-            ticks: { color: 'white' },
-            grid: { color: '#333' }
+            ticks: { color: 'rgba(240, 246, 255, 0.7)' },
+            grid: { color: 'rgba(255, 255, 255, 0.05)' }
           }
         }
       }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
@@ -27,8 +27,22 @@ export class DashboardCeoComponent implements OnInit {
   chatInput = '';
   isTyping = false;
   chatMessages: any[] = [
-    { role: 'ai', text: 'Messagerie instantanée avec le service Marketing. Vos messages sont éphémères.' }
+    { role: 'ai', text: 'Messagerie instantanée avec le service Marketing. Vos messages sont éphémères.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
   ];
+  @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
+
+  scrollToBottom(): void {
+    try {
+      if (this.chatScrollContainer) {
+        this.chatScrollContainer.nativeElement.scrollTop = this.chatScrollContainer.nativeElement.scrollHeight;
+      }
+    } catch(err) { }
+  }
+
+  // ── USERS MANAGEMENT ──
+  showUsersModal = false;
+  marketingUsers: any[] = [];
+  editingUser: any = null;
 
   private BACKEND_URL = '';
   private readonly HEADERS = new HttpHeaders().set('ngrok-skip-browser-warning', 'any');
@@ -37,7 +51,8 @@ export class DashboardCeoComponent implements OnInit {
     private router: Router,
     private auth: AuthService,
     private sanitizer: DomSanitizer,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) {
     this.BACKEND_URL = this.auth.getBackendUrl();
     this.router.events
@@ -69,6 +84,7 @@ export class DashboardCeoComponent implements OnInit {
     this.http.get<{ count: number }>(`${this.BACKEND_URL}/api/notifications/unread-count`, { headers: this.HEADERS }).subscribe({
       next: (res) => {
         this.unreadNotifs = res.count;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Notification check failed', err)
     });
@@ -83,7 +99,10 @@ export class DashboardCeoComponent implements OnInit {
 
   fetchNotifications() {
     this.http.get<any[]>(`${this.BACKEND_URL}/api/notifications/latest`, { headers: this.HEADERS }).subscribe({
-      next: (res) => this.notifications = res,
+      next: (res) => {
+        this.notifications = [...res];
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error('Failed to fetch notifications', err)
     });
   }
@@ -105,6 +124,7 @@ export class DashboardCeoComponent implements OnInit {
   markNotifsRead() {
     this.http.post(`${this.BACKEND_URL}/api/notifications/mark-read`, {}, { headers: this.HEADERS }).subscribe(() => {
       this.unreadNotifs = 0;
+      this.cdr.detectChanges();
       this.fetchNotifications();
     });
   }
@@ -121,9 +141,9 @@ export class DashboardCeoComponent implements OnInit {
     this.iframeKey = 0;
     let url = "";
     if (route === '/content-ceo') {
-      url = "https://app.powerbi.com/reportEmbed?reportId=8f607b5c-e506-4bfa-9b0e-04ecd9f03190&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730";
+      url = "https://app.powerbi.com/reportEmbed?reportId=0768d703-3c6b-48a0-99f8-c5e1b924b1e7&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false";
     } else {
-      url = "https://app.powerbi.com/reportEmbed?reportId=8f607b5c-e506-4bfa-9b0e-04ecd9f03190&groupId=b0809d6d-120a-46e5-af63-9e12b6f11ef2&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&pageName=df6243e1614b506d8b8f&bookmarkGuid=59c679a7afb0fda4b7b0";
+      url = "https://app.powerbi.com/reportEmbed?reportId=0768d703-3c6b-48a0-99f8-c5e1b924b1e7&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&pageName=df6243e1614b506d8b8f&filterPaneEnabled=false&navContentPaneEnabled=false";
     }
     this.powerBiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     setTimeout(() => { this.iframeKey = Date.now(); }, 100);
@@ -173,6 +193,7 @@ export class DashboardCeoComponent implements OnInit {
     this.isChatOpen = !this.isChatOpen;
     if (this.isChatOpen) {
       this.unreadMessagesCount = 0; // Reset quand on ouvre
+      setTimeout(() => this.scrollToBottom(), 100);
     }
   }
 
@@ -187,7 +208,9 @@ export class DashboardCeoComponent implements OnInit {
     this.http.post(`${this.BACKEND_URL}/api/chat/send`, msgData, { headers: this.HEADERS }).subscribe({
       next: () => {
         this.chatInput = '';
+        this.cdr.detectChanges();
         this.syncMessages();
+        setTimeout(() => this.scrollToBottom(), 100);
       }
     });
   }
@@ -195,8 +218,10 @@ export class DashboardCeoComponent implements OnInit {
   syncMessages() {
     this.http.get<any[]>(`${this.BACKEND_URL}/api/chat/sync`, { headers: this.HEADERS }).subscribe({
       next: (msgs) => {
+        const hasNewMessages = msgs.length > this.chatMessages.length;
+        
         // Si le nombre de messages a augmenté et que le chat est fermé
-        if (msgs.length > this.chatMessages.length && !this.isChatOpen) {
+        if (hasNewMessages && !this.isChatOpen) {
           // On compte combien de nouveaux messages viennent de l'autre
           const newMsgs = msgs.slice(this.chatMessages.length);
           const fromOther = newMsgs.filter(m => m.sender !== 'CEO').length;
@@ -208,6 +233,11 @@ export class DashboardCeoComponent implements OnInit {
           text: m.text,
           time: m.timestamp
         }));
+        this.cdr.detectChanges();
+        
+        if (hasNewMessages && this.isChatOpen) {
+          setTimeout(() => this.scrollToBottom(), 100);
+        }
       }
     });
   }
@@ -220,5 +250,61 @@ export class DashboardCeoComponent implements OnInit {
 
   isActive(route: string): boolean {
     return this.activeRoute === route;
+  }
+
+  // ── USER MANAGEMENT METHODS ──
+  openUsersModal() {
+    this.showUsersModal = true;
+    this.fetchMarketingUsers();
+  }
+
+  closeUsersModal() {
+    this.showUsersModal = false;
+    this.editingUser = null;
+  }
+
+  getAuthHeaders() {
+    return new HttpHeaders()
+      .set('ngrok-skip-browser-warning', 'any')
+      .set('Authorization', `Bearer ${this.auth.getToken()}`);
+  }
+
+  fetchMarketingUsers() {
+    this.http.get<any[]>(`${this.BACKEND_URL}/api/auth/users/marketing`, { headers: this.getAuthHeaders() }).subscribe({
+      next: (users) => {
+        this.marketingUsers = [...users]; // Utiliser le spread operator pour forcer la nouvelle référence
+        this.cdr.detectChanges(); // Forcer la détection de changement
+        console.log('Marketing users loaded:', users);
+      },
+      error: (err) => console.error('Failed to fetch users', err)
+    });
+  }
+
+  editUser(user: any) {
+    this.editingUser = { ...user };
+  }
+
+  saveUser() {
+    if (!this.editingUser) return;
+    this.http.put(`${this.BACKEND_URL}/api/auth/users/${this.editingUser.id}`, this.editingUser, { headers: this.getAuthHeaders() }).subscribe({
+      next: () => {
+        this.fetchMarketingUsers();
+        this.editingUser = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Failed to update user', err)
+    });
+  }
+
+  deleteUser(userId: number) {
+    if (confirm('Etes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+      this.http.delete(`${this.BACKEND_URL}/api/auth/users/${userId}`, { headers: this.getAuthHeaders() }).subscribe({
+        next: () => {
+          this.fetchMarketingUsers();
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error('Failed to delete user', err)
+      });
+    }
   }
 }
