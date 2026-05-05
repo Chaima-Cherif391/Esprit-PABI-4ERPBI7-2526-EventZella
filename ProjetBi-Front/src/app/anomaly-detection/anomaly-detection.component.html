@@ -1,0 +1,245 @@
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <div class="navbar-brand" (click)="goHome()" style="cursor: pointer;">
+      <div class="back-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+      </div>
+      <div class="logo-icon-sm">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <div class="navbar-title">Anomaly Intelligence <span>Sentinel AI</span></div>
+    </div>
+
+    <div class="navbar-actions">
+      <!-- Sync Status -->
+      <div class="sync-status" [ngClass]="{'syncing': isLoading}">
+        <div class="status-dot"></div>
+        <span>{{ isLoading ? 'Analyzing...' : 'System Active' }}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Accessibility Sound Toggle -->
+      <div class="icon-btn sound-btn" (click)="toggleSound()"
+        [title]="isSoundEnabled ? 'Disable Voice Assistance' : 'Enable Voice Assistance'">
+        <svg *ngIf="isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <svg *ngIf="!isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── CONTENT ── -->
+  <div class="content-wrapper">
+
+    <!-- SYSTEM OVERVIEW BAR -->
+    <div class="system-overview">
+      <div class="overview-item">
+        <div class="label">Database Health</div>
+        <div class="value" *ngIf="dbAnomalyData">{{ dbAnomalyData.consensus.anomalies_detected }} Anomalies Detected
+        </div>
+        <div class="value" *ngIf="!dbAnomalyData">Scanning...</div>
+      </div>
+      <div class="overview-item">
+        <div class="label">Last Full Scan</div>
+        <div class="value">{{ lastScanTime | date:'HH:mm:ss' }}</div>
+      </div>
+      <button class="btn-refresh" (click)="scanDatabase()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+        </svg>
+        Rescan DB
+      </button>
+    </div>
+
+    <div class="dashboard-grid">
+
+      <!-- LEFT: CONFIGURATION -->
+      <div class="panel config-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Event Simulator</h2>
+          <p>Test potential scenarios to detect risks before they occur.</p>
+        </div>
+
+        <!-- Presets -->
+        <div class="section-label">SIMULATION PRESETS</div>
+        <div class="simulation-presets">
+          <div *ngFor="let p of presets" (click)="applyPreset(p)" class="preset-card">
+            <div class="preset-icon">
+              <svg *ngIf="p.name.includes('Normal')" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              <svg *ngIf="p.name.includes('High Price')" viewBox="0 0 24 24" fill="none" stroke="#e67e22"
+                stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+              <svg *ngIf="p.name.includes('Marketing')" viewBox="0 0 24 24" fill="none" stroke="#e74c3c"
+                stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+            </div>
+            <div class="preset-name">{{ p.name }}</div>
+          </div>
+        </div>
+
+        <div class="section-label">INPUT METRICS</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Event Price ($)</label>
+            <input type="number" [(ngModel)]="formData.price" class="form-input">
+          </div>
+          <div class="form-group">
+            <label>Total Bookings</label>
+            <input type="number" [(ngModel)]="formData.nbr_reservations" class="form-input">
+          </div>
+          <div class="form-group">
+            <label>Daily Visitors</label>
+            <input type="number" [(ngModel)]="formData.nbr_visitors" class="form-input">
+          </div>
+          <div class="form-group">
+            <label>Ad Spend ($)</label>
+            <input type="number" [(ngModel)]="formData.marketing_spend" class="form-input">
+          </div>
+          <div class="form-group">
+            <label>Market Scope</label>
+            <input type="number" [(ngModel)]="formData.market_count" class="form-input">
+          </div>
+          <div class="form-group">
+            <label>Client Rating</label>
+            <input type="number" step="0.1" [(ngModel)]="formData.rating" class="form-input">
+          </div>
+        </div>
+
+        <button class="btn-predict" (click)="analyzeAnomaly()" [disabled]="isLoading">
+          <div class="btn-content" *ngIf="!isLoading">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+              <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
+            <span>Execute AI Analysis</span>
+          </div>
+          <div *ngIf="isLoading" class="spinner-sm"></div>
+        </button>
+      </div>
+
+      <!-- RIGHT: RESULTS -->
+      <div class="panel results-panel">
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state" *ngIf="!anomalyData && !isLoading">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+          </div>
+          <h3>System Idle</h3>
+          <p>The AI engine is waiting for input parameters. Select a preset or adjust metrics to begin the detection
+            process.</p>
+        </div>
+
+        <!-- LOADING STATE -->
+        <div class="loading-state" *ngIf="isLoading">
+          <div class="radar-scan"></div>
+          <h3>Neural Scan in Progress...</h3>
+          <p>Processing {{ formData.nbr_reservations }} reservations against historical multidimensional patterns.</p>
+        </div>
+
+        <!-- REAL RESULTS -->
+        <div class="results-container" *ngIf="anomalyData && !isLoading">
+
+          <!-- Main Status Card -->
+          <div class="result-header" [ngClass]="anomalyData.is_anomaly === 1 ? 'is-anomaly' : 'is-normal'">
+            <div class="status-badge">
+              <svg *ngIf="anomalyData.is_anomaly === 1" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              <svg *ngIf="anomalyData.is_anomaly === 0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              {{ anomalyData.is_anomaly === 1 ? 'ANOMALY DETECTED' : 'OPERATIONAL NORMAL' }}
+            </div>
+            <div class="score-display">
+              <span class="label">AI Confidence Score</span>
+              <span class="value">{{ (anomalyData.anomaly_score * 100) | number:'1.1-1' }}%</span>
+            </div>
+          </div>
+
+          <div class="results-inner-grid">
+            <!-- Diagnosis Card -->
+            <div class="diagnosis-card">
+              <div class="card-title">AI DIAGNOSIS & EXPLANATION</div>
+              <div class="diagnosis-text">{{ anomalyData.explanation }}</div>
+            </div>
+
+            <!-- Recommendation Card -->
+            <div class="recommendation-card">
+              <div class="card-title">SUGGESTED ACTION</div>
+              <div class="action-item" *ngIf="anomalyData.is_anomaly === 1">
+                <div class="action-bullet">!</div>
+                <p>Manual review required. Check consistency between <strong>marketing spend</strong> and
+                  <strong>conversion rates</strong>.</p>
+              </div>
+              <div class="action-item" *ngIf="anomalyData.is_anomaly === 0">
+                <div class="action-bullet">✓</div>
+                <p>Continue operations. Current trends are within expected variance thresholds.</p>
+              </div>
+            </div>
+
+            <!-- Metrics Analysis Card (Full Width) -->
+            <div class="metrics-deviation full-width">
+              <div class="card-title">MULTIDIMENSIONAL FEATURE ANALYSIS</div>
+              <div class="metrics-row-grid">
+                <div class="metric-row" *ngFor="let m of [
+                  {label: 'Price Level', val: formData.price, max: 150000, color: '#16c0de', unit: '$'},
+                  {label: 'Conversion Density', val: formData.nbr_reservations, max: 500, color: '#f39c12', unit: ''},
+                  {label: 'Market Saturation', val: formData.market_count, max: 20, color: '#9b59b6', unit: ''},
+                  {label: 'Customer Satisfaction', val: formData.rating, max: 5, color: '#2ecc71', unit: '/5'}
+                ]">
+                  <div class="metric-labels">
+                    <span>{{ m.label }}</span>
+                    <span>{{ m.val }}{{ m.unit }}</span>
+                  </div>
+                  <div class="progress-container">
+                    <div class="progress-fill" [style.width.%]="(m.val/m.max)*100" [style.background-color]="m.color">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

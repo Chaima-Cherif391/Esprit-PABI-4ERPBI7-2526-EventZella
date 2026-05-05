@@ -1181,3 +1181,149 @@ tbody tr:hover td {
   height: 18px;
   color: var(--dark);
 }
+.summary-fab { position: absolute; bottom: 30px; right: 30px; background: linear-gradient(135deg, #16c0de, #122840); color: white; padding: 12px 20px; border-radius: 30px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); transition: all 0.3s ease; z-index: 1000; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); } .summary-fab:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(22, 192, 222, 0.4); } .summary-fab svg { width: 20px; height: 20px; stroke: #fff; } .summary-fab .fab-text { font-weight: 600; font-size: 14px; letter-spacing: 0.5px; }
+
+/* FAB SOUND */
+.fab-sound { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #f39c12, #e67e22); color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4); z-index: 9999; transition: all 0.3s ease; }
+.fab-sound:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(243, 156, 18, 0.6); }
+.fab-sound svg { width: 24px; height: 24px; }
+
+/* ── AI ADDITIONS ── */
+.mode-switch-hint {
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.chat-title:hover .mode-switch-hint {
+  opacity: 1;
+}
+
+.typing-indicator {
+  padding: 12px 16px;
+  display: flex;
+  gap: 4px;
+}
+
+.typing-indicator span {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: typing 1s infinite ease-in-out;
+  opacity: 0.4;
+}
+
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(-4px); opacity: 1; }
+}
+
+
+/* -- STRATEGIC REPORT -- */
+.strategy-btn:hover { background: rgba(108, 92, 231, 0.1) !important; border-color: #6c5ce7 !important; }
+.strategy-btn:hover svg { stroke: #6c5ce7 !important; }
+.strategy-modal { max-width: 800px !important; max-height: 85vh; overflow-y: auto; background: var(--dark2); border: 1px solid #6c5ce7; box-shadow: 0 0 50px rgba(108, 92, 231, 0.2); }
+.header-with-icon { display: flex; align-items: center; gap: 12px; }
+.report-content { padding: 24px; line-height: 1.7; color: var(--text-mid); font-size: 15px; }
+.report-content strong { color: #6c5ce7; font-weight: 700; }
+.loading-report { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 40px; color: var(--text-muted); }
+.spinner { width: 40px; height: 40px; border: 3px solid rgba(108, 92, 231, 0.1); border-top-color: #6c5ce7; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.modal-overlay.strategy-report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 5000; }
+
+
+
+/* -- PREMIUM STRATEGY MODAL (CEO STYLE) -- */
+.strategy-modal {
+  width: 90% !important;
+  max-width: 900px !important;
+  max-height: 85vh;
+  background: rgba(9, 22, 35, 0.85) !important;
+  backdrop-filter: blur(25px) !important;
+  -webkit-backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(108, 92, 231, 0.3) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(108, 92, 231, 0.15) !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.strategy-modal .modal-header {
+  padding: 24px 32px !important;
+  background: rgba(108, 92, 231, 0.05) !important;
+  border-bottom: 1px solid rgba(108, 92, 231, 0.1) !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.strategy-modal .modal-header h2 {
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  margin: 0;
+  font-size: 22px;
+}
+
+.report-content {
+  padding: 32px !important;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 16px !important;
+  line-height: 1.8 !important;
+  color: #d1d1d1 !important;
+}
+
+.report-content strong {
+  color: #a29bfe !important;
+  font-weight: 700;
+}
+
+.report-content h3, .report-content h4 {
+  color: #fff !important;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-family: 'Syne', sans-serif;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 50% !important;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.close-btn:hover {
+  background: rgba(231, 76, 60, 0.2) !important;
+  color: #e74c3c !important;
+  transform: rotate(90deg);
+}
+
+
+
+/* -- CUSTOM SCROLLBAR FOR MODAL -- */
+.report-content::-webkit-scrollbar { width: 6px; }
+.report-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+.report-content::-webkit-scrollbar-thumb { background: rgba(108, 92, 231, 0.3); border-radius: 10px; }
+.report-content::-webkit-scrollbar-thumb:hover { background: rgba(108, 92, 231, 0.5); }
+

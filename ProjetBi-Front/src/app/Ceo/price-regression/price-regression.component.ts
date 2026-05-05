@@ -7,6 +7,7 @@ import {
   PredictionResponse,
   PredictionService
 } from '../../services/predictionRegression.service';
+import { SoundService } from '../../services/sound.service';
 
 @Component({
   selector: 'app-price-regression',
@@ -118,7 +119,8 @@ export class PriceRegressionComponent implements OnInit {
     private predictionService: PredictionService,
     private router: Router,
     private auth: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private soundService: SoundService
   ) {}
 
   ngOnInit() {
@@ -160,9 +162,20 @@ export class PriceRegressionComponent implements OnInit {
   }
 
   exportExcel(): void {
-    // Lien de téléchargement direct en format Excel (.xlsx)
     const googleSheetsUrl = 'https://docs.google.com/spreadsheets/d/1biKepM8Y2DwwtqiPSqdKnObM7ORJkUY6S746PRCci1w/export?format=xlsx';
     window.open(googleSheetsUrl, '_blank');
+  }
+
+  toggleNotifs(): void {
+    alert('Notifications are available on the main dashboard.');
+  }
+
+  toggleChat(): void {
+    alert('Direct messages are available on the main dashboard.');
+  }
+
+  openUsersModal(): void {
+    alert('User management is available on the main dashboard.');
   }
 
   logout(): void {
@@ -231,5 +244,31 @@ export class PriceRegressionComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  get isSoundEnabled(): boolean {
+    return this.soundService.getSoundStatus();
+  }
+
+  toggleSound(): void {
+    this.soundService.toggleSound();
+  }
+
+  hoverSummary() {
+    if (this.isSoundEnabled) {
+      this.soundService.speak("Read price regression summary.");
+    }
+  }
+
+  readSummary() {
+    if (this.isSoundEnabled) {
+      if (this.result) {
+        this.soundService.speak(`Price Regression Summary: The recommended price is ${this.result.recommended_price} Dinars. The predicted price is ${this.result.predicted_price} Dinars. The confidence score is ${this.result.confidence_score} percent with a ${this.result.expected_demand} demand level. Strategic recommendation: ${this.result.strategic_recommendation}`);
+      } else {
+        this.soundService.speak("Price Regression Summary: This page allows you to predict the optimal price for your event based on market inputs. Please run a prediction first to hear the results.");
+      }
+    } else {
+      alert("Please enable voice assistance in the navbar first.");
+    }
   }
 }

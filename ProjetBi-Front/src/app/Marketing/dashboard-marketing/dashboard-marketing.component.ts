@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { SoundService } from '../../services/sound.service';
 
 @Component({
   selector: 'app-dashboard-marketing',
@@ -26,9 +27,14 @@ export class DashboardMarketingComponent implements OnInit {
   isChatOpen = false;
   chatInput = '';
   isTyping = false;
+  isAiMode = false;
   chatMessages: any[] = [
-    { role: 'ai', text: 'Messagerie instantanée avec le CEO. Vos messages sont éphémères.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+    { role: 'ai', text: 'Instant messaging with the CEO. Your messages are ephemeral.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
   ];
+  aiMessages: any[] = [
+    { role: 'ai', text: 'Hello! I am your BI Assistant. Ask me anything about your data (sales, weather, events...).', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+  ];
+  marketingMessages: any[] = [];
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
 
   scrollToBottom(): void {
@@ -36,18 +42,26 @@ export class DashboardMarketingComponent implements OnInit {
       if (this.chatScrollContainer) {
         this.chatScrollContainer.nativeElement.scrollTop = this.chatScrollContainer.nativeElement.scrollHeight;
       }
-    } catch(err) { }
+    } catch (err) { }
   }
+
+  // ── STRATEGIC REPORT ──
+  showStrategyModal = false;
+  isGeneratingReport = false;
+  formattedReport = '';
 
   private BACKEND_URL = '';
   private readonly HEADERS = new HttpHeaders().set('ngrok-skip-browser-warning', 'any');
+
+  isSoundEnabled = false;
 
   constructor(
     private router: Router,
     private auth: AuthService,
     private sanitizer: DomSanitizer,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private soundService: SoundService
   ) {
     this.BACKEND_URL = this.auth.getBackendUrl();
     this.router.events
@@ -67,6 +81,27 @@ export class DashboardMarketingComponent implements OnInit {
     this.userRole = user?.role || 'MARKETING';
     this.userInitials = this.getInitials(this.fullName);
     this.startPolling();
+    this.isSoundEnabled = this.soundService.getSoundStatus();
+  }
+
+  toggleSound(): void {
+    this.soundService.toggleSound();
+    this.isSoundEnabled = this.soundService.getSoundStatus();
+  }
+
+  hoverSummary() {
+    if (this.isSoundEnabled) {
+      this.soundService.speak("Read dashboard summary.");
+    }
+  }
+
+  readSummary() {
+    if (this.isSoundEnabled) {
+      const text = "Welcome to the Marketing Dashboard. This specialized view focuses on market penetration and campaign analytics. You can track customer acquisition trends, evaluate the impact of marketing spend on reservations, and monitor event popularity by region. You have " + this.unreadNotifs + " unread notifications. Use the navigation bar to access the Power BI reports or communicate with the CEO.";
+      this.soundService.speak(text);
+    } else {
+      alert("Please enable voice assistance in the navbar first.");
+    }
   }
 
   getInitials(name: string): string {
@@ -79,7 +114,7 @@ export class DashboardMarketingComponent implements OnInit {
   }
 
   checkNotifications() {
-    this.http.get<{count: number}>(`${this.BACKEND_URL}/api/notifications/unread-count`, { headers: this.HEADERS }).subscribe({
+    this.http.get<{ count: number }>(`${this.BACKEND_URL}/api/notifications/unread-count`, { headers: this.HEADERS }).subscribe({
       next: (res) => {
         this.unreadNotifs = res.count;
         this.cdr.detectChanges();
@@ -127,13 +162,9 @@ export class DashboardMarketingComponent implements OnInit {
     });
   }
 
-  openForecast() {
-    this.router.navigate(['/forecast']);
-  }
-
   updatePowerBiUrl() {
     this.iframeKey = 0;
-    const url = "https://app.powerbi.com/reportEmbed?reportId=0768d703-3c6b-48a0-99f8-c5e1b924b1e7&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&pageName=df6243e1614b506d8b8f&filterPaneEnabled=false&navContentPaneEnabled=false";
+    const url = "https://app.powerbi.com/reportEmbed?reportId=5adad138-4b1d-46de-a4bf-40f61ababab4&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&pageName=df6243e1614b506d8b8f&filterPaneEnabled=false&navContentPaneEnabled=false";
     this.powerBiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     setTimeout(() => { this.iframeKey = Date.now(); }, 100);
   }
@@ -148,16 +179,6 @@ export class DashboardMarketingComponent implements OnInit {
   navigateTo(route: string): void {
     this.router.navigate([route]);
     this.activeRoute = route;
-  }
-
-  openRegression(): void {
-    this.router.navigate(['/price-regression']);
-  }
-
-  exportPDF(): void {
-    const url = `${this.BACKEND_URL}/api/pdf/download?token=skip`;
-    alert('Le rapport PDF va s\'ouvrir dans un nouvel onglet...');
-    window.open(url, '_blank');
   }
 
   exportExcel(): void {
@@ -179,43 +200,99 @@ export class DashboardMarketingComponent implements OnInit {
     }
   }
 
+  toggleChatMode() {
+    this.isAiMode = !this.isAiMode;
+    if (this.isAiMode) {
+      this.marketingMessages = [...this.chatMessages];
+      this.chatMessages = [...this.aiMessages];
+    } else {
+      this.aiMessages = [...this.chatMessages];
+      this.chatMessages = [...this.marketingMessages];
+    }
+    setTimeout(() => this.scrollToBottom(), 100);
+  }
+
   sendMessage() {
     if (!this.chatInput.trim()) return;
-    const msgData = {
-      sender: 'MARKETING',
-      text: this.chatInput,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
+    const userText = this.chatInput;
+    this.chatInput = '';
+
+    const newMsg = {
+      role: 'user',
+      text: userText,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
-    
-    this.http.post(`${this.BACKEND_URL}/api/chat/send`, msgData, { headers: this.HEADERS }).subscribe({
-      next: () => {
-        this.chatInput = '';
-        this.cdr.detectChanges();
-        this.syncMessages();
-        setTimeout(() => this.scrollToBottom(), 100);
-      }
-    });
+    this.chatMessages.push(newMsg);
+    setTimeout(() => this.scrollToBottom(), 100);
+
+    if (this.isAiMode) {
+      this.isTyping = true;
+      this.http.post<any>(`${this.BACKEND_URL}/api/ai/chat`, { message: userText }, { headers: this.HEADERS }).subscribe({
+        next: (res) => {
+          this.isTyping = false;
+          this.chatMessages.push({
+            role: 'ai',
+            text: res.answer,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          });
+          this.aiMessages = [...this.chatMessages];
+          setTimeout(() => this.scrollToBottom(), 100);
+        },
+        error: (err) => {
+          this.isTyping = false;
+          this.chatMessages.push({
+            role: 'ai',
+            text: "Sorry, I encountered an error. Please check the AI assistant configuration.",
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          });
+          setTimeout(() => this.scrollToBottom(), 100);
+        }
+      });
+    } else {
+      const msgData = {
+        sender: 'MARKETING',
+        text: userText,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      this.http.post(`${this.BACKEND_URL}/api/chat/send`, msgData, { headers: this.HEADERS }).subscribe({
+        next: () => {
+          this.syncMessages();
+        }
+      });
+    }
   }
 
   syncMessages() {
+    if (this.isAiMode) return;
+
     this.http.get<any[]>(`${this.BACKEND_URL}/api/chat/sync`, { headers: this.HEADERS }).subscribe({
       next: (msgs) => {
-        const hasNewMessages = msgs.length > this.chatMessages.length;
-        
+        const hasNewMessages = msgs.length > (this.isAiMode ? this.marketingMessages.length : this.chatMessages.length);
+
         if (hasNewMessages && !this.isChatOpen) {
-          const newMsgs = msgs.slice(this.chatMessages.length);
+          const baseLen = this.isAiMode ? this.marketingMessages.length : this.chatMessages.length;
+          const newMsgs = msgs.slice(baseLen);
           const fromOther = newMsgs.filter(m => m.sender !== 'MARKETING').length;
           this.unreadMessagesCount += fromOther;
         }
 
-        this.chatMessages = msgs.map(m => ({
+        const formattedMsgs = msgs.map(m => ({
           role: m.sender === 'MARKETING' ? 'user' : 'ai',
           text: m.text,
           time: m.timestamp
         }));
+
+        if (!this.isAiMode) {
+          this.chatMessages = formattedMsgs;
+        } else {
+          this.marketingMessages = formattedMsgs;
+        }
+
         this.cdr.detectChanges();
-        
-        if (hasNewMessages && this.isChatOpen) {
+
+        if (hasNewMessages && this.isChatOpen && !this.isAiMode) {
           setTimeout(() => this.scrollToBottom(), 100);
         }
       }
@@ -224,11 +301,35 @@ export class DashboardMarketingComponent implements OnInit {
 
   startPolling() {
     setInterval(() => {
-      this.syncMessages(); // On sync tout le temps pour le compteur
+      this.syncMessages();
     }, 3000);
   }
 
   isActive(route: string): boolean {
     return this.activeRoute === route;
+  }
+
+  // ── STRATEGIC REPORT METHODS ──
+  generateStrategicReport() {
+    this.showStrategyModal = true;
+    this.isGeneratingReport = true;
+    this.formattedReport = '';
+
+    this.http.get<any>(`${this.BACKEND_URL}/api/ai/strategic-report`, { headers: this.HEADERS }).subscribe({
+      next: (res) => {
+        this.isGeneratingReport = false;
+        this.formattedReport = res.report
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+      },
+      error: (err) => {
+        this.isGeneratingReport = false;
+        this.formattedReport = "Error generating report. Please check your AI configuration.";
+      }
+    });
+  }
+
+  closeStrategyModal() {
+    this.showStrategyModal = false;
   }
 }

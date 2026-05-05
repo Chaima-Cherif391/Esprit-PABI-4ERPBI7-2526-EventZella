@@ -11,6 +11,8 @@ import { DashboardMarketingComponent } from './Marketing/dashboard-marketing/das
 import { ContentCeoComponent } from './Ceo/content-ceo/content-ceo.component';
 import { PriceRegressionComponent } from './Ceo/price-regression/price-regression.component';
 import { ForecastComponent } from './forecast/forecast.component';
+import { SoundVisualDirective } from './directives/sound-visual.directive';
+import { AnomalyDetectionComponent } from './anomaly-detection/anomaly-detection.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { ForecastComponent } from './forecast/forecast.component';
     DashboardMarketingComponent,
     ContentCeoComponent,
     PriceRegressionComponent,
-    ForecastComponent
+    ForecastComponent,
+    SoundVisualDirective,
+    AnomalyDetectionComponent
   ],
   imports: [
     BrowserModule,

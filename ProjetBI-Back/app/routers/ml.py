@@ -84,6 +84,32 @@ def anomaly_detection():
         return jsonify({"detail": str(exc)}), 500
 
 
+@ml_bp.route("/anomaly-db", methods=["GET"])
+def anomaly_db():
+    try:
+        records = ml_service.get_anomaly_records_from_db()
+        if not records:
+            return jsonify({"detail": "No records found in database."}), 404
+        result = ml_service.run_anomaly_detection(records)
+        return jsonify(result), 200
+    except ValueError as exc:
+        return jsonify({"detail": str(exc)}), 400
+    except Exception as exc:
+        return jsonify({"detail": str(exc)}), 500
+
+
+@ml_bp.route("/anomaly-realtime", methods=["POST"])
+def anomaly_realtime():
+    try:
+        payload = request.get_json(force=True, silent=True) or {}
+        result = ml_service.predict_anomaly_realtime(payload)
+        return jsonify(result), 200
+    except ValueError as exc:
+        return jsonify({"detail": str(exc)}), 400
+    except Exception as exc:
+        return jsonify({"detail": str(exc)}), 500
+
+
 # Legacy compatibility endpoints from former ML backend
 @legacy_ml_bp.route("/predict", methods=["POST"])
 def legacy_predict():

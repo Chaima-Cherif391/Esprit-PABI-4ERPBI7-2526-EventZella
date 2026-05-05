@@ -1152,6 +1152,41 @@ tbody tr:hover td {
   border-color: var(--accent);
 }
 
+.mode-switch-hint {
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 5px;
+  opacity: 0.7;
+}
+
+.typing-indicator {
+  padding: 10px 15px;
+  background: var(--dark3);
+  border-radius: 12px;
+  width: fit-content;
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.typing-indicator span {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: typing 1s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(-4px); opacity: 1; }
+}
+
 .chat-input-area button {
   width: 42px;
   height: 42px;
@@ -1241,3 +1276,217 @@ tbody tr:hover td {
 .form-actions { display: flex; gap: 12px; margin-top: 16px; }
 .save-btn { background: var(--accent); color: var(--dark); border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 .cancel-btn { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+.summary-fab { position: absolute; bottom: 30px; right: 30px; background: linear-gradient(135deg, #16c0de, #122840); color: white; padding: 12px 20px; border-radius: 30px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); transition: all 0.3s ease; z-index: 1000; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); } .summary-fab:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(22, 192, 222, 0.4); } .summary-fab svg { width: 20px; height: 20px; stroke: #fff; } .summary-fab .fab-text { font-weight: 600; font-size: 14px; letter-spacing: 0.5px; }
+
+/* FAB SOUND */
+.fab-sound { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #f39c12, #e67e22); color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4); z-index: 9999; transition: all 0.3s ease; }
+.fab-sound:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(243, 156, 18, 0.6); }
+.fab-sound svg { width: 24px; height: 24px; }
+
+
+/* -- STRATEGIC REPORT -- */
+.strategy-btn:hover { background: rgba(108, 92, 231, 0.1) !important; border-color: #6c5ce7 !important; }
+.strategy-btn:hover svg { stroke: #6c5ce7 !important; }
+.strategy-modal { max-width: 800px !important; max-height: 85vh; overflow-y: auto; background: var(--dark2); border: 1px solid #6c5ce7; box-shadow: 0 0 50px rgba(108, 92, 231, 0.2); }
+.header-with-icon { display: flex; align-items: center; gap: 12px; }
+.report-content { padding: 24px; line-height: 1.7; color: var(--text-mid); font-size: 15px; }
+.report-content strong { color: #6c5ce7; font-weight: 700; }
+.loading-report { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 40px; color: var(--text-muted); }
+.spinner { width: 40px; height: 40px; border: 3px solid rgba(108, 92, 231, 0.1); border-top-color: #6c5ce7; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-soft); display: flex; justify-content: flex-end; }
+.print-btn { padding: 10px 20px; background: rgba(108, 92, 231, 0.1); border: 1px solid #6c5ce7; color: #6c5ce7; border-radius: 8px; font-weight: 600; display: flex; align-items: center; cursor: pointer; transition: all 0.2s; }
+.print-btn:hover { background: #6c5ce7; color: white; }
+
+
+/* -- PRINT OPTIMIZATION -- */
+@media print {
+  @page { margin: 1cm; }
+  body * { visibility: hidden; }
+  .strategy-modal, .strategy-modal * { visibility: visible; }
+  .strategy-modal { position: absolute; left: 0; top: 0; width: 100% !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border: none !important; background: white !important; color: black !important; }
+  .report-content { color: black !important; font-size: 12pt; line-height: 1.5; }
+  .report-content strong { color: #6c5ce7 !important; }
+  .close-btn, .modal-footer, .navbar, .summary-fab, .chat-window, .icon-btn { display: none !important; }
+  .modal-overlay { background: white !important; position: static !important; }
+}
+
+
+/* -- FINAL PRINT FIX -- */
+@media print {
+  /* Masquer tout sans exception */
+  .navbar, .content, .chat-window, .summary-fab, .modal-overlay:not(.strategy-modal-overlay), .icon-btn, iframe {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Forcer l'affichage du rapport uniquement */
+  .modal-overlay {
+    background: white !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .strategy-modal {
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    color: black !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+
+  .report-content, .report-content * {
+    visibility: visible !important;
+    color: black !important;
+  }
+
+  .modal-header button, .modal-footer {
+    display: none !important;
+  }
+}
+
+
+/* -- ISOLATION PRINT -- */
+@media print {
+  .main > nav, .main > .content, .chat-window, .summary-fab, .modal-overlay:not(.strategy-report-overlay) {
+    display: none !important;
+  }
+  .strategy-report-overlay {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: white !important;
+  }
+}
+
+
+/* -- RESET & FIX PRINT -- */
+@media print {
+  /* On cache absolument tout par défaut */
+  html, body, .main, nav, .content, .chat-window, .summary-fab, .icon-btn, iframe {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* On force l'affichage uniquement du conteneur du rapport */
+  .strategy-report-overlay, .strategy-report-overlay * {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+  }
+
+  .strategy-report-overlay {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    background: white !important;
+    z-index: 99999 !important;
+  }
+
+  .strategy-modal {
+    width: 100% !important;
+    max-width: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  .report-content {
+    font-size: 12pt !important;
+    color: black !important;
+  }
+
+  /* Cacher les boutons inutiles à l'impression */
+  .close-btn, .modal-footer, .print-btn {
+    display: none !important;
+  }
+}
+
+
+/* -- SURGICAL PRINT FIX -- */
+@media print {
+  body { background: white !important; }
+  .navbar, .content, .chat-window, .summary-fab, .modal-overlay:not(.strategy-report-overlay) {
+    display: none !important;
+  }
+  .main {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .strategy-report-overlay {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    display: block !important;
+    visibility: visible !important;
+    background: white !important;
+  }
+  .strategy-modal {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+  }
+}
+
+
+/* -- ULTIMATE PRINT FIX -- */
+@media print {
+  /* On cache tout ce qui est dans le body par défaut */
+  body > * {
+    display: none !important;
+  }
+
+  /* On force l'affichage du conteneur principal car le rapport est dedans */
+  body > .main {
+    display: block !important;
+    background: white !important;
+  }
+
+  /* Dans le main, on cache tout SAUF le rapport */
+  .main > *:not(.strategy-report-overlay) {
+    display: none !important;
+  }
+
+  /* On affiche le rapport en plein écran */
+  .strategy-report-overlay {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    visibility: visible !important;
+  }
+
+  .strategy-modal {
+    display: block !important;
+    visibility: visible !important;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+  }
+
+  .report-content, .report-content * {
+    display: block !important;
+    visibility: visible !important;
+    color: black !important;
+  }
+}

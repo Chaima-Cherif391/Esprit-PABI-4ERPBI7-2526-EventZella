@@ -21,6 +21,8 @@ from app.core.config import (
     DB_USER,
     ML_MODELS_DIR,
 )
+from app.database import engine, data_engine
+from sqlalchemy import text
 
 
 class MLService:
@@ -32,6 +34,8 @@ class MLService:
         self.iforest_model = None
         self.arima_model = None
         self.ets_model = None
+        self.anomaly_model = None
+        self.scaler_model = None
         self._load_models()
 
     def _load_model_file(self, filename: str):
@@ -47,6 +51,22 @@ class MLService:
                 self.iforest_model = self._load_model_file("iforest.pkl")
                 self.arima_model = self._load_model_file("arima.pkl")
                 self.ets_model = self._load_model_file("ets.pkl")
+                try:
+                    # Use the new anomaly_model.pkl if it exists, otherwise fallback to anomaly.pkl
+                    if (self.models_dir / "anomaly_model.pkl").exists():
+                        combined = self._load_model_file("anomaly_model.pkl")
+                        if isinstance(combined, dict):
+                            self.anomaly_model = combined.get("model")
+                            self.scaler_model = combined.get("scaler")
+                            print("Loaded combined anomaly model from anomaly_model.pkl")
+                        else:
+                            self.anomaly_model = combined
+                            self.scaler_model = self._load_model_file("scaler.pkl")
+                    else:
+                        self.anomaly_model = self._load_model_file("anomaly.pkl")
+                        self.scaler_model = self._load_model_file("scaler.pkl")
+                except Exception as e:
+                    print(f"Could not load custom anomaly models: {e}")
 
             version_warnings = [
                 w for w in caught if isinstance(w.message, InconsistentVersionWarning)
@@ -98,6 +118,42 @@ class MLService:
                 df[col] = 0
 
         return df[expected_cols]
+
+    def predict_anomaly_realtime(self, payload: dict):
+        if self.anomaly_model is None or self.scaler_model is None:
+            raise ValueError("Anomaly model or scaler is not loaded")
+
+        expected_features = ["price", "nbr_reservations", "nbr_visitors", "marketing_spend", "market_count", "rating"]
+        data = {f: float(payload.get(f, 0.0)) for f in expected_features}
+        
+        # Le scaler s'attend à un ordre de colonnes strict selon l'entraînement, on le maintient:
+        df = pd.DataFrame([data])
+        X_scaled = self.scaler_model.transform(df)
+        
+        pred = self.anomaly_model.predict(X_scaled)[0]
+        score = float(self.anomaly_model.decision_function(X_scaled)[0])
+        
+        is_anomaly = 1 if pred == -1 else 0
+        
+        if is_anomaly:
+            if data["rating"] < 2.5 and data["nbr_visitors"] > 4000:
+                explanation = "Critical Alert: Suspicious correlation between high attendance and very low customer satisfaction. Risk of brand reputation damage."
+            elif data["marketing_spend"] > 15000 and data["nbr_reservations"] < 50:
+                explanation = "Budget Alert: Abnormally low marketing efficiency. High investment for almost zero return."
+            elif data["price"] > 150000 and data["market_count"] < 2:
+                explanation = "Strategy Alert: Extremely high price in a very restricted market. Risk of massive rejection."
+            else:
+                explanation = "Statistical Anomaly: The model detected behavior deviating significantly from historical patterns (Outlier)."
+        else:
+            explanation = "Normal Behavior: Metrics are consistent with standard historical performance patterns."
+            
+        print(f"DEBUG Realtime Anomaly - Input: {data} -> Prediction: {is_anomaly} (Score: {score})")
+            
+        return {
+            "is_anomaly": is_anomaly,
+            "anomaly_score": round(score, 4),
+            "explanation": explanation
+        }
 
     def predict_price_response(self, payload: dict):
         if self.rf_model is None:
@@ -252,30 +308,7 @@ class MLService:
         }
 
     def get_timeseries_records_from_db(self):
-        try:
-            import pyodbc
-        except ModuleNotFoundError as exc:
-            raise ValueError("pyodbc is required for DB forecast mode") from exc
-
-        if DB_USER and DB_PASSWORD:
-            conn_str = (
-                f"DRIVER={{{DB_DRIVER}}};"
-                f"SERVER={DB_SERVER};"
-                f"DATABASE={DB_NAME};"
-                f"UID={DB_USER};"
-                f"PWD={DB_PASSWORD};"
-                f"TrustServerCertificate={DB_TRUST_SERVER_CERTIFICATE};"
-            )
-        else:
-            conn_str = (
-                f"DRIVER={{{DB_DRIVER}}};"
-                f"SERVER={DB_SERVER};"
-                f"DATABASE={DB_NAME};"
-                "Trusted_Connection=yes;"
-                f"TrustServerCertificate={DB_TRUST_SERVER_CERTIFICATE};"
-            )
-
-        query = """
+        query = text("""
             SELECT
                 FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM') AS month,
                 SUM(nbr_reservations) AS nbr_reservations
@@ -283,14 +316,39 @@ class MLService:
             WHERE Date_PK IS NOT NULL
             GROUP BY FORMAT(CAST(CAST(Date_PK AS VARCHAR(8)) AS DATE), 'yyyy-MM')
             ORDER BY month ASC
-        """
+        """)
 
-        conn = pyodbc.connect(conn_str)
         try:
-            df = pd.read_sql(query, conn)
-        finally:
-            conn.close()
+            with data_engine.connect() as conn:
+                df = pd.read_sql(query, conn)
+        except Exception as exc:
+            print(f"Error fetching timeseries from DB: {exc}")
+            return []
 
+        return df.to_dict(orient="records")
+
+    def get_anomaly_records_from_db(self):
+        query = text("""
+            SELECT TOP 1000
+                f.Date_PK,
+                CAST(f.price AS FLOAT) as price,
+                CAST(f.nbr_reservations AS FLOAT) as nbr_reservations,
+                CAST(f.nbr_visitors AS FLOAT) as nbr_visitors,
+                CAST(f.marketing_spend AS FLOAT) as marketing_spend,
+                CAST(f.market_count AS FLOAT) as market_count,
+                CAST(e.rating AS FLOAT) as rating
+            FROM FACT_VENTES f
+            LEFT JOIN Dim_Evaluation e ON f.id_evaluation = e.id_evaluation
+            WHERE f.Date_PK IS NOT NULL
+            ORDER BY f.Date_PK DESC
+        """)
+
+        with data_engine.connect() as conn:
+            df = pd.read_sql(query, conn)
+
+        if df.empty:
+            return []
+            
         return df.to_dict(orient="records")
 
     def run_timeseries(self, records, steps=6):

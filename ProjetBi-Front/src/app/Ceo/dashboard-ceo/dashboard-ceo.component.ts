@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { SoundService } from '../../services/sound.service';
 
 @Component({
   selector: 'app-dashboard-ceo',
@@ -26,9 +27,14 @@ export class DashboardCeoComponent implements OnInit {
   isChatOpen = false;
   chatInput = '';
   isTyping = false;
+  isAiMode = false;
   chatMessages: any[] = [
-    { role: 'ai', text: 'Messagerie instantanée avec le service Marketing. Vos messages sont éphémères.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+    { role: 'ai', text: 'Instant messaging with the Marketing service. Your messages are ephemeral.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
   ];
+  aiMessages: any[] = [
+    { role: 'ai', text: 'Hello! I am your BI Assistant. Ask me anything about your data (sales, weather, events...).', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+  ];
+  marketingMessages: any[] = [];
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
 
   scrollToBottom(): void {
@@ -38,6 +44,11 @@ export class DashboardCeoComponent implements OnInit {
       }
     } catch(err) { }
   }
+
+  // ── STRATEGIC REPORT ──
+  showStrategyModal = false;
+  isGeneratingReport = false;
+  formattedReport = '';
 
   // ── USERS MANAGEMENT ──
   showUsersModal = false;
@@ -52,7 +63,8 @@ export class DashboardCeoComponent implements OnInit {
     private auth: AuthService,
     private sanitizer: DomSanitizer,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private soundService: SoundService
   ) {
     this.BACKEND_URL = this.auth.getBackendUrl();
     this.router.events
@@ -141,9 +153,9 @@ export class DashboardCeoComponent implements OnInit {
     this.iframeKey = 0;
     let url = "";
     if (route === '/content-ceo') {
-      url = "https://app.powerbi.com/reportEmbed?reportId=0768d703-3c6b-48a0-99f8-c5e1b924b1e7&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false";
+      url = "https://app.powerbi.com/reportEmbed?reportId=5adad138-4b1d-46de-a4bf-40f61ababab4&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false";
     } else {
-      url = "https://app.powerbi.com/reportEmbed?reportId=0768d703-3c6b-48a0-99f8-c5e1b924b1e7&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&pageName=df6243e1614b506d8b8f&filterPaneEnabled=false&navContentPaneEnabled=false";
+      url = "https://app.powerbi.com/reportEmbed?reportId=5adad138-4b1d-46de-a4bf-40f61ababab4&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&pageName=df6243e1614b506d8b8f&filterPaneEnabled=false&navContentPaneEnabled=false";
     }
     this.powerBiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     setTimeout(() => { this.iframeKey = Date.now(); }, 100);
@@ -170,11 +182,13 @@ export class DashboardCeoComponent implements OnInit {
     this.router.navigate(['/price-regression']);
   }
 
+  openAnomaly(): void {
+    this.router.navigate(['/anomaly']);
+  }
+
   exportPDF(): void {
-    // On ouvre directement le lien du backend dans un nouvel onglet
-    // Cela évite les erreurs de connexion et de sécurité
     const url = `${this.BACKEND_URL}/api/pdf/download?token=skip`;
-    alert('Le rapport PDF va s\'ouvrir dans un nouvel onglet...');
+    alert('The PDF report will open in a new tab...');
     window.open(url, '_blank');
   }
 
@@ -192,50 +206,104 @@ export class DashboardCeoComponent implements OnInit {
   toggleChat() {
     this.isChatOpen = !this.isChatOpen;
     if (this.isChatOpen) {
-      this.unreadMessagesCount = 0; // Reset quand on ouvre
+      this.unreadMessagesCount = 0;
       setTimeout(() => this.scrollToBottom(), 100);
     }
   }
 
+  toggleChatMode() {
+    this.isAiMode = !this.isAiMode;
+    if (this.isAiMode) {
+      this.marketingMessages = [...this.chatMessages];
+      this.chatMessages = [...this.aiMessages];
+    } else {
+      this.aiMessages = [...this.chatMessages];
+      this.chatMessages = [...this.marketingMessages];
+    }
+    setTimeout(() => this.scrollToBottom(), 100);
+  }
+
   sendMessage() {
     if (!this.chatInput.trim()) return;
-    const msgData = {
-      sender: 'CEO',
-      text: this.chatInput,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
 
-    this.http.post(`${this.BACKEND_URL}/api/chat/send`, msgData, { headers: this.HEADERS }).subscribe({
-      next: () => {
-        this.chatInput = '';
-        this.cdr.detectChanges();
-        this.syncMessages();
-        setTimeout(() => this.scrollToBottom(), 100);
-      }
-    });
+    const userText = this.chatInput;
+    this.chatInput = '';
+
+    const newMsg = {
+      role: 'user',
+      text: userText,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    this.chatMessages.push(newMsg);
+    setTimeout(() => this.scrollToBottom(), 100);
+
+    if (this.isAiMode) {
+      this.isTyping = true;
+      this.http.post<any>(`${this.BACKEND_URL}/api/ai/chat`, { message: userText }, { headers: this.HEADERS }).subscribe({
+        next: (res) => {
+          this.isTyping = false;
+          this.chatMessages.push({
+            role: 'ai',
+            text: res.answer,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          });
+          this.aiMessages = [...this.chatMessages];
+          setTimeout(() => this.scrollToBottom(), 100);
+        },
+        error: (err) => {
+          this.isTyping = false;
+          this.chatMessages.push({
+            role: 'ai',
+            text: "Sorry, I encountered an error. Please check the AI assistant configuration.",
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          });
+          setTimeout(() => this.scrollToBottom(), 100);
+        }
+      });
+    } else {
+      const msgData = {
+        sender: 'CEO',
+        text: userText,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      this.http.post(`${this.BACKEND_URL}/api/chat/send`, msgData, { headers: this.HEADERS }).subscribe({
+        next: () => {
+          this.syncMessages();
+        }
+      });
+    }
   }
 
   syncMessages() {
+    if (this.isAiMode) return;
+
     this.http.get<any[]>(`${this.BACKEND_URL}/api/chat/sync`, { headers: this.HEADERS }).subscribe({
       next: (msgs) => {
-        const hasNewMessages = msgs.length > this.chatMessages.length;
+        const hasNewMessages = msgs.length > (this.isAiMode ? this.marketingMessages.length : this.chatMessages.length);
         
-        // Si le nombre de messages a augmenté et que le chat est fermé
         if (hasNewMessages && !this.isChatOpen) {
-          // On compte combien de nouveaux messages viennent de l'autre
-          const newMsgs = msgs.slice(this.chatMessages.length);
+          const baseLen = this.isAiMode ? this.marketingMessages.length : this.chatMessages.length;
+          const newMsgs = msgs.slice(baseLen);
           const fromOther = newMsgs.filter(m => m.sender !== 'CEO').length;
           this.unreadMessagesCount += fromOther;
         }
 
-        this.chatMessages = msgs.map(m => ({
+        const formattedMsgs = msgs.map(m => ({
           role: m.sender === 'CEO' ? 'user' : 'ai',
           text: m.text,
           time: m.timestamp
         }));
+
+        if (!this.isAiMode) {
+          this.chatMessages = formattedMsgs;
+        } else {
+          this.marketingMessages = formattedMsgs;
+        }
+
         this.cdr.detectChanges();
         
-        if (hasNewMessages && this.isChatOpen) {
+        if (hasNewMessages && this.isChatOpen && !this.isAiMode) {
           setTimeout(() => this.scrollToBottom(), 100);
         }
       }
@@ -244,7 +312,7 @@ export class DashboardCeoComponent implements OnInit {
 
   startPolling() {
     setInterval(() => {
-      this.syncMessages(); // On sync tout le temps pour le compteur
+      this.syncMessages();
     }, 3000);
   }
 
@@ -272,9 +340,8 @@ export class DashboardCeoComponent implements OnInit {
   fetchMarketingUsers() {
     this.http.get<any[]>(`${this.BACKEND_URL}/api/auth/users/marketing`, { headers: this.getAuthHeaders() }).subscribe({
       next: (users) => {
-        this.marketingUsers = [...users]; // Utiliser le spread operator pour forcer la nouvelle référence
-        this.cdr.detectChanges(); // Forcer la détection de changement
-        console.log('Marketing users loaded:', users);
+        this.marketingUsers = [...users];
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Failed to fetch users', err)
     });
@@ -297,7 +364,7 @@ export class DashboardCeoComponent implements OnInit {
   }
 
   deleteUser(userId: number) {
-    if (confirm('Etes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+    if (confirm('Are you sure you want to delete this user?')) {
       this.http.delete(`${this.BACKEND_URL}/api/auth/users/${userId}`, { headers: this.getAuthHeaders() }).subscribe({
         next: () => {
           this.fetchMarketingUsers();
@@ -305,6 +372,53 @@ export class DashboardCeoComponent implements OnInit {
         },
         error: (err) => console.error('Failed to delete user', err)
       });
+    }
+  }
+
+  // ── STRATEGIC REPORT METHODS ──
+  generateStrategicReport() {
+    this.showStrategyModal = true;
+    this.isGeneratingReport = true;
+    this.formattedReport = '';
+
+    this.http.get<any>(`${this.BACKEND_URL}/api/ai/strategic-report`, { headers: this.HEADERS }).subscribe({
+      next: (res) => {
+        this.isGeneratingReport = false;
+        // Simple markdown to HTML conversion for the report
+        this.formattedReport = res.report
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+      },
+      error: (err) => {
+        this.isGeneratingReport = false;
+        this.formattedReport = "Error generating report. Please check your AI configuration.";
+      }
+    });
+  }
+
+  closeStrategyModal() {
+    this.showStrategyModal = false;
+  }
+
+  get isSoundEnabled(): boolean {
+    return this.soundService.getSoundStatus();
+  }
+
+  toggleSound(): void {
+    this.soundService.toggleSound();
+  }
+
+  hoverSummary() {
+    if (this.isSoundEnabled) {
+      this.soundService.speak("Read dashboard summary.");
+    }
+  }
+
+  readSummary() {
+    if (this.isSoundEnabled) {
+      this.soundService.speak("Welcome to the CEO Dashboard. This interactive view provides high-level insights into your business performance. You can analyze total revenue, reservation trends by event type, and average service prices. Please use the filters on the left to select a specific year, and navigate through the bottom tabs to explore seasonality and new opportunities.");
+    } else {
+      alert("Please enable voice assistance in the navbar first.");
     }
   }
 }

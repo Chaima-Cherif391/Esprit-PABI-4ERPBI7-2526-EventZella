@@ -34,7 +34,6 @@
               {
                 "glob": "**/*",
                 "input": "public"
-      
               }
             ],
             "styles": [
@@ -45,18 +44,23 @@
           "configurations": {
             "production": {
               "budgets": [
-  {
-    "type": "initial",
-    "maximumWarning": "5mb",
-    "maximumError": "10mb"
-  },
-  {
-    "type": "anyComponentStyle",
-    "maximumWarning": "30kb",
-    "maximumError": "50kb"
-  }
-],
-              "outputHashing": "all"
+                {
+                  "type": "initial",
+                  "maximumWarning": "5mb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "30kb",
+                  "maximumError": "50kb"
+                }
+              ],
+              "outputHashing": "all",
+              "optimization": {
+                "fonts": {
+                  "inline": false
+                }
+              }
             },
             "development": {
               "optimization": false,

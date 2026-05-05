@@ -7,6 +7,7 @@ import { ContentCeoComponent } from './Ceo/content-ceo/content-ceo.component';
 import { AuthGuard } from './guards/auth.guard';
 import { PriceRegressionComponent } from './Ceo/price-regression/price-regression.component';
 import { ForecastComponent } from './forecast/forecast.component';
+import { AnomalyDetectionComponent } from './anomaly-detection/anomaly-detection.component';
 
 const routes: Routes = [
 // {path : '', redirectTo : 'login', pathMatch : 'full'},
@@ -17,7 +18,7 @@ const routes: Routes = [
     
 
 
- { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'dashboard-ceo', component: DashboardCeoComponent,
     canActivate: [AuthGuard], data: { role: 'CEO' } },
@@ -27,6 +28,7 @@ const routes: Routes = [
     canActivate: [AuthGuard], data: { role: 'CEO' } },
   { path: 'price-regression', component: PriceRegressionComponent },
   { path: 'forecast', component: ForecastComponent },
+  { path: 'anomaly', component: AnomalyDetectionComponent },
 
 
 // if (user.role === 'CEO') {

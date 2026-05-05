@@ -386,3 +386,4 @@
   .user-info-sm { display: none; }
   .form-grid { grid-template-columns: 1fr; }
 }
+.summary-fab { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #16c0de, #122840); color: white; padding: 12px 20px; border-radius: 30px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); transition: all 0.3s ease; z-index: 1000; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); } .summary-fab:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(22, 192, 222, 0.4); } .summary-fab svg { width: 20px; height: 20px; stroke: #fff; } .summary-fab .fab-text { font-weight: 600; font-size: 14px; letter-spacing: 0.5px; }
