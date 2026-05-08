@@ -1,9 +1,7 @@
-<!-- layout.component.html -->
-
 <!-- ══ MAIN ══ -->
 <div class="main">
 
-  <!-- ── NAVBAR ── -->
+  <!-- ── NAVBAR (Unified Premium Design) ── -->
   <nav class="navbar">
     <div class="navbar-brand" (click)="goHome()" style="cursor: pointer;">
       <div class="logo-icon-sm">
@@ -11,15 +9,15 @@
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
         </svg>
       </div>
-      <div class="navbar-title">
-        CEO Dashboard
-      </div>
+      <div class="navbar-title">CEO Dashboard <span>Eventzella Executive</span></div>
     </div>
 
     <div class="navbar-actions">
-      <!-- Anomaly Detection Link -->
-      <div class="icon-btn anomaly-btn" (click)="openAnomaly()" title="Real-time Anomaly Detection" appSoundVisual="Real-time Anomaly Detection.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Anomaly Detection -->
+      <div class="icon-btn anomaly-btn" (click)="openAnomaly()" title="Real-time Anomaly Detection"
+        appSoundVisual="Real-time Anomaly Detection.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
           <line x1="12" y1="9" x2="12" y2="13"></line>
           <line x1="12" y1="17" x2="12.01" y2="17"></line>
@@ -27,54 +25,45 @@
       </div>
 
       <!-- Strategic AI Consultant -->
-      <div class="icon-btn strategy-btn" (click)="generateStrategicReport()" title="AI Strategic Briefing" appSoundVisual="Generate a strategic AI report.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="icon-btn strategy-btn" (click)="generateStrategicReport()" title="AI Strategic Briefing"
+        appSoundVisual="Generate a strategic AI report.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
           <path d="M6 3h12l4 6-10 12L2 9z"></path>
           <path d="M11 3L8 9l3 12"></path>
           <path d="M13 3l3 6-3 12"></path>
           <path d="M2 9h20"></path>
         </svg>
-        <span class="btn-badge" *ngIf="isGeneratingReport">...</span>
       </div>
 
-      <!-- Price Regression Link -->
-      <div class="icon-btn regression-btn" (click)="openRegression()" title="Price Regression Analysis" appSoundVisual="Price regression analysis.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Price Regression -->
+      <div class="icon-btn regression-btn" (click)="openRegression()" title="Price Regression Analysis"
+        appSoundVisual="Price regression analysis.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
           <line x1="12" y1="1" x2="12" y2="23"></line>
           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
         </svg>
       </div>
 
-      <!-- Forecast (Dedicated Route) -->
-      <div class="icon-btn forecast-btn" (click)="openForecast()" title="Time-Series Forecast" appSoundVisual="Time-series forecast analysis.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Forecast -->
+      <div class="icon-btn forecast-btn" (click)="openForecast()" title="Time-Series Forecast"
+        appSoundVisual="Time-series forecast analysis.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
           <path d="M8 16l2-2 2 2 4-4" stroke-width="2.5"></path>
         </svg>
       </div>
 
+      <!-- ICON NOTIFS -->
       <div class="icon-btn" (click)="toggleNotifs()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
           <path d="M13.73 21a2 2 0 0 1-3.46 0" />
         </svg>
         <span class="notif-dot" *ngIf="unreadNotifs > 0">{{ unreadNotifs }}</span>
-
-        <div class="notif-dropdown" *ngIf="isNotifOpen" (click)="$event.stopPropagation()">
-          <div class="notif-header">
-            <span>Notifications</span>
-            <button (click)="markNotifsRead()" *ngIf="unreadNotifs > 0">Tout lire</button>
-          </div>
-          <div class="notif-list">
-            <div class="notif-item" *ngFor="let n of notifications" [class.unread]="!n.is_read" (click)="viewNotif(n)">
-              <div class="notif-title">{{ n.title }}</div>
-              <div class="notif-msg">{{ n.message }}</div>
-              <div class="notif-time">{{ n.created_at | date:'shortTime' }}</div>
-            </div>
-            <div class="notif-empty" *ngIf="notifications.length === 0">Aucune notification</div>
-          </div>
-        </div>
       </div>
 
       <!-- ICON MESSAGERIE -->
@@ -85,23 +74,16 @@
         <span class="notif-dot" *ngIf="unreadMessagesCount > 0">{{ unreadMessagesCount }}</span>
       </div>
 
-      <!-- USER MANAGEMENT -->
-      <div class="icon-btn" (click)="openUsersModal()" title="Gérer les accès Marketing" appSoundVisual="Manage marketing access.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-      </div>
-
       <!-- Accessibility Sound Toggle -->
-      <div class="icon-btn sound-btn" (click)="toggleSound()" [title]="isSoundEnabled ? 'Disable Voice Assistance' : 'Enable Voice Assistance'">
-        <svg *ngIf="isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="icon-btn sound-btn" (click)="toggleSound()"
+        [title]="isSoundEnabled ? 'Disable Voice Assistance' : 'Enable Voice Assistance'">
+        <svg *ngIf="isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         </svg>
-        <svg *ngIf="!isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg *ngIf="!isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <line x1="23" y1="9" x2="17" y2="15"></line>
           <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -123,15 +105,14 @@
   </nav>
 
   <!-- CONTENU -->
-  <div class="content" style="height: calc(100vh - 80px); padding: 0; position: relative;" appSoundVisual="Interactive Power BI Dashboard for CEO.">
-    <iframe *ngIf="iframeKey" [src]="powerBiUrl" width="100%" height="100%" frameborder="0" 
-      allowFullScreen="true"
-      allow="storage-access; encrypted-media; clipboard-write"
-      style="border: none;"></iframe>
-    <div style="display: none;"><router-outlet></router-outlet></div>
-
+  <div class="content" style="height: calc(100vh - 72px); padding: 0; position: relative;"
+    appSoundVisual="Interactive Power BI Dashboard for CEO.">
+    <iframe *ngIf="iframeKey" [src]="powerBiUrl" width="100%" height="100%" frameborder="0" allowFullScreen="true"
+      allow="storage-access; encrypted-media; clipboard-write" style="border: none;"></iframe>
+    
     <div class="summary-fab" (mouseenter)="hoverSummary()" (click)="readSummary()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
         <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
@@ -150,9 +131,10 @@
       </div>
       <button class="close-chat" (click)="toggleChat()">×</button>
     </div>
-    
+
     <div class="chat-messages" #chatScroll>
-      <div *ngFor="let msg of chatMessages" class="message" [class.user]="msg.role === 'user'" [class.ai]="msg.role === 'ai'">
+      <div *ngFor="let msg of chatMessages" class="message" [class.user]="msg.role === 'user'"
+        [class.ai]="msg.role === 'ai'">
         <div class="message-meta" *ngIf="msg.role === 'ai'">{{ isAiMode ? 'IA' : 'Service Marketing' }}</div>
         <div class="message-meta" *ngIf="msg.role === 'user'">Moi (CEO)</div>
         <div class="message-content">
@@ -176,62 +158,6 @@
     </div>
   </div>
 
-  <!-- USERS MODAL -->
-  <div class="modal-overlay" *ngIf="showUsersModal" (click)="closeUsersModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2>Marketing Team</h2>
-        <button class="close-btn" (click)="closeUsersModal()">×</button>
-      </div>
-      
-      <div class="users-list" *ngIf="!editingUser">
-        <table class="users-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let u of marketingUsers">
-              <td>{{ u.full_name }}</td>
-              <td>{{ u.email }}</td>
-              <td>
-                <span class="status-badge" [class.active]="u.is_active">{{ u.is_active ? 'Active' : 'Inactive' }}</span>
-              </td>
-              <td>
-                <button class="action-btn edit" (click)="editUser(u)">Edit</button>
-                <button class="action-btn delete" (click)="deleteUser(u.id)">Delete</button>
-              </td>
-            </tr>
-            <tr *ngIf="marketingUsers.length === 0">
-              <td colspan="4" style="text-align: center; padding: 20px; color: #888;">No marketing users found.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="edit-user-form" *ngIf="editingUser">
-        <h3>Edit User: {{ editingUser.full_name }}</h3>
-        <label>Full Name</label>
-        <input type="text" [(ngModel)]="editingUser.full_name">
-        <label>Email</label>
-        <input type="email" [(ngModel)]="editingUser.email">
-        <label>New Password (leave empty to keep current)</label>
-        <input type="password" [(ngModel)]="editingUser.password">
-        <label class="checkbox-label">
-          <input type="checkbox" [(ngModel)]="editingUser.is_active"> Active Account
-        </label>
-        <div class="form-actions">
-          <button class="save-btn" (click)="saveUser()">Save</button>
-          <button class="cancel-btn" (click)="editingUser = null">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- STRATEGIC REPORT MODAL -->
   <div class="modal-overlay strategy-report-overlay" *ngIf="showStrategyModal" (click)="closeStrategyModal()">
     <div class="modal-content strategy-modal" (click)="$event.stopPropagation()">
@@ -244,7 +170,7 @@
         </div>
         <button class="close-btn" (click)="closeStrategyModal()">×</button>
       </div>
-      
+
       <div class="report-content" [innerHTML]="formattedReport">
         <div class="loading-report" *ngIf="isGeneratingReport">
           <div class="spinner"></div>

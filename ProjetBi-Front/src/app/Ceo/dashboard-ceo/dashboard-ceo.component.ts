@@ -42,7 +42,7 @@ export class DashboardCeoComponent implements OnInit {
       if (this.chatScrollContainer) {
         this.chatScrollContainer.nativeElement.scrollTop = this.chatScrollContainer.nativeElement.scrollHeight;
       }
-    } catch(err) { }
+    } catch (err) { }
   }
 
   // ── STRATEGIC REPORT ──
@@ -151,14 +151,14 @@ export class DashboardCeoComponent implements OnInit {
 
   updatePowerBiUrl(route: string) {
     this.iframeKey = 0;
-    let url = "";
-    if (route === '/content-ceo') {
-      url = "https://app.powerbi.com/reportEmbed?reportId=5adad138-4b1d-46de-a4bf-40f61ababab4&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false";
-    } else {
-      url = "https://app.powerbi.com/reportEmbed?reportId=5adad138-4b1d-46de-a4bf-40f61ababab4&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&pageName=df6243e1614b506d8b8f&filterPaneEnabled=false&navContentPaneEnabled=false";
-    }
-    this.powerBiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    setTimeout(() => { this.iframeKey = Date.now(); }, 100);
+    
+    this.http.get<any>(`${this.BACKEND_URL}/api/powerbi/embed-info`, { headers: this.getAuthHeaders() }).subscribe({
+      next: (res) => {
+        this.powerBiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(res.embedUrl);
+        setTimeout(() => { this.iframeKey = Date.now(); }, 100);
+      },
+      error: (err) => console.error('Failed to fetch Power BI info', err)
+    });
   }
 
   goHome(): void {
@@ -281,7 +281,7 @@ export class DashboardCeoComponent implements OnInit {
     this.http.get<any[]>(`${this.BACKEND_URL}/api/chat/sync`, { headers: this.HEADERS }).subscribe({
       next: (msgs) => {
         const hasNewMessages = msgs.length > (this.isAiMode ? this.marketingMessages.length : this.chatMessages.length);
-        
+
         if (hasNewMessages && !this.isChatOpen) {
           const baseLen = this.isAiMode ? this.marketingMessages.length : this.chatMessages.length;
           const newMsgs = msgs.slice(baseLen);
@@ -302,7 +302,7 @@ export class DashboardCeoComponent implements OnInit {
         }
 
         this.cdr.detectChanges();
-        
+
         if (hasNewMessages && this.isChatOpen && !this.isAiMode) {
           setTimeout(() => this.scrollToBottom(), 100);
         }

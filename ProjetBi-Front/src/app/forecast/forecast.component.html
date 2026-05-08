@@ -1,5 +1,6 @@
+<!-- ══ MAIN ══ -->
 <div class="main">
-  <!-- ── NAVBAR (Unified Design) ── -->
+  <!-- ── NAVBAR (Unified Premium Design) ── -->
   <nav class="navbar">
     <div class="navbar-brand" (click)="goHome()" style="cursor: pointer;">
       <div class="logo-icon-sm">
@@ -21,19 +22,19 @@
         </svg>
       </div>
 
-
-
       <!-- Refresh Forecast -->
-      <div class="icon-btn refresh-btn" (click)="loadForecast()" title="Refresh Forecast" appSoundVisual="Refresh AI forecast data.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="icon-btn refresh-btn" (click)="loadForecast()" title="Refresh Forecast"
+        appSoundVisual="Refresh AI forecast data.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
           <polyline points="23 4 23 10 17 10"></polyline>
           <polyline points="1 20 1 14 7 14"></polyline>
           <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
         </svg>
       </div>
 
-      <!-- Forecast -->
-      <div class="icon-btn forecast-btn" title="Time-Series Forecast" appSoundVisual="Time-series forecast analysis.">
+      <!-- Forecast (Active) -->
+      <div class="icon-btn forecast-btn active" title="Time-Series Forecast" appSoundVisual="Time-series forecast analysis.">
         <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -67,18 +68,6 @@
       <div class="icon-btn" (click)="toggleChat()" title="Messages directs">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-      </div>
-
-      <!-- USER MANAGEMENT -->
-      <div class="icon-btn" (click)="openUsersModal()" title="Manage users access"
-        appSoundVisual="Manage users access.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
       </div>
 

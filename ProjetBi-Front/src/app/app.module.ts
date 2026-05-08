@@ -13,6 +13,8 @@ import { PriceRegressionComponent } from './Ceo/price-regression/price-regressio
 import { ForecastComponent } from './forecast/forecast.component';
 import { SoundVisualDirective } from './directives/sound-visual.directive';
 import { AnomalyDetectionComponent } from './anomaly-detection/anomaly-detection.component';
+import { DashboardAdminComponent } from './Admin/dashboard-admin/dashboard-admin.component';
+
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { AnomalyDetectionComponent } from './anomaly-detection/anomaly-detection
     PriceRegressionComponent,
     ForecastComponent,
     SoundVisualDirective,
-    AnomalyDetectionComponent
+    AnomalyDetectionComponent,
+    DashboardAdminComponent
+
   ],
   imports: [
     BrowserModule,

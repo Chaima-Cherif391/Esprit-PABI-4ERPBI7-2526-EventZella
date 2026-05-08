@@ -1,0 +1,48 @@
+groups:
+  - name: eventzella_alerts
+    rules:
+
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(api_request_latency_seconds_bucket[1m])) > 2
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency detected"
+          description: "The 95th percentile latency is above 2 seconds."
+
+      - alert: HighErrorRate
+        expr: sum(rate(api_errors_total[1m])) > 0.02
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "High API error rate detected"
+          description: "API errors increased significantly."
+
+      - alert: ModelDriftDetected
+        expr: data_drift_detected == 1
+        for: 10s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Data drift detected"
+          description: "Input data distribution is different from baseline."
+
+      - alert: AccuracyDegradation
+        expr: accuracy_degradation_detected == 1
+        for: 10s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Model accuracy degradation detected"
+          description: "Current model accuracy dropped more than 5% compared to baseline."
+
+      - alert: LowModelConfidence
+        expr: model_confidence_average < 0.7
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low model confidence"
+          description: "Average model confidence is below baseline."

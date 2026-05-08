@@ -31,11 +31,11 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: eventzella-sqlserver
     restart: always
+    ports:
+      - "1433:1433"
     environment:
       SA_PASSWORD: "EventZella2024!"
       ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
     healthcheck:
       test: ["CMD-SHELL", "grep -q 'Recovery is complete' /var/opt/mssql/log/errorlog || exit 1"]
       interval: 5s
@@ -47,9 +47,44 @@ services:
     volumes:
       - sql_data:/var/opt/mssql
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: eventzella-prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./ProjetBI-Back/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./ProjetBI-Back/monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      - backend
+    networks:
+      - eventzella-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: eventzella-grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_PUBLIC_DASHBOARDS_ENABLED=true
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - eventzella-network
+
 networks:
   eventzella-network:
     driver: bridge
 
 volumes:
-  sql_data:
+  sql_data:
+  grafana_data:

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   PredictionRequest,
   PredictionResponse,
@@ -115,19 +115,50 @@ export class PriceRegressionComponent implements OnInit {
   userRole = '';
   userInitials = '';
 
+  // ── CHAT LOGIC ──
+  isChatOpen = false;
+  chatInput = '';
+  isTyping = false;
+  isAiMode = false;
+  chatMessages: any[] = [
+    { role: 'ai', text: 'Messaging with the Marketing service.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+  ];
+  aiMessages: any[] = [
+    { role: 'ai', text: 'Hello! I am your BI Assistant. Ask me anything about your price predictions.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+  ];
+  marketingMessages: any[] = [];
+  @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
+
+  // ── STRATEGIC REPORT ──
+  showStrategyModal = false;
+  isGeneratingReport = false;
+  formattedReport = '';
+
+  private BACKEND_URL = '';
+  private readonly HEADERS = new HttpHeaders().set('ngrok-skip-browser-warning', 'any');
+
   constructor(
     private predictionService: PredictionService,
     private router: Router,
     private auth: AuthService,
     private http: HttpClient,
     private soundService: SoundService
-  ) {}
+  ) {
+    this.BACKEND_URL = this.auth.getBackendUrl();
+  }
 
   ngOnInit() {
     const user = this.auth.getUser();
     this.fullName = user?.full_name || 'User';
     this.userRole = user?.role || 'Guest';
     this.userInitials = this.getInitials(this.fullName);
+    this.startPolling();
+  }
+
+  startPolling() {
+    setInterval(() => {
+      this.syncMessages();
+    }, 3000);
   }
 
   getInitials(name: string): string {
@@ -154,13 +185,6 @@ export class PriceRegressionComponent implements OnInit {
     this.router.navigate(['/forecast']);
   }
 
-  exportPDF(): void {
-    const backendUrl = this.auth.getBackendUrl();
-    const url = `${backendUrl}/api/pdf/download?token=skip`;
-    alert('Le rapport PDF va s\'ouvrir dans un nouvel onglet...');
-    window.open(url, '_blank');
-  }
-
   exportExcel(): void {
     const googleSheetsUrl = 'https://docs.google.com/spreadsheets/d/1biKepM8Y2DwwtqiPSqdKnObM7ORJkUY6S746PRCci1w/export?format=xlsx';
     window.open(googleSheetsUrl, '_blank');
@@ -171,11 +195,89 @@ export class PriceRegressionComponent implements OnInit {
   }
 
   toggleChat(): void {
-    alert('Direct messages are available on the main dashboard.');
+    this.isChatOpen = !this.isChatOpen;
+    if (this.isChatOpen) {
+      setTimeout(() => this.scrollToBottom(), 100);
+    }
   }
 
-  openUsersModal(): void {
-    alert('User management is available on the main dashboard.');
+  toggleChatMode() {
+    this.isAiMode = !this.isAiMode;
+    if (this.isAiMode) {
+      this.marketingMessages = [...this.chatMessages];
+      this.chatMessages = [...this.aiMessages];
+    } else {
+      this.aiMessages = [...this.chatMessages];
+      this.chatMessages = [...this.marketingMessages];
+    }
+    setTimeout(() => this.scrollToBottom(), 100);
+  }
+
+  sendMessage() {
+    if (!this.chatInput.trim()) return;
+    const userText = this.chatInput;
+    this.chatInput = '';
+
+    const newMsg = {
+      role: 'user',
+      text: userText,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    this.chatMessages.push(newMsg);
+    setTimeout(() => this.scrollToBottom(), 100);
+
+    if (this.isAiMode) {
+      this.isTyping = true;
+      this.http.post<any>(`${this.BACKEND_URL}/api/ai/chat`, { message: userText }, { headers: this.HEADERS }).subscribe({
+        next: (res) => {
+          this.isTyping = false;
+          this.chatMessages.push({
+            role: 'ai',
+            text: res.answer,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          });
+          this.aiMessages = [...this.chatMessages];
+          setTimeout(() => this.scrollToBottom(), 100);
+        },
+        error: () => {
+          this.isTyping = false;
+          this.chatMessages.push({ role: 'ai', text: "Error connecting to AI.", time: "Now" });
+          setTimeout(() => this.scrollToBottom(), 100);
+        }
+      });
+    } else {
+      const msgData = { sender: this.userRole === 'CEO' ? 'CEO' : 'Marketing', text: userText, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+      this.http.post(`${this.BACKEND_URL}/api/chat/send`, msgData, { headers: this.HEADERS }).subscribe({
+        next: () => this.syncMessages()
+      });
+    }
+  }
+
+  syncMessages() {
+    if (this.isAiMode) return;
+    this.http.get<any[]>(`${this.BACKEND_URL}/api/chat/sync`, { headers: this.HEADERS }).subscribe({
+      next: (msgs) => {
+        const formattedMsgs = msgs.map(m => ({
+          role: m.sender === (this.userRole === 'CEO' ? 'CEO' : 'Marketing') ? 'user' : 'ai',
+          text: m.text,
+          time: m.timestamp
+        }));
+        if (!this.isAiMode) this.chatMessages = formattedMsgs;
+        else this.marketingMessages = formattedMsgs;
+      }
+    });
+  }
+
+  scrollToBottom(): void {
+    try {
+      if (this.chatScrollContainer) {
+        this.chatScrollContainer.nativeElement.scrollTop = this.chatScrollContainer.nativeElement.scrollHeight;
+      }
+    } catch (err) { }
+  }
+
+  closeStrategyModal() {
+    this.showStrategyModal = false;
   }
 
   logout(): void {
@@ -187,32 +289,19 @@ export class PriceRegressionComponent implements OnInit {
     for (let key of keys) {
       const val = (this.formData as any)[key];
       if (val === null || val === undefined || val === '') {
-         return 'Please fill out all fields.';
+        return 'Please fill out all fields.';
       }
     }
-    if (this.formData.market_count < 0) return "Competitors cannot be negative.";
-    if (this.formData.nbr_visitors < 0) return "Number of visitors cannot be negative.";
-    if (this.formData.nbr_reservations < 0) return "Number of reservations cannot be negative.";
-    if (this.formData.marketing_spend < 0) return "Marketing spend cannot be negative.";
-    if (this.formData.rating < 1 || this.formData.rating > 5) return "Rating must be between 1 and 5.";
-    if (this.formData.capacity_min < 0) return "Minimum capacity cannot be negative.";
-    if (this.formData.capacity_max < 0) return "Maximum capacity cannot be negative.";
-    if (this.formData.capacity_max < this.formData.capacity_min) return "Maximum capacity must be greater than or equal to minimum capacity.";
-    if (this.formData.season_encoded < 1 || this.formData.season_encoded > 4) return "Season must be between 1 and 4.";
-    
     return null;
   }
 
   predictPrice(): void {
     this.errorMessage = '';
-    
-    // Convert selected capacity range string to min and max
     if (this.selectedCapacityRange.includes('-')) {
       const parts = this.selectedCapacityRange.split('-');
       this.formData.capacity_min = parseInt(parts[0], 10);
       this.formData.capacity_max = parseInt(parts[1], 10);
     }
-
     this.formData.marketing_spend = Number(this.selectedMarketingSpend);
     this.formData.nbr_visitors = Number(this.selectedVisitors);
     this.formData.nbr_reservations = Number(this.selectedReservations);
@@ -227,19 +316,13 @@ export class PriceRegressionComponent implements OnInit {
     this.predictedPrice = null;
     this.result = null;
 
-    const payload: PredictionRequest = { ...this.formData };
-    Object.keys(payload).forEach(key => {
-      (payload as any)[key] = Number((payload as any)[key]);
-    });
-
-    this.predictionService.predictPrice(payload).subscribe({
+    this.predictionService.predictPrice(this.formData).subscribe({
       next: (response: PredictionResponse) => {
         this.result = response;
         this.predictedPrice = response.predicted_price;
         this.loading = false;
       },
-      error: (error) => {
-        console.error('Prediction error:', error);
+      error: () => {
         this.errorMessage = 'An error occurred during prediction.';
         this.loading = false;
       }
@@ -263,9 +346,9 @@ export class PriceRegressionComponent implements OnInit {
   readSummary() {
     if (this.isSoundEnabled) {
       if (this.result) {
-        this.soundService.speak(`Price Regression Summary: The recommended price is ${this.result.recommended_price} Dinars. The predicted price is ${this.result.predicted_price} Dinars. The confidence score is ${this.result.confidence_score} percent with a ${this.result.expected_demand} demand level. Strategic recommendation: ${this.result.strategic_recommendation}`);
+        this.soundService.speak(`Price Regression Summary: The recommended price is ${this.result.recommended_price} Dinars. The predicted price is ${this.result.predicted_price} Dinars. The confidence score is ${this.result.confidence_score} percent.`);
       } else {
-        this.soundService.speak("Price Regression Summary: This page allows you to predict the optimal price for your event based on market inputs. Please run a prediction first to hear the results.");
+        this.soundService.speak("Price Regression Summary: This page allows you to predict the optimal price for your event based on market inputs.");
       }
     } else {
       alert("Please enable voice assistance in the navbar first.");

@@ -8,34 +8,47 @@ import { AuthGuard } from './guards/auth.guard';
 import { PriceRegressionComponent } from './Ceo/price-regression/price-regression.component';
 import { ForecastComponent } from './forecast/forecast.component';
 import { AnomalyDetectionComponent } from './anomaly-detection/anomaly-detection.component';
+import { DashboardAdminComponent } from './Admin/dashboard-admin/dashboard-admin.component';
+
 
 const routes: Routes = [
-// {path : '', redirectTo : 'login', pathMatch : 'full'},
-// {path : 'login', component : LoginComponent},
-// {path :'dashboard-ceo', component:DashboardCeoComponent},
-// {path :'dashboard-marketing', component:DashboardMarketingComponent},
-// { path: 'content-ceo',      component: ContentCeoComponent },
-    
+  // {path : '', redirectTo : 'login', pathMatch : 'full'},
+  // {path : 'login', component : LoginComponent},
+  // {path :'dashboard-ceo', component:DashboardCeoComponent},
+  // {path :'dashboard-marketing', component:DashboardMarketingComponent},
+  // { path: 'content-ceo',      component: ContentCeoComponent },
+
 
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard-ceo', component: DashboardCeoComponent,
-    canActivate: [AuthGuard], data: { role: 'CEO' } },
-  { path: 'dashboard-marketing', component: DashboardMarketingComponent,
-    canActivate: [AuthGuard], data: { role: 'MARKETING' } },
-  { path: 'content-ceo',      component: ContentCeoComponent,
-    canActivate: [AuthGuard], data: { role: 'CEO' } },
+  {
+    path: 'dashboard-ceo', component: DashboardCeoComponent,
+    canActivate: [AuthGuard], data: { role: 'CEO' }
+  },
+  {
+    path: 'dashboard-marketing', component: DashboardMarketingComponent,
+    canActivate: [AuthGuard], data: { role: 'MARKETING' }
+  },
+  {
+    path: 'content-ceo', component: ContentCeoComponent,
+    canActivate: [AuthGuard], data: { role: 'CEO' }
+  },
+  {
+    path: 'dashboard-admin', component: DashboardAdminComponent,
+    canActivate: [AuthGuard], data: { role: 'ADMIN' }
+  },
+
   { path: 'price-regression', component: PriceRegressionComponent },
   { path: 'forecast', component: ForecastComponent },
   { path: 'anomaly', component: AnomalyDetectionComponent },
 
 
-// if (user.role === 'CEO') {
-//   this.router.navigate(['/dashboard-ceo']);
-// } else if (user.role === 'MARKETING') {
-//   this.router.navigate(['/dashboard-marketing']);
-// }
+  // if (user.role === 'CEO') {
+  //   this.router.navigate(['/dashboard-ceo']);
+  // } else if (user.role === 'MARKETING') {
+  //   this.router.navigate(['/dashboard-marketing']);
+  // }
 ];
 
 @NgModule({

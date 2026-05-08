@@ -2,6 +2,12 @@ from flask import Blueprint, jsonify, request
 
 from app.services.ml_service import MLService
 from app.services.n8n_service import N8nService
+from app.core.monitoring import (
+    detect_missing_values,
+    detect_drift,
+    mark_new_data_received,
+    update_model_confidence
+)
 
 
 ml_bp = Blueprint("ml", __name__, url_prefix="/api/ml")
@@ -15,7 +21,18 @@ n8n_service = N8nService()
 def predict_price():
     try:
         payload = request.get_json(force=True, silent=True) or {}
+        
+        # Monitoring
+        mark_new_data_received()
+        detect_missing_values(payload)
+        detect_drift(payload)
+        
         result = ml_service.predict_price_response(payload)
+        
+        # Si le modèle retourne un score de confiance, on le logue
+        if "confidence" in result:
+            update_model_confidence(result["confidence"])
+            
         n8n_service.emit_prediction_event({"event": "prediction.generated", "payload": payload, "result": result})
         return jsonify(result), 200
     except ValueError as exc:

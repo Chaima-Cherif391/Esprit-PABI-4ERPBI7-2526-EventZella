@@ -1,15 +1,9 @@
 <!-- ══ MAIN ══ -->
 <div class="main">
 
-  <!-- ── NAVBAR ── -->
+  <!-- ── NAVBAR (Unified Premium Design) ── -->
   <nav class="navbar">
     <div class="navbar-brand" (click)="goHome()" style="cursor: pointer;">
-      <div class="back-arrow">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path d="M19 12H5M12 19l-7-7 7-7" />
-        </svg>
-      </div>
       <div class="logo-icon-sm">
         <svg viewBox="0 0 24 24">
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -42,6 +36,18 @@
           <line x1="17" y1="9" x2="23" y2="15"></line>
         </svg>
       </div>
+      
+      <div class="divider"></div>
+
+      <div class="user-profile-sm">
+        <div class="user-avatar-sm">{{ userInitials || 'BB' }}</div>
+        <div class="user-info-sm">
+          <div class="user-name-sm">{{ fullName || 'Bilel Beyni' }}</div>
+          <div class="user-role-sm">{{ userRole || 'CEO' }}</div>
+        </div>
+      </div>
+
+      <button class="btn-logout" (click)="logout()">Logout</button>
     </div>
   </nav>
 
@@ -206,7 +212,8 @@
               <div class="action-item" *ngIf="anomalyData.is_anomaly === 1">
                 <div class="action-bullet">!</div>
                 <p>Manual review required. Check consistency between <strong>marketing spend</strong> and
-                  <strong>conversion rates</strong>.</p>
+                  <strong>conversion rates</strong>.
+                </p>
               </div>
               <div class="action-item" *ngIf="anomalyData.is_anomaly === 0">
                 <div class="action-bullet">✓</div>

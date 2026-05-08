@@ -33,6 +33,9 @@ export class AnomalyDetectionComponent implements OnInit {
   ];
 
   isSoundEnabled = false;
+  fullName = '';
+  userRole = '';
+  userInitials = '';
 
   constructor(
     private router: Router,
@@ -42,8 +45,17 @@ export class AnomalyDetectionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const user = this.auth.getUser();
+    this.fullName = user?.full_name || 'User';
+    this.userRole = user?.role || 'Guest';
+    this.userInitials = this.getInitials(this.fullName);
+    
     this.isSoundEnabled = this.soundService.getSoundStatus();
     this.scanDatabase();
+  }
+
+  getInitials(name: string): string {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
   }
 
   scanDatabase() {
@@ -60,19 +72,15 @@ export class AnomalyDetectionComponent implements OnInit {
         this.isLoading = false;
         this.lastScanTime = new Date();
         if (this.isSoundEnabled && data.consensus) {
-          this.soundService.speak(`Database scan complete. Detected ${data.consensus.anomalies_detected} critical anomalies across ${data.total_records} records.`);
+          this.soundService.speak(`Database scan complete. Detected ${data.consensus.anomalies_detected} critical anomalies.`);
         }
       },
       error: (err) => {
         console.error(err);
         this.isLoading = false;
-        this.errorMessage = err.error?.detail || "Impossible de se connecter à la base de données ou aucune donnée trouvée.";
+        this.errorMessage = err.error?.detail || "Impossible de se connecter à la base de données.";
       }
     });
-  }
-
-  setTab(tab: 'database' | 'simulation') {
-    this.currentTab = tab;
   }
 
   isFormValid(): boolean {
@@ -89,7 +97,7 @@ export class AnomalyDetectionComponent implements OnInit {
   }
 
   analyzeAnomaly() {
-    this.anomalyData = null; 
+    this.anomalyData = null;
     if (!this.isFormValid()) {
       this.errorMessage = "Veuillez remplir tous les champs avec des valeurs valides.";
       return;
@@ -110,9 +118,9 @@ export class AnomalyDetectionComponent implements OnInit {
         this.isLoading = false;
         if (this.isSoundEnabled) {
           if (data.is_anomaly === 1) {
-            this.soundService.speak("Alert. Anomaly detected. " + data.explanation);
+            this.soundService.speak("Alert. Anomaly detected.");
           } else {
-            this.soundService.speak("All metrics are normal. " + data.explanation);
+            this.soundService.speak("All metrics are normal.");
           }
         }
       },
@@ -127,9 +135,6 @@ export class AnomalyDetectionComponent implements OnInit {
   applyPreset(preset: any) {
     this.formData = { ...preset.data };
     this.anomalyData = null;
-    if (this.isSoundEnabled) {
-      this.soundService.speak(`Applying ${preset.name} template.`);
-    }
   }
 
   goHome(): void {
@@ -144,5 +149,9 @@ export class AnomalyDetectionComponent implements OnInit {
   toggleSound(): void {
     this.soundService.toggleSound();
     this.isSoundEnabled = this.soundService.getSoundStatus();
+  }
+
+  logout(): void {
+    this.auth.logout();
   }
 }

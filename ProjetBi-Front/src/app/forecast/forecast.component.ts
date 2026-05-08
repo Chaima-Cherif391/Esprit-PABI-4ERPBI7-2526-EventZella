@@ -13,7 +13,7 @@ import { SoundService } from '../services/sound.service';
 export class ForecastComponent implements OnInit {
   isLoading = true;
   forecastHtml: SafeResourceUrl | null = null;
-  
+
   fullName = '';
   userRole = '';
   userInitials = '';
@@ -22,7 +22,7 @@ export class ForecastComponent implements OnInit {
   private readonly HEADERS = new HttpHeaders().set('ngrok-skip-browser-warning', 'any');
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private sanitizer: DomSanitizer,
     private router: Router,
     private auth: AuthService,

@@ -5,7 +5,7 @@ from app.schemas.user import UserCreate, UserLogin, UserOut
 from app.core.security import hash_password, verify_password, create_access_token, decode_token
 from pydantic import ValidationError
 
-VALID_ROLES = ["CEO", "MARKETING"]
+VALID_ROLES = ["CEO", "MARKETING", "ADMIN"]
 
 
 def _get_token_from_header():
@@ -172,6 +172,20 @@ def create_auth_blueprint(name: str, url_prefix: str) -> Blueprint:
         finally:
             db.close()
 
+    @bp.route("/users/all", methods=["GET"])
+    def get_all_users():
+        token = _get_token_from_header()
+        if not token:
+            return jsonify({"detail": "Not authenticated"}), 401
+
+        db = SessionLocal()
+        try:
+            # Récupérer tous les users SAUF les ADMIN
+            users = db.query(User).filter(User.role != "ADMIN").all()
+            return jsonify([UserOut.model_validate(u).model_dump(mode="json") for u in users]), 200
+        finally:
+            db.close()
+
     @bp.route("/users/<int:user_id>", methods=["PUT"])
     def update_user(user_id):
         token = _get_token_from_header()
@@ -193,6 +207,8 @@ def create_auth_blueprint(name: str, url_prefix: str) -> Blueprint:
                 user.is_active = data["is_active"]
             if "password" in data and data["password"]:
                 user.password = hash_password(data["password"])
+            if "role" in data and data["role"] in VALID_ROLES:
+                user.role = data["role"]
 
             db.commit()
             db.refresh(user)

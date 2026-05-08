@@ -3,7 +3,7 @@
 <!-- ══ MAIN ══ -->
 <div class="main">
 
-  <!-- ── NAVBAR ── -->
+  <!-- ── NAVBAR (Unified Premium Design) ── -->
   <nav class="navbar">
     <div class="navbar-brand" (click)="goHome()" style="cursor: pointer;">
       <div class="logo-icon-sm">
@@ -11,27 +11,28 @@
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
         </svg>
       </div>
-      <div class="navbar-title">
-        Marketing Dashboard
-      </div>
+      <div class="navbar-title">Marketing Dashboard <span>Eventzella Analytics</span></div>
     </div>
 
     <div class="navbar-actions">
 
       <!-- Strategic AI Consultant -->
-      <div class="icon-btn strategy-btn" (click)="generateStrategicReport()" title="AI Strategic Briefing" appSoundVisual="Generate a strategic AI report.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="icon-btn strategy-btn" (click)="generateStrategicReport()" title="AI Strategic Briefing"
+        appSoundVisual="Generate a strategic AI report.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
           <path d="M6 3h12l4 6-10 12L2 9z"></path>
           <path d="M11 3L8 9l3 12"></path>
           <path d="M13 3l3 6-3 12"></path>
           <path d="M2 9h20"></path>
         </svg>
-        <span class="btn-badge" *ngIf="isGeneratingReport">...</span>
       </div>
 
       <!-- Excel Export -->
-      <div class="icon-btn export-excel" (click)="exportExcel()" title="Export to Google Sheets" appSoundVisual="Export data to Google Sheets.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="icon-btn export-excel" (click)="exportExcel()" title="Export to Google Sheets"
+        appSoundVisual="Export data to Google Sheets.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
           <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
           <line x1="3" y1="9" x2="21" y2="9"></line>
           <line x1="3" y1="15" x2="21" y2="15"></line>
@@ -40,30 +41,16 @@
         </svg>
       </div>
 
+      <!-- ICON NOTIFS -->
       <div class="icon-btn" (click)="toggleNotifs()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
           <path d="M13.73 21a2 2 0 0 1-3.46 0" />
         </svg>
         <span class="notif-dot" *ngIf="unreadNotifs > 0">{{ unreadNotifs }}</span>
-
-        <div class="notif-dropdown" *ngIf="isNotifOpen" (click)="$event.stopPropagation()">
-          <div class="notif-header">
-            <span>Notifications</span>
-            <button (click)="markNotifsRead()" *ngIf="unreadNotifs > 0">Tout lire</button>
-          </div>
-          <div class="notif-list">
-            <div class="notif-item" *ngFor="let n of notifications" [class.unread]="!n.is_read" (click)="viewNotif(n)">
-              <div class="notif-title">{{ n.title }}</div>
-              <div class="notif-msg">{{ n.message }}</div>
-              <div class="notif-time">{{ n.created_at | date:'shortTime' }}</div>
-            </div>
-            <div class="notif-empty" *ngIf="notifications.length === 0">Aucune notification</div>
-          </div>
-        </div>
       </div>
 
-        <!-- ICON MESSAGERIE -->
+      <!-- ICON MESSAGERIE -->
       <div class="icon-btn" (click)="toggleChat()" title="Messages directs">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -72,12 +59,15 @@
       </div>
 
       <!-- Accessibility Sound Toggle -->
-      <div class="icon-btn sound-btn" (click)="toggleSound()" [title]="isSoundEnabled ? 'Disable Voice Assistance' : 'Enable Voice Assistance'">
-        <svg *ngIf="isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="icon-btn sound-btn" (click)="toggleSound()"
+        [title]="isSoundEnabled ? 'Disable Voice Assistance' : 'Enable Voice Assistance'">
+        <svg *ngIf="isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         </svg>
-        <svg *ngIf="!isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg *ngIf="!isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <line x1="23" y1="9" x2="17" y2="15"></line>
           <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -99,14 +89,14 @@
   </nav>
 
   <!-- CONTENU -->
-  <div class="content" style="height: calc(100vh - 80px); padding: 0; position: relative;" appSoundVisual="Interactive Power BI Dashboard for Marketing.">
-    <iframe *ngIf="iframeKey" [src]="powerBiUrl" width="100%" height="100%" frameborder="0" 
-      allowFullScreen="true"
-      allow="storage-access; encrypted-media; clipboard-write"
-      style="border: none;"></iframe>
+  <div class="content" style="height: calc(100vh - 72px); padding: 0; position: relative;"
+    appSoundVisual="Interactive Power BI Dashboard for Marketing.">
+    <iframe *ngIf="iframeKey" [src]="powerBiUrl" width="100%" height="100%" frameborder="0" allowFullScreen="true"
+      allow="storage-access; encrypted-media; clipboard-write" style="border: none;"></iframe>
 
     <div class="summary-fab" (mouseenter)="hoverSummary()" (click)="readSummary()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
         <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
@@ -125,9 +115,10 @@
       </div>
       <button class="close-chat" (click)="toggleChat()">×</button>
     </div>
-    
+
     <div class="chat-messages" #chatScroll>
-      <div *ngFor="let msg of chatMessages" class="message" [class.user]="msg.role === 'user'" [class.ai]="msg.role === 'ai'">
+      <div *ngFor="let msg of chatMessages" class="message" [class.user]="msg.role === 'user'"
+        [class.ai]="msg.role === 'ai'">
         <div class="message-meta" *ngIf="msg.role === 'ai'">{{ isAiMode ? 'AI' : 'CEO' }}</div>
         <div class="message-meta" *ngIf="msg.role === 'user'">Me (Marketing)</div>
         <div class="message-content">
@@ -148,28 +139,6 @@
           <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
         </svg>
       </button>
-    </div>
-  </div>
-
-  <!-- STRATEGIC REPORT MODAL -->
-  <div class="modal-overlay strategy-report-overlay" *ngIf="showStrategyModal" (click)="closeStrategyModal()">
-    <div class="modal-content strategy-modal" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <div class="header-with-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2.5" style="width: 24px;">
-            <path d="M6 3h12l4 6-10 12L2 9z"></path>
-          </svg>
-          <h2>AI Strategic Briefing</h2>
-        </div>
-        <button class="close-btn" (click)="closeStrategyModal()">×</button>
-      </div>
-      
-      <div class="report-content" [innerHTML]="formattedReport">
-        <div class="loading-report" *ngIf="isGeneratingReport">
-          <div class="spinner"></div>
-          <p>The AI Consultant is analyzing your Data Warehouse...</p>
-        </div>
-      </div>
     </div>
   </div>
 

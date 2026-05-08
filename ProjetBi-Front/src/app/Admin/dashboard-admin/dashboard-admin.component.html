@@ -1,0 +1,330 @@
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- ── NAVBAR (Unified Premium Design) ── -->
+  <nav class="navbar">
+    <div class="navbar-brand" (click)="goHome()" style="cursor: pointer;">
+      <div class="logo-icon-sm">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <div class="navbar-title">Admin Dashboard <span>Infrastructure & Control</span></div>
+    </div>
+
+    <div class="navbar-actions">
+
+      <!-- Power BI View -->
+      <div class="icon-btn" [class.active]="displayMode === 'pbi'" (click)="setMode('pbi')" title="Power BI Dashboard"
+        appSoundVisual="Switch to Power BI Business Analytics.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+      </div>
+
+      <!-- Grafana View -->
+      <div class="icon-btn" [class.active]="displayMode === 'grafana'" (click)="setMode('grafana')"
+        title="Grafana Monitoring" appSoundVisual="Switch to Grafana Infrastructure Monitoring.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+      </div>
+
+      <!-- Anomaly Detection -->
+      <div class="icon-btn anomaly-btn" (click)="openAnomaly()" title="Real-time Anomaly Detection"
+        appSoundVisual="Real-time Anomaly Detection.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </div>
+
+      <!-- Strategic AI -->
+      <div class="icon-btn strategy-btn" (click)="generateStrategicReport()" title="AI Strategic Briefing"
+        appSoundVisual="Generate a strategic AI report.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M6 3h12l4 6-10 12L2 9z"></path>
+          <path d="M11 3L8 9l3 12"></path>
+          <path d="M13 3l3 6-3 12"></path>
+          <path d="M2 9h20"></path>
+        </svg>
+      </div>
+
+      <!-- Price Regression -->
+      <div class="icon-btn regression-btn" (click)="openRegression()" title="Price Regression Analysis"
+        appSoundVisual="Price regression analysis.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+
+      <!-- Forecast -->
+      <div class="icon-btn forecast-btn" (click)="openForecast()" title="Time-Series Forecast"
+        appSoundVisual="Time-series forecast analysis.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+          <path d="M8 16l2-2 2 2 4-4" stroke-width="2.5"></path>
+        </svg>
+      </div>
+
+      <!-- User Management -->
+      <div class="icon-btn" (click)="openUsersModal()" title="User Access Management"
+        appSoundVisual="Manage user accounts and permissions.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e67e22" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      </div>
+
+      <!-- Notifications -->
+      <div class="icon-btn" (click)="toggleNotifs()" title="System Notifications"
+        appSoundVisual="View system notifications.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        <span class="notif-dot" *ngIf="unreadNotifs > 0">{{ unreadNotifs }}</span>
+
+        <!-- Dropdown Notifs -->
+        <div class="notif-dropdown" *ngIf="isNotifOpen" (click)="$event.stopPropagation()">
+          <div class="notif-header">
+            <span>Notifications</span>
+            <button (click)="markNotifsRead()" *ngIf="unreadNotifs > 0">Tout lire</button>
+          </div>
+          <div class="notif-list">
+            <div class="notif-item" *ngFor="let n of notifications" [class.unread]="!n.is_read" (click)="viewNotif(n)">
+              <div class="notif-title">{{ n.title }}</div>
+              <div class="notif-msg">{{ n.message }}</div>
+              <div class="notif-time">{{ n.created_at | date:'shortTime' }}</div>
+            </div>
+            <div class="notif-empty" *ngIf="notifications.length === 0">Aucune notification</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messaging -->
+      <div class="icon-btn" (click)="toggleChat()" title="Direct Messaging"
+        appSoundVisual="Open direct messaging interface.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        <span class="notif-dot" *ngIf="unreadMessagesCount > 0">{{ unreadMessagesCount }}</span>
+      </div>
+
+      <!-- Accessibility Sound Toggle -->
+      <div class="icon-btn sound-btn" (click)="toggleSound()"
+        [title]="isSoundEnabled ? 'Disable Voice Assistance' : 'Enable Voice Assistance'">
+        <svg *ngIf="isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <svg *ngIf="!isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="user-profile-sm">
+        <div class="user-avatar-sm">{{ userInitials }}</div>
+        <div class="user-info-sm">
+          <div class="user-name-sm">{{ fullName }}</div>
+          <div class="user-role-sm">{{ userRole }}</div>
+        </div>
+      </div>
+
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- CONTENU -->
+  <div class="content">
+    <div *ngIf="!isRefreshing" style="width: 100%; height: 100%;">
+      <iframe *ngIf="displayMode === 'pbi' && powerBiUrl" [src]="powerBiUrl" width="100%" height="100%" frameborder="0"
+        allowFullScreen="true" allow="storage-access; encrypted-media; clipboard-write"></iframe>
+      <iframe *ngIf="displayMode === 'grafana' && grafanaUrl" [src]="grafanaUrl" width="100%" height="100%"
+        frameborder="0" allowFullScreen="true"></iframe>
+    </div>
+
+    <div class="loading-report" *ngIf="isRefreshing || (!powerBiUrl && !grafanaUrl)">
+      <div class="spinner"></div>
+      <p>{{ isRefreshing ? 'Rafraîchissement...' : 'Chargement des systèmes...' }}</p>
+    </div>
+
+    <div class="summary-fab" (mouseenter)="hoverSummary()" (click)="readSummary()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+      </svg>
+      <span class="fab-text">Read Summary</span>
+    </div>
+  </div>
+
+  <!-- CHAT WINDOW -->
+  <div class="chat-window" [class.open]="isChatOpen">
+    <div class="chat-header">
+      <div class="chat-title" (click)="toggleChatMode()" style="cursor: pointer;">
+        <span class="status-dot" [style.background]="isAiMode ? '#16c0de' : '#2ecc71'"></span>
+        {{ isAiMode ? 'Assistant BI (IA)' : 'Messagerie (Marketing)' }}
+        <span class="mode-switch-hint">🔁 Switch</span>
+      </div>
+      <button class="close-chat" (click)="toggleChat()">×</button>
+    </div>
+
+    <div class="chat-messages" #chatScroll>
+      <div *ngFor="let msg of chatMessages" class="message" [class.user]="msg.role === 'user'"
+        [class.ai]="msg.role === 'ai'">
+        <div class="message-meta" *ngIf="msg.role === 'ai'">{{ isAiMode ? 'IA' : 'Service Marketing' }}</div>
+        <div class="message-meta" *ngIf="msg.role === 'user'">Moi (Admin)</div>
+        <div class="message-content">
+          {{ msg.text }}
+          <div class="message-time">{{ msg.time }}</div>
+        </div>
+      </div>
+      <div class="typing-indicator" *ngIf="isTyping">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" [(ngModel)]="chatInput" (keyup.enter)="sendMessage()" placeholder="Écrivez un message...">
+      <button (click)="sendMessage()" [disabled]="!chatInput.trim()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- STRATEGIC REPORT MODAL -->
+  <div class="modal-overlay strategy-report-overlay" *ngIf="showStrategyModal" (click)="closeStrategyModal()">
+    <div class="modal-content strategy-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="header-with-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2.5" style="width: 24px;">
+            <path d="M6 3h12l4 6-10 12L2 9z"></path>
+          </svg>
+          <h2>AI Strategic Briefing</h2>
+        </div>
+        <button class="close-btn" (click)="closeStrategyModal()">×</button>
+      </div>
+
+      <div class="report-content" [innerHTML]="formattedReport">
+        <div class="loading-report" *ngIf="isGeneratingReport">
+          <div class="spinner"></div>
+          <p>The AI Consultant is analyzing your Data Warehouse...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USERS MODAL -->
+  <div class="modal-overlay" *ngIf="showUsersModal" (click)="closeUsersModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="header-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#e67e22" stroke-width="2"
+            style="width: 24px; margin-right: 10px;">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+          </svg>
+          <h2>User Access Management</h2>
+        </div>
+        <button class="close-btn" (click)="closeUsersModal()">×</button>
+      </div>
+
+      <div class="modal-actions" *ngIf="!editingUser && !showAddUserForm">
+        <button class="add-user-btn" (click)="showAddUserForm = true">+ Add New User</button>
+      </div>
+
+      <div class="users-list" *ngIf="!editingUser && !showAddUserForm">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of allUsers">
+              <td>{{ u.full_name }}</td>
+              <td>{{ u.email }}</td>
+              <td><span class="role-badge">{{ u.role }}</span></td>
+              <td><span class="status-badge" [class.active]="u.is_active">{{ u.is_active ? 'Active' : 'Inactive'
+                  }}</span></td>
+              <td>
+                <button class="action-btn edit" (click)="editUser(u)">Edit</button>
+                <button class="action-btn delete" (click)="deleteUser(u.id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="user-form" *ngIf="showAddUserForm">
+        <h3>Create New Account</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" [(ngModel)]="newUser.full_name"></div>
+        <div class="form-group"><label>Email Address</label><input type="email" [(ngModel)]="newUser.email"></div>
+        <div class="form-group"><label>Initial Password</label><input type="password" [(ngModel)]="newUser.password">
+        </div>
+        <div class="form-group"><label>Role</label>
+          <select [(ngModel)]="newUser.role">
+            <option value="MARKETING">MARKETING</option>
+            <option value="CEO">CEO</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="save-btn" (click)="createUser()">Create User</button>
+          <button class="cancel-btn" (click)="showAddUserForm = false">Back</button>
+        </div>
+      </div>
+
+      <div class="user-form" *ngIf="editingUser">
+        <h3>Edit User: {{ editingUser.full_name }}</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" [(ngModel)]="editingUser.full_name"></div>
+        <div class="form-group"><label>Email</label><input type="email" [(ngModel)]="editingUser.email"></div>
+        <div class="form-group"><label>Role</label>
+          <select [(ngModel)]="editingUser.role">
+            <option value="MARKETING">MARKETING</option>
+            <option value="CEO">CEO</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="checkbox-label"><input type="checkbox"
+              [(ngModel)]="editingUser.is_active"> Active Account</label></div>
+        <div class="form-actions">
+          <button class="save-btn" (click)="saveUser()">Save</button>
+          <button class="cancel-btn" (click)="editingUser = null">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,7 +1,7 @@
 <!-- ══ MAIN ══ -->
 <div class="main">
 
-  <!-- ── NAVBAR (Unified Design) ── -->
+  <!-- ── NAVBAR (Unified Premium Design) ── -->
   <nav class="navbar">
     <div class="navbar-brand" (click)="goHome()" style="cursor: pointer;">
       <div class="logo-icon-sm">
@@ -13,19 +13,21 @@
     </div>
 
     <div class="navbar-actions">
-      <!-- Price Regression Link -->
-      <div class="icon-btn regression-btn active" title="Price Regression Analysis" appSoundVisual="Price regression analysis.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Price Regression Link (Active) -->
+      <div class="icon-btn regression-btn active" title="Price Regression Analysis"
+        appSoundVisual="Price regression analysis.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
           <line x1="12" y1="1" x2="12" y2="23"></line>
           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
         </svg>
       </div>
 
-
-
       <!-- Forecast -->
-      <div class="icon-btn forecast-btn" (click)="openForecast()" title="Time-Series Forecast" appSoundVisual="Time-series forecast analysis.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="icon-btn forecast-btn" (click)="openForecast()" title="Time-Series Forecast"
+        appSoundVisual="Time-series forecast analysis.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
           <path d="M8 16l2-2 2 2 4-4" stroke-width="2.5"></path>
@@ -33,8 +35,10 @@
       </div>
 
       <!-- Excel Export -->
-      <div class="icon-btn export-excel" (click)="exportExcel()" title="Export to Google Sheets" appSoundVisual="Export data to Google Sheets." *ngIf="userRole !== 'CEO'">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="icon-btn export-excel" (click)="exportExcel()" title="Export to Google Sheets"
+        appSoundVisual="Export data to Google Sheets." *ngIf="userRole !== 'CEO'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round">
           <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
           <line x1="3" y1="9" x2="21" y2="9"></line>
           <line x1="3" y1="15" x2="21" y2="15"></line>
@@ -58,23 +62,16 @@
         </svg>
       </div>
 
-      <!-- USER MANAGEMENT -->
-      <div class="icon-btn" (click)="openUsersModal()" title="Manage users access" appSoundVisual="Manage users access.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-      </div>
-
       <!-- Accessibility Sound Toggle -->
-      <div class="icon-btn sound-btn" (click)="toggleSound()" [title]="isSoundEnabled ? 'Disable Voice Assistance' : 'Enable Voice Assistance'">
-        <svg *ngIf="isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="icon-btn sound-btn" (click)="toggleSound()"
+        [title]="isSoundEnabled ? 'Disable Voice Assistance' : 'Enable Voice Assistance'">
+        <svg *ngIf="isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         </svg>
-        <svg *ngIf="!isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg *ngIf="!isSoundEnabled" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <line x1="23" y1="9" x2="17" y2="15"></line>
           <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -117,8 +114,9 @@
           <div class="form-section">
             <h4>Market & Performance</h4>
             <div class="form-grid">
-              <label class="field"><span>Competitors</span><input type="number" min="0" [(ngModel)]="formData.market_count"></label>
-              
+              <label class="field"><span>Competitors</span><input type="number" min="0"
+                  [(ngModel)]="formData.market_count"></label>
+
               <label class="field"><span>Visitors</span>
                 <select [(ngModel)]="selectedVisitors">
                   <option *ngFor="let o of visitorOptions" [value]="o.value">{{ o.label }}</option>
@@ -137,7 +135,8 @@
                 </select>
               </label>
 
-              <label class="field"><span>Rating (1-5)</span><input type="number" min="1" max="5" [(ngModel)]="formData.rating"></label>
+              <label class="field"><span>Rating (1-5)</span><input type="number" min="1" max="5"
+                  [(ngModel)]="formData.rating"></label>
             </div>
           </div>
 
@@ -183,7 +182,7 @@
                 <input type="range" min="0" max="100" [(ngModel)]="formData.trend_score" class="custom-slider"
                   [style.background]="'linear-gradient(to right, #16c0de ' + formData.trend_score + '%, #122840 ' + formData.trend_score + '%)'">
               </div>
-              
+
               <div class="field slider-field">
                 <div class="slider-header">
                   <span>Growth Rate</span>
@@ -219,33 +218,113 @@
           <p>Decision-ready pricing KPIs from your latest market inputs.</p>
         </div>
         <div class="kpi-grid">
-          <article class="kpi-card kpi-primary" appSoundVisual="Recommended Price."><span class="kpi-title">Recommended Price</span><p class="kpi-value">{{ result.recommended_price | number:'1.0-0' }} TND</p></article>
-          <article class="kpi-card" appSoundVisual="Predicted Price."><span class="kpi-title">Predicted Price</span><p class="kpi-value">{{ result.predicted_price | number:'1.2-2' }} TND</p></article>
-          <article class="kpi-card" appSoundVisual="Confidence Score."><span class="kpi-title">Confidence</span><p class="kpi-value">{{ result.confidence_score }}%</p></article>
-          <article class="kpi-card" appSoundVisual="Demand Level."><span class="kpi-title">Demand Level</span><p class="kpi-value">{{ result.expected_demand }}</p></article>
-          <article class="kpi-card" appSoundVisual="Risk Level."><span class="kpi-title">Risk Level</span><p class="kpi-value">{{ result.risk_level }}</p></article>
+          <article class="kpi-card kpi-primary" appSoundVisual="Recommended Price."><span class="kpi-title">Recommended
+              Price</span>
+            <p class="kpi-value">{{ result.recommended_price | number:'1.0-0' }} TND</p>
+          </article>
+          <article class="kpi-card" appSoundVisual="Predicted Price."><span class="kpi-title">Predicted Price</span>
+            <p class="kpi-value">{{ result.predicted_price | number:'1.2-2' }} TND</p>
+          </article>
+          <article class="kpi-card" appSoundVisual="Demand Level."><span class="kpi-title">Demand Level</span>
+            <p class="kpi-value">{{ result.expected_demand }}</p>
+          </article>
+          <article class="kpi-card" appSoundVisual="Risk Level."><span class="kpi-title">Risk Level</span>
+            <p class="kpi-value">{{ result.risk_level }}</p>
+          </article>
         </div>
         <article class="recommendation-highlight" appSoundVisual="Strategic Recommendation.">
           <div class="recommendation-tag">Strategic Recommendation</div>
           <h4>Option 2 - Best Balance</h4>
           <p>{{ result.strategic_recommendation }}</p>
         </article>
-        <div class="section-header scenarios-header"><h3>Pricing Options for Decision</h3><p>Compare each strategy before final approval.</p></div>
+        <div class="section-header scenarios-header">
+          <h3>Pricing Options for Decision</h3>
+          <p>Compare each strategy before final approval.</p>
+        </div>
         <div class="scenario-grid">
-          <article class="scenario-card safe" appSoundVisual="Secure More Clients scenario."><h4>Secure More Clients</h4><p class="scenario-price">{{ result.scenarios.conservative | number:'1.0-0' }} TND</p><p class="scenario-text">Lower price, demand acquisition focus.</p></article>
-          <article class="scenario-card balanced" appSoundVisual="Best Balance scenario."><h4>Best Balance</h4><p class="scenario-price">{{ result.scenarios.balanced | number:'1.0-0' }} TND</p><p class="scenario-text">Balanced positioning focus.</p></article>
-          <article class="scenario-card aggressive" appSoundVisual="Maximize Profit scenario."><h4>Maximize Profit</h4><p class="scenario-price">{{ result.scenarios.aggressive | number:'1.0-0' }} TND</p><p class="scenario-text">Premium pricing, margin focus.</p></article>
+          <article class="scenario-card safe" appSoundVisual="Secure More Clients scenario.">
+            <h4>Secure More Clients</h4>
+            <p class="scenario-price">{{ result.scenarios.conservative | number:'1.0-0' }} TND</p>
+            <p class="scenario-text">Lower price, demand acquisition focus.</p>
+          </article>
+          <article class="scenario-card balanced" appSoundVisual="Best Balance scenario.">
+            <h4>Best Balance</h4>
+            <p class="scenario-price">{{ result.scenarios.balanced | number:'1.0-0' }} TND</p>
+            <p class="scenario-text">Balanced positioning focus.</p>
+          </article>
+          <article class="scenario-card aggressive" appSoundVisual="Maximize Profit scenario.">
+            <h4>Maximize Profit</h4>
+            <p class="scenario-price">{{ result.scenarios.aggressive | number:'1.0-0' }} TND</p>
+            <p class="scenario-text">Premium pricing, margin focus.</p>
+          </article>
         </div>
       </section>
     </section>
 
     <div class="summary-fab" (mouseenter)="hoverSummary()" (click)="readSummary()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
         <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
       </svg>
       <span class="fab-text">Read Summary</span>
+    </div>
+  </div>
+
+  <!-- CHAT WINDOW -->
+  <div class="chat-window" [class.open]="isChatOpen">
+    <div class="chat-header">
+      <div class="chat-title" (click)="toggleChatMode()" style="cursor: pointer;">
+        <span class="status-dot" [style.background]="isAiMode ? '#16c0de' : '#2ecc71'"></span>
+        {{ isAiMode ? 'Assistant BI (IA)' : 'Messagerie (Marketing)' }}
+        <span class="mode-switch-hint">🔁 Switch</span>
+      </div>
+      <button class="close-chat" (click)="toggleChat()">×</button>
+    </div>
+
+    <div class="chat-messages" #chatScroll>
+      <div *ngFor="let msg of chatMessages" class="message" [class.user]="msg.role === 'user'"
+        [class.ai]="msg.role === 'ai'">
+        <div class="message-meta">{{ msg.role === 'ai' ? (isAiMode ? 'IA' : 'Marketing') : 'Moi' }}</div>
+        <div class="message-content">
+          {{ msg.text }}
+          <div class="message-time">{{ msg.time }}</div>
+        </div>
+      </div>
+      <div class="typing-indicator" *ngIf="isTyping"><span></span><span></span><span></span></div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" [(ngModel)]="chatInput" (keyup.enter)="sendMessage()" placeholder="Écrivez un message...">
+      <button (click)="sendMessage()" [disabled]="!chatInput.trim()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- STRATEGIC REPORT MODAL -->
+<div class="modal-overlay strategy-report-overlay" *ngIf="showStrategyModal" (click)="closeStrategyModal()">
+  <div class="modal-content strategy-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="header-with-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2.5" style="width: 24px;">
+          <path d="M6 3h12l4 6-10 12L2 9z"></path>
+        </svg>
+        <h2>AI Strategic Briefing</h2>
+      </div>
+      <button class="close-btn" (click)="closeStrategyModal()">×</button>
+    </div>
+    <div class="report-content" [innerHTML]="formattedReport">
+      <div class="loading-report" *ngIf="isGeneratingReport">
+        <div class="spinner"></div>
+        <p>The AI Consultant is analyzing your Data Warehouse...</p>
+      </div>
     </div>
   </div>
 </div>

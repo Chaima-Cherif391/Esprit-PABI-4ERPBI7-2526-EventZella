@@ -164,9 +164,20 @@ export class DashboardMarketingComponent implements OnInit {
 
   updatePowerBiUrl() {
     this.iframeKey = 0;
-    const url = "https://app.powerbi.com/reportEmbed?reportId=5adad138-4b1d-46de-a4bf-40f61ababab4&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&pageName=df6243e1614b506d8b8f&filterPaneEnabled=false&navContentPaneEnabled=false";
-    this.powerBiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    setTimeout(() => { this.iframeKey = Date.now(); }, 100);
+
+    this.http.get<any>(`${this.BACKEND_URL}/api/powerbi/embed-info`, { headers: this.getAuthHeaders() }).subscribe({
+      next: (res) => {
+        this.powerBiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(res.embedUrl);
+        setTimeout(() => { this.iframeKey = Date.now(); }, 100);
+      },
+      error: (err) => console.error('Failed to fetch Power BI info Marketing', err)
+    });
+  }
+
+  getAuthHeaders() {
+    return new HttpHeaders()
+      .set('ngrok-skip-browser-warning', 'any')
+      .set('Authorization', `Bearer ${this.auth.getToken()}`);
   }
 
   goHome(): void {
