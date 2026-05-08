@@ -141,6 +141,8 @@ export class AnomalyDetectionComponent implements OnInit {
     const role = this.auth.getRole();
     if (role === 'CEO') {
       this.router.navigate(['/dashboard-ceo']);
+    } else if (role === 'ADMIN') {
+      this.router.navigate(['/dashboard-admin']);
     } else {
       this.router.navigate(['/dashboard-marketing']);
     }
@@ -153,5 +155,21 @@ export class AnomalyDetectionComponent implements OnInit {
 
   logout(): void {
     this.auth.logout();
+  }
+
+  hoverSummary() {
+    if (this.isSoundEnabled) {
+      this.soundService.speak("Click to read the AI summary of anomalies.");
+    }
+  }
+
+  readSummary() {
+    if (this.anomalyData) {
+      this.soundService.speak(`Anomaly summary. Confidence level is ${(this.anomalyData.anomaly_score * 100).toFixed(1)} percent. ${this.anomalyData.explanation}`);
+    } else if (this.dbAnomalyData) {
+      this.soundService.speak(`Database scan summary. Detected ${this.dbAnomalyData.consensus.anomalies_detected} critical anomalies in the fact table.`);
+    } else {
+      this.soundService.speak("No analysis data available yet. Please run a scan or simulation.");
+    }
   }
 }

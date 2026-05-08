@@ -74,6 +74,17 @@ export class DashboardAdminComponent implements OnInit {
     this.loadDashboardData();
     this.fetchNotificationsCount();
     this.startPolling();
+    this.loadAvailableTables();
+  }
+
+  availableTables: string[] = [];
+  selectedTargetTable: string = 'Dim_Event';
+
+  loadAvailableTables() {
+    this.http.get<string[]>(`${this.BACKEND_URL}/api/admin/tables`, { headers: this.getAuthHeaders() }).subscribe({
+      next: (res) => { this.availableTables = res; },
+      error: (err) => console.error('Failed to load tables', err)
+    });
   }
 
   getInitials(name: string): string {
@@ -122,7 +133,13 @@ export class DashboardAdminComponent implements OnInit {
   openAnomaly() { this.router.navigate(['/anomaly']); }
   openRegression() { this.router.navigate(['/price-regression']); }
   openForecast() { this.router.navigate(['/forecast']); }
-  goHome() { this.router.navigate(['/dashboard-admin']); }
+  goHome() {
+    if (this.displayMode !== 'pbi') {
+      this.setMode('pbi');
+    } else {
+      this.router.navigate(['/dashboard-admin']);
+    }
+  }
 
   // ── USER MANAGEMENT ──
   openUsersModal() {
@@ -338,6 +355,56 @@ export class DashboardAdminComponent implements OnInit {
     } else {
       alert("Please enable voice assistance in the navbar first.");
     }
+  }
+
+  // ── CSV UPLOAD ──
+  showUploadModal = false;
+  selectedFile: File | null = null;
+  isUploading = false;
+  isDragging = false;
+
+  openUploadModal() { 
+    this.loadAvailableTables();
+    this.showUploadModal = true; 
+  }
+  closeUploadModal() { this.showUploadModal = false; this.selectedFile = null; this.isUploading = false; }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file && file.name.endsWith('.csv')) this.selectedFile = file;
+    else alert('Please select a valid CSV file.');
+  }
+
+  onDragOver(event: DragEvent) { event.preventDefault(); this.isDragging = true; }
+  onDragLeave(event: DragEvent) { event.preventDefault(); this.isDragging = false; }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging = false;
+    const file = event.dataTransfer?.files[0];
+    if (file && file.name.endsWith('.csv')) this.selectedFile = file;
+    else alert('Only CSV files are accepted.');
+  }
+
+  uploadCSV() {
+    if (!this.selectedFile || !this.selectedTargetTable) return;
+    this.isUploading = true;
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+
+    this.http.post(`${this.BACKEND_URL}/api/admin/upload-table/${this.selectedTargetTable}`, formData, {
+      headers: new HttpHeaders({ 'Authorization': `Bearer ${this.auth.getToken()}` })
+    }).subscribe({
+      next: (res: any) => {
+        this.isUploading = false;
+        alert(res.message || 'Data imported successfully!');
+        this.closeUploadModal();
+      },
+      error: (err) => {
+        this.isUploading = false;
+        alert(err.error?.detail || 'Error during data ingestion.');
+      }
+    });
   }
 
   logout() { this.auth.logout(); }

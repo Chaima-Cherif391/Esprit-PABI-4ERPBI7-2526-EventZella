@@ -176,6 +176,8 @@ export class PriceRegressionComponent implements OnInit {
       this.router.navigate(['/dashboard-ceo']);
     } else if (role === 'MARKETING') {
       this.router.navigate(['/dashboard-marketing']);
+    } else if (role === 'ADMIN') {
+      this.router.navigate(['/dashboard-admin']);
     } else {
       this.router.navigate(['/login']);
     }
