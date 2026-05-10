@@ -18,7 +18,7 @@ export class DashboardAdminComponent implements OnInit {
   displayMode: 'pbi' | 'grafana' = 'pbi';
   isRefreshing: boolean = false;
   iframeKey: number = 0;
-  
+
   fullName = '';
   userRole = '';
   userInitials = '';
@@ -51,6 +51,11 @@ export class DashboardAdminComponent implements OnInit {
   showStrategyModal = false;
   isGeneratingReport = false;
   formattedReport = '';
+
+  // Airflow
+  showAirflowModal = false;
+  airflowStatus: any = { status: 'LOADING...', last_execution: 'N/A' };
+  isTriggering = false;
 
   private BACKEND_URL = '';
   private HEADERS = new HttpHeaders().set('ngrok-skip-browser-warning', 'any');
@@ -121,7 +126,7 @@ export class DashboardAdminComponent implements OnInit {
   refreshIframe() {
     this.isRefreshing = true;
     this.cdr.detectChanges();
-    
+
     setTimeout(() => {
       this.isRefreshing = false;
       this.iframeKey = Date.now();
@@ -345,6 +350,48 @@ export class DashboardAdminComponent implements OnInit {
   }
   closeStrategyModal() { this.showStrategyModal = false; }
 
+  // ── AIRFLOW ──
+  openAirflowModal() {
+    this.showAirflowModal = true;
+    this.refreshAirflowStatus();
+  }
+
+  closeAirflowModal() {
+    this.showAirflowModal = false;
+  }
+
+  refreshAirflowStatus() {
+    this.http.get<any>(`${this.BACKEND_URL}/api/admin/airflow/status`, { headers: this.getAuthHeaders() }).subscribe({
+      next: (res) => {
+        this.airflowStatus = res;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Airflow status error", err);
+        this.airflowStatus = { status: 'ERROR', last_execution: 'N/A' };
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  triggerPipeline() {
+    this.isTriggering = true;
+    this.http.post<any>(`${this.BACKEND_URL}/api/admin/airflow/run`, {}, { headers: this.getAuthHeaders() }).subscribe({
+      next: (res) => {
+        this.isTriggering = false;
+        this.refreshAirflowStatus();
+        alert("Pipeline triggered successfully!");
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.isTriggering = false;
+        console.error("Airflow trigger error", err);
+        alert("Failed to trigger pipeline: " + (err.error?.detail || "Unknown error"));
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   // ── SOUND ──
   get isSoundEnabled(): boolean { return this.soundService.getSoundStatus(); }
   toggleSound(): void { this.soundService.toggleSound(); }
@@ -363,9 +410,72 @@ export class DashboardAdminComponent implements OnInit {
   isUploading = false;
   isDragging = false;
 
-  openUploadModal() { 
+  // ── OCR POSTER UPLOAD ──
+  showOcrModal = false;
+  selectedOcrFile: File | null = null;
+  isOcrUploading = false;
+  ocrResult: any = null;
+
+  openOcrModal() {
+    this.showOcrModal = true;
+    this.ocrResult = null;
+    this.selectedOcrFile = null;
+  }
+  
+  closeOcrModal() {
+    this.showOcrModal = false;
+    this.selectedOcrFile = null;
+    this.isOcrUploading = false;
+  }
+  
+  onOcrFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      this.selectedOcrFile = file;
+    } else {
+      alert('Please select a valid image file (JPG or PNG).');
+    }
+  }
+
+  onOcrDragOver(event: DragEvent) { event.preventDefault(); this.isDragging = true; }
+  onOcrDragLeave(event: DragEvent) { event.preventDefault(); this.isDragging = false; }
+  onOcrDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging = false;
+    const file = event.dataTransfer?.files[0];
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      this.selectedOcrFile = file;
+    } else {
+      alert('Only image files are accepted.');
+    }
+  }
+
+  uploadOcrImage() {
+    if (!this.selectedOcrFile) return;
+    this.isOcrUploading = true;
+    const formData = new FormData();
+    formData.append('file', this.selectedOcrFile);
+
+    this.http.post(`${this.BACKEND_URL}/api/ocr/extract-poster`, formData, {
+      headers: new HttpHeaders({ 'Authorization': `Bearer ${this.auth.getToken()}` })
+    }).subscribe({
+      next: (res: any) => {
+        this.isOcrUploading = false;
+        this.ocrResult = res.data;
+        alert(res.message || 'Poster data extracted and inserted to Dim_Event!');
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.isOcrUploading = false;
+        alert(err.error?.detail || 'Error extracting poster data.');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  openUploadModal() {
     this.loadAvailableTables();
-    this.showUploadModal = true; 
+    this.showUploadModal = true;
   }
   closeUploadModal() { this.showUploadModal = false; this.selectedFile = null; this.isUploading = false; }
 

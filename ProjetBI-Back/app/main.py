@@ -14,6 +14,7 @@ from app.routers.chat_relay import chat_relay_bp
 from app.routers.ai_assistant import ai_assistant_bp
 from app.routers.powerbi import pbi_bp
 from app.routers.admin import admin_bp
+from app.routers.ocr import ocr_bp
 
 from app.core.monitoring import (
     REQUEST_COUNT,
@@ -92,6 +93,7 @@ app.register_blueprint(chat_relay_bp)
 app.register_blueprint(ai_assistant_bp)
 app.register_blueprint(pbi_bp)
 app.register_blueprint(admin_bp)
+app.register_blueprint(ocr_bp)
 
 
 @app.route("/", methods=["GET"])

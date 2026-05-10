@@ -7,6 +7,8 @@ from app.core.security import decode_token
 from app.models.user import User
 import pandas as pd
 import io
+import requests
+from requests.auth import HTTPBasicAuth
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
 
@@ -110,4 +112,51 @@ def upload_table_data(table_name):
         
     except Exception as e:
         print(f"Upload error: {e}")
+        return jsonify({"detail": str(e)}), 500
+
+@admin_bp.route("/airflow/status", methods=["GET"])
+def get_airflow_status():
+    user, error = _check_admin()
+    if error:
+        return jsonify({"detail": error[0]}), error[1]
+    
+    try:
+        # Airflow configuration
+        # Since the backend is in Docker and Airflow is on the host (port 8081),
+        # we use host.docker.internal to reach the host's port.
+        url = "http://host.docker.internal:8081/api/v1/dags/talend_dwh_pipeline/dagRuns?limit=1&order_by=-execution_date"
+        response = requests.get(url, auth=HTTPBasicAuth("airflow", "airflow"))
+        
+        if response.status_code == 200:
+            data = response.json()
+            runs = data.get("dag_runs", [])
+            if runs:
+                last_run = runs[0]
+                return jsonify({
+                    "status": last_run.get("state").upper(),
+                    "last_execution": last_run.get("execution_date")
+                }), 200
+            else:
+                return jsonify({"status": "NO RUNS", "last_execution": "N/A"}), 200
+        else:
+            return jsonify({"detail": f"Failed to connect to Airflow: {response.text}"}), response.status_code
+    except Exception as e:
+        return jsonify({"detail": str(e)}), 500
+
+@admin_bp.route("/airflow/run", methods=["POST"])
+def trigger_airflow_pipeline():
+    user, error = _check_admin()
+    if error:
+        return jsonify({"detail": error[0]}), error[1]
+    
+    try:
+        url = "http://host.docker.internal:8081/api/v1/dags/talend_dwh_pipeline/dagRuns"
+        # Body can be empty, but must be valid JSON
+        response = requests.post(url, json={}, auth=HTTPBasicAuth("airflow", "airflow"))
+        
+        if response.status_code in [200, 201]:
+            return jsonify({"message": "Pipeline triggered successfully"}), 200
+        else:
+            return jsonify({"detail": f"Airflow error: {response.text}"}), response.status_code
+    except Exception as e:
         return jsonify({"detail": str(e)}), 500

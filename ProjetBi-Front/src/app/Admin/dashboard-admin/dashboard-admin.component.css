@@ -613,7 +613,7 @@ iframe {
 .summary-fab svg {
   width: 22px;
   height: 22px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   fill: none;
   stroke: currentColor;
   stroke-width: 2.5;
@@ -628,8 +628,15 @@ iframe {
 }
 
 @keyframes floatFab {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .summary-fab::after {
@@ -646,9 +653,20 @@ iframe {
 }
 
 @keyframes pulseNotif {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
-  70% { transform: scale(1.2); box-shadow: 0 0 0 8px rgba(255, 71, 87, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+  }
+
+  70% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 8px rgba(255, 71, 87, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+  }
 }
 
 
@@ -832,7 +850,7 @@ iframe {
   overflow: hidden;
   background: #091623 !important;
   border: 1px solid rgba(46, 204, 113, 0.2) !important;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.6) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6) !important;
 }
 
 .modal-title-group {
@@ -1033,4 +1051,160 @@ iframe {
   background: rgba(255, 71, 87, 0.1);
   color: #ff4757;
   border-color: rgba(255, 71, 87, 0.3);
+}
+
+/* ── AIRFLOW STYLES ── */
+.airflow-btn svg {
+  stroke: #f1c40f !important;
+}
+
+.airflow-btn:hover {
+  background: rgba(241, 196, 15, 0.1) !important;
+  box-shadow: 0 0 20px rgba(241, 196, 15, 0.4) !important;
+  border-color: #f1c40f !important;
+}
+
+.airflow-modal {
+  max-width: 480px !important;
+  background: #091623 !important;
+  border: 1px solid rgba(241, 196, 15, 0.2) !important;
+}
+
+.airflow-icon {
+  background: rgba(241, 196, 15, 0.1) !important;
+  color: #f1c40f !important;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.airflow-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.airflow-body {
+  padding: 24px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pipeline-status-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.status-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-value {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-value.success { background: rgba(46, 204, 113, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2); }
+.status-value.failed { background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.2); }
+.status-value.running { background: rgba(52, 152, 219, 0.1); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.2); }
+.status-value.loading { background: rgba(241, 196, 15, 0.1); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.2); }
+
+.status-time {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.pipeline-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.btn-run-pipeline {
+  flex: 2;
+  background: linear-gradient(135deg, #f1c40f, #f39c12);
+  color: #050E1A;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  font-family: 'Syne', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 20px rgba(241, 196, 15, 0.3);
+}
+
+.btn-run-pipeline:hover:not(:disabled) {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(241, 196, 15, 0.5);
+}
+
+.btn-run-pipeline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+.btn-refresh-status {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 12px;
+}
+
+.btn-refresh-status:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-run-pipeline svg, .btn-refresh-status svg {
+  width: 18px;
+  height: 18px;
+}
+
+.spinner-sm {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
