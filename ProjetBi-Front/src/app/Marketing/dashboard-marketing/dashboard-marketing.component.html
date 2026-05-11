@@ -29,7 +29,7 @@
       </div>
 
       <!-- Excel Export -->
-      <div class="icon-btn export-excel" (click)="exportExcel()" title="Export to Google Sheets"
+      <div class="icon-btn export-btn" (click)="exportExcel()" title="Export to Google Sheets"
         appSoundVisual="Export data to Google Sheets.">
         <svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round"
           stroke-linejoin="round">
@@ -42,7 +42,7 @@
       </div>
 
       <!-- ICON NOTIFS -->
-      <div class="icon-btn" (click)="toggleNotifs()">
+      <div class="icon-btn notif-btn" (click)="toggleNotifs()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
           <path d="M13.73 21a2 2 0 0 1-3.46 0" />
@@ -67,7 +67,7 @@
       </div>
 
       <!-- ICON MESSAGERIE -->
-      <div class="icon-btn" (click)="toggleChat()" title="Messages directs">
+      <div class="icon-btn chat-btn" (click)="toggleChat()" title="Messages directs">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
@@ -125,9 +125,11 @@
   <div class="chat-window" [class.open]="isChatOpen">
     <div class="chat-header">
       <div class="chat-title" (click)="toggleChatMode()" style="cursor: pointer;">
-        <span class="status-dot" [style.background]="isAiMode ? '#16c0de' : '#2ecc71'"></span>
-        {{ isAiMode ? 'BI Assistant (AI)' : 'Direct Messages (CEO)' }}
-        <span class="mode-switch-hint">🔁 Switch</span>
+        <div class="chat-title-main">
+          <span class="status-dot" [style.background]="isAiMode ? '#16c0de' : '#2ecc71'"></span>
+          {{ isAiMode ? 'BI Assistant (AI)' : 'Direct Messages (CEO)' }}
+        </div>
+        <div class="mode-switch-btn">🔁 Switch to {{ isAiMode ? 'CEO' : 'AI' }}</div>
       </div>
       <button class="close-chat" (click)="toggleChat()">×</button>
     </div>

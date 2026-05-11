@@ -340,11 +340,32 @@ export class DashboardAdminComponent implements OnInit {
     this.http.get<any>(`${this.BACKEND_URL}/api/ai/strategic-report`, { headers: this.getAuthHeaders() }).subscribe({
       next: (res) => {
         this.isGeneratingReport = false;
-        this.formattedReport = res.report.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        let text = res.report;
+        
+        // Replace Headers
+        text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        text = text.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+        
+        // Replace Bold
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Replace Horizontal Rules
+        text = text.replace(/^===+$/gim, '<div class="report-divider"></div>');
+        
+        // Replace Lists (simple approach for li)
+        text = text.replace(/^\* (.*$)/gim, '<li>$1</li>');
+        
+        // Wrap adjacent li tags in ul
+        text = text.replace(/(<li>.*<\/li>)/gms, '<ul>$1</ul>');
+
+        // Clean up double br caused by markdown newlines vs formatting
+        text = text.replace(/\n/g, '<br>');
+        
+        this.formattedReport = text;
       },
       error: () => {
         this.isGeneratingReport = false;
-        this.formattedReport = "Error generating strategic briefing.";
+        this.formattedReport = "<div class='error-msg'>Error generating strategic briefing. Please check your AI service connection.</div>";
       }
     });
   }

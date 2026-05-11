@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
     if (requiredRoles && requiredRoles.length > 0) {
       const userRole = this.auth.getRole();
       const hasPermission = requiredRoles.some(role => role.toUpperCase() === userRole?.toUpperCase());
-      
+
       if (!hasPermission) {
         this.router.navigate(['/login']);
         return false;

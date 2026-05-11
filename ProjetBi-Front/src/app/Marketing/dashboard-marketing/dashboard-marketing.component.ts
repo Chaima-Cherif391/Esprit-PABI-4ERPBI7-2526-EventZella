@@ -329,13 +329,30 @@ export class DashboardMarketingComponent implements OnInit {
     this.http.get<any>(`${this.BACKEND_URL}/api/ai/strategic-report`, { headers: this.HEADERS }).subscribe({
       next: (res) => {
         this.isGeneratingReport = false;
-        this.formattedReport = res.report
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\n/g, '<br>');
+        let text = res.report;
+        
+        // Headers
+        text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        text = text.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+        
+        // Bold
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Horizontal Rules
+        text = text.replace(/^===+$/gim, '<div class="report-divider"></div>');
+        
+        // Lists
+        text = text.replace(/^\* (.*$)/gim, '<li>$1</li>');
+        text = text.replace(/(<li>.*<\/li>)/gms, '<ul>$1</ul>');
+
+        // Newlines
+        text = text.replace(/\n/g, '<br>');
+        
+        this.formattedReport = text;
       },
       error: (err) => {
         this.isGeneratingReport = false;
-        this.formattedReport = "Error generating report. Please check your AI configuration.";
+        this.formattedReport = "<div class='error-msg'>Error generating strategic report. Please check AI service status.</div>";
       }
     });
   }
