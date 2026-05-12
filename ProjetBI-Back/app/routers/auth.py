@@ -1,4 +1,9 @@
 from flask import Blueprint, request, jsonify
+import smtplib
+import ssl
+import os
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from app.database import SessionLocal
 from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin, UserOut
@@ -6,6 +11,59 @@ from app.core.security import hash_password, verify_password, create_access_toke
 from pydantic import ValidationError
 
 VALID_ROLES = ["CEO", "MARKETING", "ADMIN"]
+
+def send_recovery_email(receiver_email, temp_password):
+    smtp_server = "smtp.gmail.com"
+    port = 587  # For STARTTLS
+    sender_email = os.getenv("SMTP_USER")
+    password = os.getenv("SMTP_PASSWORD")
+
+    print(f"DEBUG: Attempting to send recovery email to {receiver_email} using {sender_email}")
+
+    if not sender_email or not password:
+        print("DEBUG: SMTP credentials missing in .env")
+        return False
+
+    message = MIMEMultipart("alternative")
+    message["Subject"] = "Eventzilla - Password Recovery"
+    message["From"] = sender_email
+    message["To"] = receiver_email
+
+    text = f"Your temporary password is: {temp_password}\nPlease log in and change it immediately."
+    html = f"""
+    <html>
+    <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #050c16; color: #fff; padding: 20px;">
+        <div style="max-width: 600px; margin: auto; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 30px; backdrop-filter: blur(10px);">
+            <h2 style="color: #16c0de;">Password Recovery</h2>
+            <p>Hello,</p>
+            <p>You requested to reset your password for your <strong>Eventzilla</strong> account.</p>
+            <div style="background: rgba(22, 192, 222, 0.1); border: 1px dashed #16c0de; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; color: #16c0de; margin: 20px 0; border-radius: 8px;">
+                {temp_password}
+            </div>
+            <p>Please use this temporary password to log in and change it immediately from your profile settings.</p>
+            <p>If you didn't request this, you can safely ignore this email.</p>
+            <br>
+            <p style="font-size: 12px; color: #888;">&copy; 2024 Eventzilla AI Dashboard. All rights reserved.</p>
+        </div>
+    </body>
+    </html>
+    """
+    part1 = MIMEText(text, "plain")
+    part2 = MIMEText(html, "html")
+    message.attach(part1)
+    message.attach(part2)
+
+    try:
+        server = smtplib.SMTP(smtp_server, port)
+        server.starttls()
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
+        server.quit()
+        print("DEBUG: Email sent successfully!")
+        return True
+    except Exception as e:
+        print(f"DEBUG: Critical SMTP Error: {e}")
+        return False
 
 
 def _get_token_from_header():
@@ -267,6 +325,35 @@ def create_auth_blueprint(name: str, url_prefix: str) -> Blueprint:
             db.delete(user)
             db.commit()
             return jsonify({"detail": "User deleted"}), 200
+        finally:
+            db.close()
+
+    @bp.route("/forgot-password", methods=["POST"])
+    def forgot_password():
+        data = request.get_json(force=True, silent=True) or {}
+        email = data.get("email")
+        if not email:
+            return jsonify({"detail": "Email is required"}), 400
+        
+        db = SessionLocal()
+        try:
+            user = db.query(User).filter(User.email == email).first()
+            if user:
+                # 1. Générer un mot de passe temporaire
+                import random
+                import string
+                temp_pass = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+                
+                # 2. Mettre à jour en base de données
+                user.password = hash_password(temp_pass)
+                db.commit()
+                
+                # 3. Envoyer l'e-mail
+                success = send_recovery_email(user.email, temp_pass)
+                if not success:
+                    return jsonify({"detail": "L'email n'a pas pu être envoyé. Vérifiez votre configuration SMTP (Mot de passe d'application)."}), 500
+            
+            return jsonify({"message": "Si un compte est associé à cet e-mail, vous recevrez des instructions sous peu."}), 200
         finally:
             db.close()
 

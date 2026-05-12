@@ -54,4 +54,47 @@ export class LoginComponent {
       }
     });
   }
+
+  onForgotPassword() {
+    Swal.fire({
+      title: 'Reset Password',
+      text: 'Enter your email address to receive instructions.',
+      input: 'email',
+      inputPlaceholder: 'email@example.com',
+      showCancelButton: true,
+      confirmButtonText: 'Send Instructions',
+      confirmButtonColor: '#16c0de',
+      background: '#091623',
+      color: '#fff',
+      backdrop: `rgba(0,0,0,0.8) blur(8px)`,
+      customClass: {
+        popup: 'glass-popup'
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        this.auth.forgotPassword(result.value).subscribe({
+          next: (res: any) => {
+            Swal.fire({
+              title: 'Success!',
+              text: res.message,
+              icon: 'success',
+              confirmButtonColor: '#16c0de',
+              background: '#091623',
+              color: '#fff'
+            });
+          },
+          error: (err: any) => {
+            Swal.fire({
+              title: 'Error',
+              text: err.error?.detail || 'Something went wrong.',
+              icon: 'error',
+              confirmButtonColor: '#ff4757',
+              background: '#091623',
+              color: '#fff'
+            });
+          }
+        });
+      }
+    });
+  }
 }

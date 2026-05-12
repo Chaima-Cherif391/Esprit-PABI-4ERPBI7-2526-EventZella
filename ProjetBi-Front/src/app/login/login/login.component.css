@@ -46,23 +46,26 @@ body {
   z-index: 1;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 40fr 60fr;  /* ← modifié */
+  grid-template-columns: 40fr 60fr;
+  /* ← modifié */
   align-items: center;
   /* padding: 0 6vw; */
   padding: 40px 6vw;
   gap: 40px;
 }
+
 /* ── LEFT : texte ── */
 .left-content {
   color: var(--white);
   animation: fadeUp 0.8s ease both;
-    align-self: flex-start; /* ← colle le contenu en haut */
+  align-self: flex-start;
+  /* ← colle le contenu en haut */
   padding-top: 20px;
 
 }
 
 .tag-logo {
-  width:  200px;   
+  width: 200px;
   height: auto;
   margin-bottom: 30px;
 }
@@ -96,9 +99,12 @@ body {
   letter-spacing: 0.03em;
   margin-bottom: 24px;
   color: #f6f6f7;
-  font-family: 'Bebas Neue', sans-serif; /* ← déjà importé */
-  border-left: 4px solid var(--accent);  /* ← barre accent à gauche */
-  padding-left: 16px;                    /* ← espace après la barre */
+  font-family: 'Bebas Neue', sans-serif;
+  /* ← déjà importé */
+  border-left: 4px solid var(--accent);
+  /* ← barre accent à gauche */
+  padding-left: 16px;
+  /* ← espace après la barre */
   margin-top: 14%;
 }
 
@@ -143,8 +149,8 @@ body {
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.35);
   animation: fadeUp 0.9s 0.15s ease both;
 
- 
-  
+
+
 }
 
 .form-card h2 {
@@ -302,6 +308,7 @@ body {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -323,4 +330,22 @@ body {
   .left-content h1 {
     font-size: 3.2rem;
   }
+}
+
+.forgot-password-link {
+  text-align: right;
+  margin-top: 12px;
+}
+
+.forgot-password-link a {
+  font-size: 0.82rem;
+  color: #666;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.25s;
+}
+
+.forgot-password-link a:hover {
+  color: #16C0DE;
+  text-decoration: underline;
 }

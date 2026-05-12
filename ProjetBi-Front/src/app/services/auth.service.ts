@@ -94,4 +94,8 @@ export class AuthService {
       headers: { 'Authorization': `Bearer ${this.getToken()}` }
     });
   }
+
+  forgotPassword(email: string) {
+    return this.http.post(`${this.API}/forgot-password`, { email });
+  }
 }
