@@ -1,23 +1,30 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SoundService } from '../../services/sound.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard-ceo',
   templateUrl: './dashboard-ceo.component.html',
   styleUrl: './dashboard-ceo.component.css'
 })
-export class DashboardCeoComponent implements OnInit {
+export class DashboardCeoComponent implements OnInit, OnDestroy {
   activeRoute: string = '/dashboard-ceo';
   powerBiUrl!: SafeResourceUrl;
   iframeKey: number = 0;
   unreadNotifs = 0;
   isNotifOpen = false;
   notifications: any[] = [];
+  autoRefreshEnabled: boolean = false;
+  private autoRefreshInterval: any;
+
+  // Profile Management
+  showProfileModal = false;
+  profileForm = { full_name: '', email: '', password: '' };
 
   fullName = '';
   userRole = '';
@@ -85,6 +92,70 @@ export class DashboardCeoComponent implements OnInit {
     this.userRole = user?.role || 'CEO';
     this.userInitials = this.getInitials(this.fullName);
     this.startPolling();
+  }
+
+  openProfileModal() {
+    const user = this.auth.getUser();
+    this.profileForm = {
+      full_name: user?.full_name || '',
+      email: user?.email || '',
+      password: ''
+    };
+    this.showProfileModal = true;
+  }
+
+  closeProfileModal() {
+    this.showProfileModal = false;
+  }
+
+  saveProfile() {
+    const oldEmail = this.auth.getUser()?.email;
+    const isChangingEmail = this.profileForm.email !== oldEmail;
+    const isChangingPass = !!this.profileForm.password;
+
+    this.auth.updateProfile(this.profileForm).subscribe({
+      next: (res: any) => {
+        if (isChangingEmail || isChangingPass) {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Profile updated successfully! Please log in again with your new credentials.',
+            icon: 'success',
+            confirmButtonColor: '#16c0de',
+            background: '#091623',
+            color: '#fff'
+          }).then(() => {
+            this.logout();
+          });
+        } else {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Profile updated successfully!',
+            icon: 'success',
+            confirmButtonColor: '#16c0de',
+            background: '#091623',
+            color: '#fff'
+          }).then(() => {
+            const updatedUser = this.auth.getUser();
+            this.fullName = updatedUser.full_name;
+            this.userInitials = this.getInitials(this.fullName);
+            this.closeProfileModal();
+            this.cdr.detectChanges();
+          });
+        }
+      },
+      error: (err) => Swal.fire({
+        title: 'Error!',
+        text: (err.error?.detail || "Unknown error"),
+        icon: 'error',
+        confirmButtonColor: '#ff4757',
+        background: '#091623',
+        color: '#fff'
+      })
+    });
+  }
+
+  ngOnDestroy() {
+    this.stopAutoRefresh();
   }
 
   startNotificationPolling() {
@@ -188,7 +259,15 @@ export class DashboardCeoComponent implements OnInit {
 
   exportPDF(): void {
     const url = `${this.BACKEND_URL}/api/pdf/download?token=skip`;
-    alert('The PDF report will open in a new tab...');
+    Swal.fire({
+      title: 'Report Generation',
+      text: 'The PDF report will open in a new tab...',
+      icon: 'info',
+      timer: 3000,
+      showConfirmButton: false,
+      background: '#091623',
+      color: '#fff'
+    });
     window.open(url, '_blank');
   }
 
@@ -197,7 +276,38 @@ export class DashboardCeoComponent implements OnInit {
     window.open(googleSheetsUrl, '_blank');
   }
 
+  refreshIframe(): void {
+    this.iframeKey = 0;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.iframeKey = Date.now();
+      this.cdr.detectChanges();
+    }, 50);
+  }
+
+  toggleAutoRefresh(): void {
+    this.autoRefreshEnabled = !this.autoRefreshEnabled;
+    if (this.autoRefreshEnabled) {
+      this.startAutoRefresh();
+    } else {
+      this.stopAutoRefresh();
+    }
+  }
+
+  startAutoRefresh(): void {
+    this.autoRefreshInterval = setInterval(() => {
+      this.refreshIframe();
+    }, 60000);
+  }
+
+  stopAutoRefresh(): void {
+    if (this.autoRefreshInterval) {
+      clearInterval(this.autoRefreshInterval);
+    }
+  }
+
   logout(): void {
+    this.stopAutoRefresh();
     this.auth.logout();
   }
 
@@ -424,17 +534,38 @@ export class DashboardCeoComponent implements OnInit {
     this.soundService.toggleSound();
   }
 
-  hoverSummary() {
-    if (this.isSoundEnabled) {
-      this.soundService.speak("Read dashboard summary.");
-    }
+  generatePDF() {
+    Swal.fire({
+      title: 'Generating Report...',
+      text: 'The PDF report will open in a new tab shortly.',
+      icon: 'info',
+      timer: 3000,
+      showConfirmButton: false,
+      background: '#091623',
+      color: '#fff'
+    });
+    const url = `${this.auth.getBackendUrl()}/api/reports/ceo_summary_pdf`;
+    window.open(url, '_blank');
   }
 
   readSummary() {
+    if (!this.isSoundEnabled) {
+      Swal.fire({
+        title: 'Voice Disabled',
+        text: 'Please enable voice assistance in the navbar first.',
+        icon: 'info',
+        confirmButtonColor: '#16c0de',
+        background: '#091623',
+        color: '#fff'
+      });
+      return;
+    }
+    this.soundService.speak("Welcome, CEO. Your dashboard is currently showing the overall business performance. Revenue trends are stable, and anomaly detection is active. You can generate a strategic briefing using the diamond icon or view detailed forecasts via the clock icon.");
+  }
+
+  hoverSummary() {
     if (this.isSoundEnabled) {
-      this.soundService.speak("Welcome to the CEO Dashboard. This interactive view provides high-level insights into your business performance. You can analyze total revenue, reservation trends by event type, and average service prices. Please use the filters on the left to select a specific year, and navigate through the bottom tabs to explore seasonality and new opportunities.");
-    } else {
-      alert("Please enable voice assistance in the navbar first.");
+      this.soundService.speak("Read dashboard summary.");
     }
   }
 }

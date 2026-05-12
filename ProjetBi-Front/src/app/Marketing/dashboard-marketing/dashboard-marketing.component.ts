@@ -1,23 +1,30 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SoundService } from '../../services/sound.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard-marketing',
   templateUrl: './dashboard-marketing.component.html',
   styleUrl: './dashboard-marketing.component.css'
 })
-export class DashboardMarketingComponent implements OnInit {
+export class DashboardMarketingComponent implements OnInit, OnDestroy {
   activeRoute: string = '/dashboard-marketing';
   powerBiUrl!: SafeResourceUrl;
   iframeKey: number = 0;
   unreadNotifs = 0;
   isNotifOpen = false;
   notifications: any[] = [];
+  autoRefreshEnabled: boolean = false;
+  private autoRefreshInterval: any;
+
+  // Profile Management
+  showProfileModal = false;
+  profileForm = { full_name: '', email: '', password: '' };
 
   fullName = '';
   userRole = '';
@@ -84,6 +91,70 @@ export class DashboardMarketingComponent implements OnInit {
     this.isSoundEnabled = this.soundService.getSoundStatus();
   }
 
+  ngOnDestroy(): void {
+    this.stopAutoRefresh();
+  }
+
+  openProfileModal() {
+    const user = this.auth.getUser();
+    this.profileForm = {
+      full_name: user?.full_name || '',
+      email: user?.email || '',
+      password: ''
+    };
+    this.showProfileModal = true;
+  }
+
+  closeProfileModal() {
+    this.showProfileModal = false;
+  }
+
+  saveProfile() {
+    const oldEmail = this.auth.getUser()?.email;
+    const isChangingEmail = this.profileForm.email !== oldEmail;
+    const isChangingPass = !!this.profileForm.password;
+
+    this.auth.updateProfile(this.profileForm).subscribe({
+      next: (res: any) => {
+        if (isChangingEmail || isChangingPass) {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Profile updated successfully! Please log in again with your new credentials.',
+            icon: 'success',
+            confirmButtonColor: '#16c0de',
+            background: '#091623',
+            color: '#fff'
+          }).then(() => {
+            this.logout();
+          });
+        } else {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Profile updated successfully!',
+            icon: 'success',
+            confirmButtonColor: '#16c0de',
+            background: '#091623',
+            color: '#fff'
+          }).then(() => {
+            const updatedUser = this.auth.getUser();
+            this.fullName = updatedUser.full_name;
+            this.userInitials = this.getInitials(this.fullName);
+            this.closeProfileModal();
+            this.cdr.detectChanges();
+          });
+        }
+      },
+      error: (err) => Swal.fire({
+        title: 'Error!',
+        text: (err.error?.detail || "Unknown error"),
+        icon: 'error',
+        confirmButtonColor: '#ff4757',
+        background: '#091623',
+        color: '#fff'
+      })
+    });
+  }
+
   toggleSound(): void {
     this.soundService.toggleSound();
     this.isSoundEnabled = this.soundService.getSoundStatus();
@@ -96,12 +167,18 @@ export class DashboardMarketingComponent implements OnInit {
   }
 
   readSummary() {
-    if (this.isSoundEnabled) {
-      const text = "Welcome to the Marketing Dashboard. This specialized view focuses on market penetration and campaign analytics. You can track customer acquisition trends, evaluate the impact of marketing spend on reservations, and monitor event popularity by region. You have " + this.unreadNotifs + " unread notifications. Use the navigation bar to access the Power BI reports or communicate with the CEO.";
-      this.soundService.speak(text);
-    } else {
-      alert("Please enable voice assistance in the navbar first.");
+    if (!this.isSoundEnabled) {
+      Swal.fire({
+        title: 'Voice Disabled',
+        text: 'Please enable voice assistance in the navbar first.',
+        icon: 'info',
+        confirmButtonColor: '#16c0de',
+        background: '#091623',
+        color: '#fff'
+      });
+      return;
     }
+    this.soundService.speak("Marketing summary: Event attendance is peaking during weekends, and our promotional campaigns are yielding high conversion rates. The current focus should be on boosting mid-week engagement through targeted offers.");
   }
 
   getInitials(name: string): string {
@@ -197,7 +274,38 @@ export class DashboardMarketingComponent implements OnInit {
     window.open(googleSheetsUrl, '_blank');
   }
 
+  refreshIframe(): void {
+    this.iframeKey = 0;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.iframeKey = Date.now();
+      this.cdr.detectChanges();
+    }, 50);
+  }
+
+  toggleAutoRefresh(): void {
+    this.autoRefreshEnabled = !this.autoRefreshEnabled;
+    if (this.autoRefreshEnabled) {
+      this.startAutoRefresh();
+    } else {
+      this.stopAutoRefresh();
+    }
+  }
+
+  startAutoRefresh(): void {
+    this.autoRefreshInterval = setInterval(() => {
+      this.refreshIframe();
+    }, 60000);
+  }
+
+  stopAutoRefresh(): void {
+    if (this.autoRefreshInterval) {
+      clearInterval(this.autoRefreshInterval);
+    }
+  }
+
   logout(): void {
+    this.stopAutoRefresh();
     this.auth.logout();
   }
 

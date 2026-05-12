@@ -1,16 +1,17 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SoundService } from '../../services/sound.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard-admin',
   templateUrl: './dashboard-admin.component.html',
   styleUrls: ['./dashboard-admin.component.css']
 })
-export class DashboardAdminComponent implements OnInit {
+export class DashboardAdminComponent implements OnInit, OnDestroy {
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
 
   powerBiUrl!: SafeResourceUrl;
@@ -18,6 +19,8 @@ export class DashboardAdminComponent implements OnInit {
   displayMode: 'pbi' | 'grafana' = 'pbi';
   isRefreshing: boolean = false;
   iframeKey: number = 0;
+  autoRefreshEnabled: boolean = false;
+  private autoRefreshInterval: any;
 
   fullName = '';
   userRole = '';
@@ -29,6 +32,10 @@ export class DashboardAdminComponent implements OnInit {
   editingUser: any = null;
   newUser = { full_name: '', email: '', password: '', role: 'MARKETING' };
   showAddUserForm = false;
+  
+  // Profile Management
+  showProfileModal = false;
+  profileForm = { full_name: '', email: '', password: '' };
 
   // Notifications
   notifications: any[] = [];
@@ -80,6 +87,70 @@ export class DashboardAdminComponent implements OnInit {
     this.fetchNotificationsCount();
     this.startPolling();
     this.loadAvailableTables();
+  }
+
+  openProfileModal() {
+    const user = this.auth.getUser();
+    this.profileForm = {
+      full_name: user?.full_name || '',
+      email: user?.email || '',
+      password: ''
+    };
+    this.showProfileModal = true;
+  }
+
+  closeProfileModal() {
+    this.showProfileModal = false;
+  }
+
+  saveProfile() {
+    const oldEmail = this.auth.getUser()?.email;
+    const isChangingEmail = this.profileForm.email !== oldEmail;
+    const isChangingPass = !!this.profileForm.password;
+
+    this.auth.updateProfile(this.profileForm).subscribe({
+      next: (res: any) => {
+        if (isChangingEmail || isChangingPass) {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Profile updated successfully! Please log in again with your new credentials.',
+            icon: 'success',
+            confirmButtonColor: '#16c0de',
+            background: '#091623',
+            color: '#fff'
+          }).then(() => {
+            this.logout();
+          });
+        } else {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Profile updated successfully!',
+            icon: 'success',
+            confirmButtonColor: '#16c0de',
+            background: '#091623',
+            color: '#fff'
+          }).then(() => {
+            const updatedUser = this.auth.getUser();
+            this.fullName = updatedUser.full_name;
+            this.userInitials = this.getInitials(this.fullName);
+            this.closeProfileModal();
+            this.cdr.detectChanges();
+          });
+        }
+      },
+      error: (err) => Swal.fire({
+        title: 'Error!',
+        text: (err.error?.detail || "Unknown error"),
+        icon: 'error',
+        confirmButtonColor: '#ff4757',
+        background: '#091623',
+        color: '#fff'
+      })
+    });
+  }
+
+  ngOnDestroy() {
+    this.stopAutoRefresh();
   }
 
   availableTables: string[] = [];
@@ -134,6 +205,32 @@ export class DashboardAdminComponent implements OnInit {
     }, 50);
   }
 
+  toggleAutoRefresh() {
+    this.autoRefreshEnabled = !this.autoRefreshEnabled;
+    if (this.autoRefreshEnabled) {
+      this.startAutoRefresh();
+    } else {
+      this.stopAutoRefresh();
+    }
+  }
+
+  private startAutoRefresh() {
+    this.stopAutoRefresh();
+    // Refresh every 60 seconds (adjustable)
+    this.autoRefreshInterval = setInterval(() => {
+      if (this.displayMode === 'pbi') {
+        this.refreshIframe();
+      }
+    }, 60000);
+  }
+
+  private stopAutoRefresh() {
+    if (this.autoRefreshInterval) {
+      clearInterval(this.autoRefreshInterval);
+      this.autoRefreshInterval = null;
+    }
+  }
+
   // ── NAVIGATION ──
   openAnomaly() { this.router.navigate(['/anomaly']); }
   openRegression() { this.router.navigate(['/price-regression']); }
@@ -170,17 +267,39 @@ export class DashboardAdminComponent implements OnInit {
 
   createUser() {
     if (!this.newUser.full_name || !this.newUser.email || !this.newUser.password) {
-      alert("Please fill in all fields");
+      Swal.fire({
+        title: 'Missing Info',
+        text: 'Please fill in all fields',
+        icon: 'warning',
+        confirmButtonColor: '#16c0de',
+        background: '#091623',
+        color: '#fff'
+      });
       return;
     }
-    this.http.post(`${this.BACKEND_URL}/api/auth/register`, this.newUser, { headers: this.getAuthHeaders() }).subscribe({
-      next: () => {
+    this.auth.register(this.newUser).subscribe({
+      next: (res: any) => {
+        Swal.fire({
+          title: 'User Created',
+          text: 'User account established successfully!',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+          background: '#091623',
+          color: '#fff'
+        });
         this.fetchUsers();
         this.showAddUserForm = false;
         this.newUser = { full_name: '', email: '', password: '', role: 'MARKETING' };
-        this.cdr.detectChanges();
       },
-      error: (err) => alert('Error creating user: ' + (err.error?.error || 'Unknown error'))
+      error: (err: any) => Swal.fire({
+        title: 'Creation Failed',
+        text: 'Error creating user: ' + (err.error?.error || 'Unknown error'),
+        icon: 'error',
+        confirmButtonColor: '#ff4757',
+        background: '#091623',
+        color: '#fff'
+      })
     });
   }
 
@@ -259,21 +378,9 @@ export class DashboardAdminComponent implements OnInit {
     this.isChatOpen = !this.isChatOpen;
     if (this.isChatOpen) {
       this.unreadMessagesCount = 0;
-      this.chatMessages = this.isAiMode ? this.aiMessages : this.marketingMessages;
+      this.chatMessages = this.aiMessages;
       setTimeout(() => this.scrollToBottom(), 100);
     }
-  }
-
-  toggleChatMode() {
-    this.isAiMode = !this.isAiMode;
-    if (this.isAiMode) {
-      this.marketingMessages = [...this.chatMessages];
-      this.chatMessages = [...this.aiMessages];
-    } else {
-      this.aiMessages = [...this.chatMessages];
-      this.chatMessages = [...this.marketingMessages];
-    }
-    setTimeout(() => this.scrollToBottom(), 100);
   }
 
   sendMessage() {
@@ -302,31 +409,12 @@ export class DashboardAdminComponent implements OnInit {
         },
         error: () => { this.isTyping = false; }
       });
-    } else {
-      const msgData = { sender: 'ADMIN', text: userText, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
-      this.http.post(`${this.BACKEND_URL}/api/chat/send`, msgData, { headers: this.getAuthHeaders() }).subscribe(() => {
-        this.syncMessages();
-      });
     }
   }
 
   syncMessages() {
-    if (this.isAiMode) return;
-    this.http.get<any[]>(`${this.BACKEND_URL}/api/chat/sync`, { headers: this.getAuthHeaders() }).subscribe({
-      next: (msgs) => {
-        const hasNew = msgs.length > (this.isAiMode ? this.marketingMessages.length : this.chatMessages.length);
-        if (hasNew && !this.isChatOpen) {
-          this.unreadMessagesCount++;
-        }
-        const formatted = msgs.map(m => ({
-          role: m.sender === 'ADMIN' ? 'user' : 'ai',
-          text: m.text, time: m.timestamp
-        }));
-        if (!this.isAiMode) this.chatMessages = formatted;
-        else this.marketingMessages = formatted;
-        this.cdr.detectChanges();
-      }
-    });
+    // Disabled for Admin
+    return;
   }
 
   startPolling() { setInterval(() => this.syncMessages(), 3000); }
@@ -383,11 +471,11 @@ export class DashboardAdminComponent implements OnInit {
 
   refreshAirflowStatus() {
     this.http.get<any>(`${this.BACKEND_URL}/api/admin/airflow/status`, { headers: this.getAuthHeaders() }).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.airflowStatus = res;
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error("Airflow status error", err);
         this.airflowStatus = { status: 'ERROR', last_execution: 'N/A' };
         this.cdr.detectChanges();
@@ -397,18 +485,31 @@ export class DashboardAdminComponent implements OnInit {
 
   triggerPipeline() {
     this.isTriggering = true;
-    this.http.post<any>(`${this.BACKEND_URL}/api/admin/airflow/run`, {}, { headers: this.getAuthHeaders() }).subscribe({
-      next: (res) => {
-        this.isTriggering = false;
+    const headers = this.getAuthHeaders();
+    this.http.post(`${this.BACKEND_URL}/api/admin/airflow/run`, {}, { headers: this.getAuthHeaders() }).subscribe({
+      next: (res: any) => {
+        Swal.fire({
+          title: 'Success!',
+          text: 'Pipeline triggered successfully!',
+          icon: 'success',
+          timer: 2500,
+          showConfirmButton: false,
+          background: '#091623',
+          color: '#fff'
+        });
         this.refreshAirflowStatus();
-        alert("Pipeline triggered successfully!");
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
         this.isTriggering = false;
-        console.error("Airflow trigger error", err);
-        alert("Failed to trigger pipeline: " + (err.error?.detail || "Unknown error"));
-        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.isTriggering = false;
+        Swal.fire({
+          title: 'Pipeline Error',
+          text: "Failed to trigger pipeline: " + (err.error?.detail || "Unknown error"),
+          icon: 'error',
+          confirmButtonColor: '#ff4757',
+          background: '#091623',
+          color: '#fff'
+        });
       }
     });
   }
@@ -418,11 +519,18 @@ export class DashboardAdminComponent implements OnInit {
   toggleSound(): void { this.soundService.toggleSound(); }
   hoverSummary() { if (this.isSoundEnabled) this.soundService.speak("Read dashboard summary."); }
   readSummary() {
-    if (this.isSoundEnabled) {
-      this.soundService.speak("Welcome to the Admin Dashboard. This central command interface allows you to monitor infrastructure via Grafana and analyze business performance with Power BI. You also have full access to anomaly detection, price optimization, and user management tools.");
-    } else {
-      alert("Please enable voice assistance in the navbar first.");
+    if (!this.isSoundEnabled) {
+      Swal.fire({
+        title: 'Voice Disabled',
+        text: 'Please enable voice assistance in the navbar first.',
+        icon: 'info',
+        confirmButtonColor: '#16c0de',
+        background: '#091623',
+        color: '#fff'
+      });
+      return;
     }
+    this.soundService.speak("Welcome to the Admin Dashboard. This central command interface allows you to monitor infrastructure via Grafana and analyze business performance with Power BI. You also have full access to anomaly detection, price optimization, and user management tools.");
   }
 
   // ── CSV UPLOAD ──
@@ -451,11 +559,30 @@ export class DashboardAdminComponent implements OnInit {
   
   onOcrFileSelected(event: any) {
     const file = event.target.files[0];
-    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
-      this.selectedOcrFile = file;
-    } else {
-      alert('Please select a valid image file (JPG or PNG).');
+    if (!file) return;
+    if (!file.type.match('image.*')) {
+      Swal.fire({
+        title: 'Invalid File',
+        text: 'Please select a valid image file (JPG or PNG).',
+        icon: 'error',
+        confirmButtonColor: '#ff4757',
+        background: '#091623',
+        color: '#fff'
+      });
+      return;
     }
+    if (!file.name.toLowerCase().endsWith('.jpg') && !file.name.toLowerCase().endsWith('.png') && !file.name.toLowerCase().endsWith('.jpeg')) {
+      Swal.fire({
+        title: 'Format Error',
+        text: 'Only image files are accepted.',
+        icon: 'error',
+        confirmButtonColor: '#ff4757',
+        background: '#091623',
+        color: '#fff'
+      });
+      return;
+    }
+    this.selectedOcrFile = file;
   }
 
   onOcrDragOver(event: DragEvent) { event.preventDefault(); this.isDragging = true; }
@@ -464,10 +591,12 @@ export class DashboardAdminComponent implements OnInit {
     event.preventDefault();
     this.isDragging = false;
     const file = event.dataTransfer?.files[0];
-    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+    if (file) {
+      if (!file.type.match('image.*')) {
+        Swal.fire({ title: 'Invalid File', text: 'Please select a valid image file.', icon: 'error', confirmButtonColor: '#ff4757', background: '#091623', color: '#fff' });
+        return;
+      }
       this.selectedOcrFile = file;
-    } else {
-      alert('Only image files are accepted.');
     }
   }
 
@@ -477,18 +606,17 @@ export class DashboardAdminComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', this.selectedOcrFile);
 
-    this.http.post(`${this.BACKEND_URL}/api/ocr/extract-poster`, formData, {
-      headers: new HttpHeaders({ 'Authorization': `Bearer ${this.auth.getToken()}` })
-    }).subscribe({
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.auth.getToken()}` });
+    this.http.post(`${this.auth.getBackendUrl()}/api/ocr/extract-poster`, formData, { headers }).subscribe({
       next: (res: any) => {
         this.isOcrUploading = false;
-        this.ocrResult = res.data;
         alert(res.message || 'Poster data extracted and inserted to Dim_Event!');
+        this.selectedOcrFile = null;
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isOcrUploading = false;
-        alert(err.error?.detail || 'Error extracting poster data.');
+        alert('OCR Error: ' + (err.error?.detail || 'Error extracting poster data.'));
         this.cdr.detectChanges();
       }
     });
@@ -503,7 +631,16 @@ export class DashboardAdminComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file && file.name.endsWith('.csv')) this.selectedFile = file;
-    else alert('Please select a valid CSV file.');
+    else {
+      Swal.fire({
+        title: 'No File Selected',
+        text: 'Please select a valid CSV file.',
+        icon: 'warning',
+        background: '#091623',
+        color: '#fff',
+        confirmButtonColor: '#16c0de'
+      });
+    }
   }
 
   onDragOver(event: DragEvent) { event.preventDefault(); this.isDragging = true; }
@@ -513,8 +650,29 @@ export class DashboardAdminComponent implements OnInit {
     event.preventDefault();
     this.isDragging = false;
     const file = event.dataTransfer?.files[0];
-    if (file && file.name.endsWith('.csv')) this.selectedFile = file;
-    else alert('Only CSV files are accepted.');
+    if (file) {
+      if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+        Swal.fire({
+          title: 'Invalid File',
+          text: 'Only CSV files are accepted.',
+          icon: 'error',
+          background: '#091623',
+          color: '#fff',
+          confirmButtonColor: '#ff4757'
+        });
+        return;
+      }
+      this.selectedFile = file;
+    } else {
+      Swal.fire({
+        title: 'No File Selected',
+        text: 'Please select a valid CSV file.',
+        icon: 'warning',
+        background: '#091623',
+        color: '#fff',
+        confirmButtonColor: '#16c0de'
+      });
+    }
   }
 
   uploadCSV() {
@@ -522,21 +680,28 @@ export class DashboardAdminComponent implements OnInit {
     this.isUploading = true;
     const formData = new FormData();
     formData.append('file', this.selectedFile);
+    formData.append('table_name', this.selectedTargetTable);
 
-    this.http.post(`${this.BACKEND_URL}/api/admin/upload-table/${this.selectedTargetTable}`, formData, {
-      headers: new HttpHeaders({ 'Authorization': `Bearer ${this.auth.getToken()}` })
-    }).subscribe({
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.auth.getToken()}`,
+      'ngrok-skip-browser-warning': '69420'
+    });
+
+    this.http.post(`${this.BACKEND_URL}/api/admin/upload-table/${this.selectedTargetTable}`, formData, { headers: this.getAuthHeaders() }).subscribe({
       next: (res: any) => {
         this.isUploading = false;
         alert(res.message || 'Data imported successfully!');
         this.closeUploadModal();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isUploading = false;
-        alert(err.error?.detail || 'Error during data ingestion.');
+        alert('Import Failed: ' + (err.error?.detail || 'Error during data ingestion.'));
       }
     });
   }
 
-  logout() { this.auth.logout(); }
+  logout() {
+    this.stopAutoRefresh();
+    this.auth.logout();
+  }
 }

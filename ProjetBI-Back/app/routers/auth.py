@@ -216,6 +216,42 @@ def create_auth_blueprint(name: str, url_prefix: str) -> Blueprint:
         finally:
             db.close()
 
+    @bp.route("/profile", methods=["PUT"])
+    def update_profile():
+        token = _get_token_from_header()
+        if not token:
+            return jsonify({"detail": "Not authenticated"}), 401
+
+        db = SessionLocal()
+        try:
+            try:
+                payload = decode_token(token)
+                user_id = int(payload.get("sub"))
+            except Exception:
+                return jsonify({"detail": "Invalid token"}), 401
+
+            user = db.query(User).filter(User.id == user_id).first()
+            if not user:
+                return jsonify({"detail": "User not found"}), 404
+
+            data = request.get_json(force=True, silent=True) or {}
+            if "full_name" in data:
+                user.full_name = data["full_name"]
+            if "email" in data:
+                # Optional: check if email is already taken by another user
+                user.email = data["email"]
+            if "password" in data and data["password"]:
+                user.password = hash_password(data["password"])
+
+            db.commit()
+            db.refresh(user)
+            return jsonify({
+                "message": "Profile updated successfully",
+                "user": UserOut.model_validate(user).model_dump(mode="json")
+            }), 200
+        finally:
+            db.close()
+
     @bp.route("/users/<int:user_id>", methods=["DELETE"])
     def delete_user(user_id):
         token = _get_token_from_header()

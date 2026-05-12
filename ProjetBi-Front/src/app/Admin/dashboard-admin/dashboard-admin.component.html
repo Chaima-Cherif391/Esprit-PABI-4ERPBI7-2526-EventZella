@@ -96,6 +96,18 @@
         </svg>
       </div>
 
+      <!-- Auto Refresh -->
+      <div class="icon-btn refresh-btn" [class.active]="autoRefreshEnabled" (click)="toggleAutoRefresh()"
+        title="Toggle Auto Refresh (60s)" appSoundVisual="Toggle automatic report refresh.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" [class.spinning]="autoRefreshEnabled">
+          <path d="M23 4v6h-6"></path>
+          <path d="M1 20v-6h6"></path>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        <span class="refresh-badge" *ngIf="autoRefreshEnabled">A</span>
+      </div>
+
       <!-- User Management -->
       <div class="icon-btn users-btn" (click)="openUsersModal()" title="User Access Management"
         appSoundVisual="Manage user accounts and permissions.">
@@ -142,7 +154,6 @@
           stroke-linejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
-        <span class="notif-dot" *ngIf="unreadMessagesCount > 0">{{ unreadMessagesCount }}</span>
       </div>
 
       <!-- Sound Toggle -->
@@ -164,7 +175,7 @@
       <div class="divider"></div>
 
       <!-- User profile -->
-      <div class="user-profile-sm">
+      <div class="user-profile-sm" (click)="openProfileModal()" style="cursor: pointer;" title="Edit Profile">
         <div class="user-avatar-sm">{{ userInitials }}</div>
         <div class="user-info-sm">
           <div class="user-name-sm">{{ fullName }}</div>
@@ -203,10 +214,9 @@
   <!-- ── CHAT WINDOW ── -->
   <div class="chat-window" [class.open]="isChatOpen">
     <div class="chat-header">
-      <div class="chat-title" (click)="toggleChatMode()" style="cursor: pointer;">
-        <span class="status-dot" [style.background]="isAiMode ? '#16c0de' : '#2ecc71'"></span>
-        {{ isAiMode ? 'Assistant BI (IA)' : 'Messagerie (Marketing)' }}
-        <span class="mode-switch-hint">🔁 Switch</span>
+      <div class="chat-title">
+        <span class="status-dot" style="background: #16c0de"></span>
+        Assistant BI (IA)
       </div>
       <button class="close-chat" (click)="toggleChat()">×</button>
     </div>
@@ -214,7 +224,7 @@
     <div class="chat-messages" #chatScroll>
       <div *ngFor="let msg of chatMessages" class="message" [class.user]="msg.role === 'user'"
         [class.ai]="msg.role === 'ai'">
-        <div class="message-meta" *ngIf="msg.role === 'ai'">{{ isAiMode ? 'IA' : 'Service Marketing' }}</div>
+        <div class="message-meta" *ngIf="msg.role === 'ai'">Assistant IA</div>
         <div class="message-meta" *ngIf="msg.role === 'user'">Moi (Admin)</div>
         <div class="message-content">
           {{ msg.text }}
@@ -329,7 +339,6 @@
           <select [(ngModel)]="newUser.role">
             <option value="MARKETING">MARKETING</option>
             <option value="CEO">CEO</option>
-            <option value="ADMIN">ADMIN</option>
           </select>
         </div>
         <div class="form-actions">
@@ -354,7 +363,6 @@
           <select [(ngModel)]="editingUser.role">
             <option value="MARKETING">MARKETING</option>
             <option value="CEO">CEO</option>
-            <option value="ADMIN">ADMIN</option>
           </select>
         </div>
         <div class="form-group">
@@ -546,6 +554,41 @@
             </svg>
             REFRESH
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROFILE MODAL ── -->
+  <div class="modal-overlay" *ngIf="showProfileModal" (click)="closeProfileModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()" style="max-width: 500px;">
+      <div class="modal-header">
+        <div class="header-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2.5" style="width: 24px;">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <h2>My Profile</h2>
+        </div>
+        <button class="close-btn" (click)="closeProfileModal()">×</button>
+      </div>
+
+      <div class="user-form">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" [(ngModel)]="profileForm.full_name">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" [(ngModel)]="profileForm.email">
+        </div>
+        <div class="form-group">
+          <label>New Password (leave blank to keep current)</label>
+          <input type="password" [(ngModel)]="profileForm.password" placeholder="••••••••">
+        </div>
+        <div class="form-actions">
+          <button class="save-btn" (click)="saveProfile()">Update Profile</button>
+          <button class="cancel-btn" (click)="closeProfileModal()">Cancel</button>
         </div>
       </div>
     </div>

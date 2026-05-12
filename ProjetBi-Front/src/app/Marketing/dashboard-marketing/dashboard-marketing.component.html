@@ -66,6 +66,18 @@
         </div>
       </div>
 
+      <!-- Auto Refresh -->
+      <div class="icon-btn refresh-btn" [class.active]="autoRefreshEnabled" (click)="toggleAutoRefresh()"
+        title="Toggle Auto Refresh (60s)" appSoundVisual="Toggle automatic report refresh.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round" [class.spinning]="autoRefreshEnabled">
+          <path d="M23 4v6h-6"></path>
+          <path d="M1 20v-6h6"></path>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        <span class="refresh-badge" *ngIf="autoRefreshEnabled">A</span>
+      </div>
+
       <!-- ICON MESSAGERIE -->
       <div class="icon-btn chat-btn" (click)="toggleChat()" title="Messages directs">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -92,7 +104,7 @@
 
       <div class="divider"></div>
 
-      <div class="user-profile-sm">
+      <div class="user-profile-sm" (click)="openProfileModal()" style="cursor: pointer;" title="Edit Profile">
         <div class="user-avatar-sm">{{ userInitials }}</div>
         <div class="user-info-sm">
           <div class="user-name-sm">{{ fullName }}</div>
@@ -179,6 +191,41 @@
       <div class="loading-report" style="position: static; padding: 2rem 0;" *ngIf="isGeneratingReport">
         <div class="spinner"></div>
         <p>The AI Consultant is analyzing your Data Warehouse...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROFILE MODAL ── -->
+  <div class="modal-overlay" *ngIf="showProfileModal" (click)="closeProfileModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()" style="max-width: 500px;">
+      <div class="modal-header">
+        <div class="header-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#16c0de" stroke-width="2.5" style="width: 24px;">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <h2>My Profile</h2>
+        </div>
+        <button class="close-btn" (click)="closeProfileModal()">×</button>
+      </div>
+
+      <div class="user-form">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" [(ngModel)]="profileForm.full_name">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" [(ngModel)]="profileForm.email">
+        </div>
+        <div class="form-group">
+          <label>New Password (leave blank to keep current)</label>
+          <input type="password" [(ngModel)]="profileForm.password" placeholder="••••••••">
+        </div>
+        <div class="form-actions">
+          <button class="save-btn" (click)="saveProfile()">Update Profile</button>
+          <button class="cancel-btn" (click)="closeProfileModal()">Cancel</button>
+        </div>
       </div>
     </div>
   </div>

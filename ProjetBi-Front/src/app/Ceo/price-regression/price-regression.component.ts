@@ -8,6 +8,7 @@ import {
   PredictionService
 } from '../../services/predictionRegression.service';
 import { SoundService } from '../../services/sound.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-price-regression',
@@ -193,10 +194,25 @@ export class PriceRegressionComponent implements OnInit {
   }
 
   toggleNotifs(): void {
-    alert('Notifications are available on the main dashboard.');
+    Swal.fire({
+      title: 'Info',
+      text: 'Notifications are available on the main dashboard.',
+      icon: 'info',
+      confirmButtonColor: '#16c0de',
+      background: '#091623',
+      color: '#fff'
+    });
   }
 
   toggleChat(): void {
+    Swal.fire({
+      title: 'Info',
+      text: 'Direct messages are available on the main dashboard.',
+      icon: 'info',
+      confirmButtonColor: '#16c0de',
+      background: '#091623',
+      color: '#fff'
+    });
     this.isChatOpen = !this.isChatOpen;
     if (this.isChatOpen) {
       setTimeout(() => this.scrollToBottom(), 100);
@@ -346,14 +362,21 @@ export class PriceRegressionComponent implements OnInit {
   }
 
   readSummary() {
-    if (this.isSoundEnabled) {
-      if (this.result) {
-        this.soundService.speak(`Price Regression Summary: The recommended price is ${this.result.recommended_price} Dinars. The predicted price is ${this.result.predicted_price} Dinars. The confidence score is ${this.result.confidence_score} percent.`);
-      } else {
-        this.soundService.speak("Price Regression Summary: This page allows you to predict the optimal price for your event based on market inputs.");
-      }
+    if (!this.isSoundEnabled) {
+      Swal.fire({
+        title: 'Voice Disabled',
+        text: 'Please enable voice assistance in the navbar first.',
+        icon: 'info',
+        confirmButtonColor: '#16c0de',
+        background: '#091623',
+        color: '#fff'
+      });
+      return;
+    }
+    if (this.result) {
+      this.soundService.speak(`Price Regression Summary: The recommended price is ${this.result.recommended_price} Dinars. The predicted price is ${this.result.predicted_price} Dinars. The confidence score is ${this.result.confidence_score} percent.`);
     } else {
-      alert("Please enable voice assistance in the navbar first.");
+      this.soundService.speak("Price Regression Summary: This page allows you to predict the optimal price for your event based on market inputs.");
     }
   }
 }

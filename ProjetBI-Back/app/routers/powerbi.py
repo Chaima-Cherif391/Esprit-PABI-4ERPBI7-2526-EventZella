@@ -10,18 +10,18 @@ pbi_bp = Blueprint('powerbi', __name__, url_prefix='/api/powerbi')
 # On ajoute filterPaneEnabled=false et navContentPaneEnabled=false pour masquer les volets
 REPORT_CONFIG = {
     "CEO": {
-        "reportId": "115669f4-efa1-420c-b652-23d2cfd43c77",
-        "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=115669f4-efa1-420c-b652-23d2cfd43c77&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false&pageName=df6243e1614b506d8b8f",
+        "reportId": "f3885d55-5e21-4067-8f3c-d2ab70ff73ae",
+        "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=f3885d55-5e21-4067-8f3c-d2ab70ff73ae&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false&pageName=df6243e1614b506d8b8f&bookmarkGuid=59c679a7afb0fda4b7b0",
         "type": "pbi"
     },
     "MARKETING": {
-        "reportId": "641a8002-de0a-4435-921b-9dffd88227aa",
-        "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=641a8002-de0a-4435-921b-9dffd88227aa&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false&pageName=df6243e1614b506d8b8f",
+        "reportId": "63031891-b46d-4e85-ab10-751af63f86bb",
+        "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=63031891-b46d-4e85-ab10-751af63f86bb&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false&pageName=df6243e1614b506d8b8f&bookmarkGuid=59c679a7afb0fda4b7b0",
         "type": "pbi"
     },
     "ADMIN": {
-        "reportId": "a1cafe20-9343-49e4-be1c-02c4eb5873f7",
-        "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=a1cafe20-9343-49e4-be1c-02c4eb5873f7&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false&pageName=df6243e1614b506d8b8f",
+        "reportId": "e96971bb-7223-40d0-986a-0d764dc41d75",
+        "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=e96971bb-7223-40d0-986a-0d764dc41d75&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false&pageName=df6243e1614b506d8b8f&bookmarkGuid=59c679a7afb0fda4b7b0",
         "grafanaUrl": "http://localhost:3000/public-dashboards/0664ff1737b24dc7b8e45b2014c56628",
         "type": "mixed"
     }

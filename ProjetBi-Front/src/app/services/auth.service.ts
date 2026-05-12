@@ -76,4 +76,22 @@ export class AuthService {
   getRole(): string {
     return this.getUser()?.role || '';
   }
+
+  updateProfile(userData: any) {
+    return this.http.put(`${this.API}/profile`, userData, {
+      headers: { 'Authorization': `Bearer ${this.getToken()}` }
+    }).pipe(
+      tap((res: any) => {
+        if (res.user) {
+          localStorage.setItem('user', JSON.stringify(res.user));
+        }
+      })
+    );
+  }
+
+  register(userData: any) {
+    return this.http.post(`${this.API}/register`, userData, {
+      headers: { 'Authorization': `Bearer ${this.getToken()}` }
+    });
+  }
 }

@@ -199,6 +199,37 @@
   color: #fbbf24;
 }
 
+.icon-btn.refresh-btn {
+  color: #2ecc71;
+}
+
+.refresh-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #2ecc71;
+  color: #050E1A;
+  font-size: 8px;
+  font-weight: 900;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #050E1A;
+  box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+}
+
+.spinning {
+  animation: spin-cw 4s linear infinite;
+}
+
+@keyframes spin-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .icon-btn:hover {
   background: rgba(255, 255, 255, 0.05);
   border-color: currentColor;

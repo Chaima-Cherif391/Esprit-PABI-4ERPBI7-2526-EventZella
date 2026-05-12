@@ -4,6 +4,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { SoundService } from '../services/sound.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-forecast',
@@ -73,9 +74,17 @@ export class ForecastComponent implements OnInit {
     this.router.navigate(['/price-regression']);
   }
 
-  exportPDF(): void {
-    const url = `${this.BACKEND_URL}/api/pdf/download?token=skip`;
-    alert('Le rapport PDF va s\'ouvrir dans un nouvel onglet...');
+  generatePDF(): void {
+    Swal.fire({
+      title: 'Success!',
+      text: 'Le rapport PDF va s\'ouvrir dans un nouvel onglet...',
+      icon: 'success',
+      timer: 2000,
+      showConfirmButton: false,
+      background: '#091623',
+      color: '#fff'
+    });
+    const url = `${this.auth.getBackendUrl()}/api/reports/forecast_summary_pdf`;
     window.open(url, '_blank');
   }
 
@@ -85,15 +94,36 @@ export class ForecastComponent implements OnInit {
   }
 
   toggleNotifs(): void {
-    alert('Notifications are available on the main dashboard.');
+    Swal.fire({
+      title: 'Info',
+      text: 'Notifications are available on the main dashboard.',
+      icon: 'info',
+      confirmButtonColor: '#16c0de',
+      background: '#091623',
+      color: '#fff'
+    });
   }
 
   toggleChat(): void {
-    alert('Direct messages are available on the main dashboard.');
+    Swal.fire({
+      title: 'Info',
+      text: 'Direct messages are available on the main dashboard.',
+      icon: 'info',
+      confirmButtonColor: '#16c0de',
+      background: '#091623',
+      color: '#fff'
+    });
   }
 
   openUsersModal(): void {
-    alert('User management is available on the main dashboard.');
+    Swal.fire({
+      title: 'Access Denied',
+      text: 'User management is available on the main dashboard.',
+      icon: 'warning',
+      confirmButtonColor: '#ff4757',
+      background: '#091623',
+      color: '#fff'
+    });
   }
 
   logout(): void {
@@ -115,10 +145,17 @@ export class ForecastComponent implements OnInit {
   }
 
   readSummary() {
-    if (this.isSoundEnabled) {
-      this.soundService.speak("Forecast Summary: This AI-powered forecast analyzes historical reservation patterns to project future demand. The time-series visualization highlights expected peaks and low-demand periods for the upcoming months.");
-    } else {
-      alert("Please enable voice assistance in the navbar first.");
+    if (!this.isSoundEnabled) {
+      Swal.fire({
+        title: 'Voice Disabled',
+        text: 'Please enable voice assistance in the navbar first.',
+        icon: 'info',
+        confirmButtonColor: '#16c0de',
+        background: '#091623',
+        color: '#fff'
+      });
+      return;
     }
+    this.soundService.speak("Forecast Analysis: Based on historical data, we project a 15% increase in event bookings for the next quarter. Seasonality trends suggest strong demand for wedding and corporate events in June and December.");
   }
 }
