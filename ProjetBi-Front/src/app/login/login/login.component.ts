@@ -41,7 +41,7 @@ export class LoginComponent {
         this.loading = false;
       },
       error: (err: any) => {
-        this.error = err.error?.detail || 'Email ou mot de passe incorrect';
+        this.error = err.error?.detail || 'Invalid email or password';
         Swal.fire({
           title: 'Login Failed',
           text: this.error,

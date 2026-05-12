@@ -338,14 +338,15 @@ body {
 }
 
 .forgot-password-link a {
-  font-size: 0.82rem;
-  color: #666;
+  font-size: 0.85rem;
+  color: #16C0DE !important;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.25s;
+  font-weight: 600;
+  transition: all 0.25s;
+  opacity: 1;
 }
 
 .forgot-password-link a:hover {
-  color: #16C0DE;
+  text-shadow: 0 0 8px rgba(22, 192, 222, 0.6);
   text-decoration: underline;
 }
